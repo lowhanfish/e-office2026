@@ -1,60 +1,77 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# Python (server/)
-server/venv/
-venv/
-env/
-.venv/
-__pycache__/
-*.pyc
-*.pyo
-.python-version
-.pytest_cache/
-
-# testing
-/coverage
-
-# Next.js (admin/)
-.next/
-out/
-build/
+# =========================
+# ROOT LEVEL
+# =========================
 
 # Environment variables
 .env*
 !.env.example
 
-# Vercel
-.vercel
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+.DS_Store?
+Thumbs.db
+ehthumbs.db
+
+# =========================
+# ADMIN (Next.js)
+# =========================
+
+admin/node_modules
+admin/.next
+admin/out
+admin/build
+
+# Next.js misc
+admin/.vercel
 
 # TypeScript
-*.tsbuildinfo
+admin/*.tsbuildinfo
 
-# Production builds
+# =========================
+# SERVER (FastAPI / Python)
+# =========================
+
+# Virtual environment
+server/venv/
+server/.venv/
+server/env/
+
+# Python cache
+server/__pycache__/
+server/**/*.pyc
+server/**/*.pyo
+
+# Python misc
+server/.pytest_cache/
+server/.python-version
+
+# =========================
+# GENERAL (fallback)
+# =========================
+
+# Python (fallback kalau di root)
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+
+# Build outputs
 dist/
 build/
 
-# Misc
-.DS_Store
+# Node fallback (kalau ada di root)
+node_modules/
+
+# =========================
+# SECURITY
+# =========================
+
+# Private keys
 *.pem
-logs/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# OS generated
-Thumbs.db
-ehthumbs.db
-.DS_Store?
-
+*.key
