@@ -9,3 +9,6 @@ passlib[bcrypt]
 python-jose[cryptography]
 python-multipart
 httpx
+
+
+# uvicorn app.main:app --reload
