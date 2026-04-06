@@ -1,21 +1,24 @@
 from fastapi import FastAPI
+# from app.models.absensi.data_master import JenisApel, JenisApelPeserta, JenisIzin
+import app.models.absensi.data_master
+from app.db.maindb import Base, engine
 import logging
 from contextlib import asynccontextmanager
-from app.db.maindb import Base, engine
 
 
 logger = logging.getLogger(__name__)
 
 @asynccontextmanager
-async def lifespan(app:FastAPI):
-    logger.info("check and create database simpeg")
+async def lifespan (app:FastAPI):
+    logger.info("Check and Create Database")
     try:
         Base.metadata.create_all(bind=engine)
     except Exception as e:
-        logger.info(f"error : {e}")
+        logger.error(f"Error : {e}")
+    
     yield
+    logger.info("server deactivated")
 
-    logger.info("App deactivated")
 
 
 app = FastAPI(
@@ -27,10 +30,9 @@ app = FastAPI(
 @app.get("/")
 async def root():
     return {
-        "message" : "server active",
-        "status" : 200
+        "message": "server active",
+        "status": 200
     }
-
 
 # from fastapi import FastAPI
 # from contextlib import asynccontextmanager
