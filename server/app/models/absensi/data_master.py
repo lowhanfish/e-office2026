@@ -77,3 +77,5 @@ class JenisLokasi(Base):
         CheckConstraint("status BETWEEN 1 AND 10", name="jenislokasi_status"),
         CheckConstraint("hidex BETWEEN 1 AND 10", name="jenislokasi_hidex")
     )
+
+
