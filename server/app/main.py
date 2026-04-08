@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-# from app.models.absensi.data_master import JenisApel, JenisApelPeserta, JenisIzin
-import app.models.absensi.data_master
+from app.models.absensi.data_master import JenisApel, JenisApelPeserta, JenisIzin
+from app.models.absensi.presensi import Absensi, AbsensiApel
 from app.db.maindb import Base, engine
 import logging
 from contextlib import asynccontextmanager
@@ -13,13 +13,12 @@ async def lifespan (app:FastAPI):
     logger.info("Check and Create Database")
     try:
         Base.metadata.create_all(bind=engine)
+        logger.info("Semua tabel berhasil diperiksa/dibuat.")
     except Exception as e:
         logger.error(f"Error : {e}")
     
     yield
     logger.info("server deactivated")
-
-
 
 app = FastAPI(
     title="e-Office",

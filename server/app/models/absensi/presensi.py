@@ -7,10 +7,10 @@ from sqlalchemy.sql import func
 class Absensi(Base):
     __tablename__ = "absensi"
     __table_args__ = (
-        {"schema" : "absensi"},
         CheckConstraint("dd BETWEEN 1 AND 31", name="absensi_dd"),
         CheckConstraint("mm BETWEEN 1 AND 12", name="absensi_mm"),
-        UniqueConstraint("NIP", "dd", "mm", "yy", name="absensi_uniq_tgl")
+        UniqueConstraint("NIP", "dd", "mm", "yy", name="absensi_uniq_tgl"),
+        {"schema" : "tester"}
     )
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
@@ -35,8 +35,16 @@ class Absensi(Base):
     createdAt = Column(DateTime(timezone=True), server_default=func.now())
 
 
+
 class AbsensiApel(Base):
     __tablename__ = "absensi_apel"
+    __table_args__ = (
+        UniqueConstraint("NIP", "dd", "mm", "yy", name="absensi_apel_uniq_tgl"),
+        CheckConstraint("dd BETWEEN 1 AND 31" , name="absensi_apel_dd"),
+        CheckConstraint("mm BETWEEN 1 AND 12" , name="absensi_apel_mm"),
+        {"schema" : "tester"}
+    )
+
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     jenispresensi =Column(Integer, index=True, default=0, comment="diambil dari table presensi")
     jenisKategori =Column(Integer, nullable=False, default=0)
@@ -56,9 +64,3 @@ class AbsensiApel(Base):
     createdBy = Column(String(35), nullable=False)
     createdAt = Column(DateTime(timezone=True), server_default=func.now())
 
-    __table_args__ = (
-        {"schema" : "absensi"},
-        UniqueConstraint("NIP", "dd", "mm", "yy", name="absensi_apel_uniq_tgl"),
-        CheckConstraint("dd BETWEEN 1 AND 31" , name="absensi_apel_dd"),
-        CheckConstraint("mm BETWEEN 1 AND 12" , name="absensi_apel_mm")
-    )
