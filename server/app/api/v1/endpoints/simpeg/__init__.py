@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from .master import master_router
-from .riwayat import pendidikan_router
+from .riwayat import riwayat_router
 
 simpeg_router = APIRouter()
 
@@ -12,7 +12,7 @@ simpeg_router.include_router(
 )
 
 simpeg_router.include_router(
-    pendidikan_router,
-    prefix="/riwayat"
-    tags=["SIMPEG - Riwayat Pendidikan"]
+    riwayat_router,
+    prefix="/riwayat",
+    tags=["SIMPEG - Riwayat"]
 )

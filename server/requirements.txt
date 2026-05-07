@@ -1,14 +1,21 @@
+# Web Framework & Server
 fastapi
 uvicorn[standard]
-sqlalchemy
-pymysql
-pydantic
+
+# Database (MySQL Async Stack)
+sqlalchemy>=2.0.0
+aiomysql
+alembic
+
+# Data Validation & Environment
+pydantic[email]
 pydantic-settings
 python-dotenv
+
+# Security & Authentication
 passlib[bcrypt]
 python-jose[cryptography]
 python-multipart
+
+# HTTP Client (BFF Gateway needs this for Microservices)
 httpx
-
-
-# uvicorn app.main:app --reload
