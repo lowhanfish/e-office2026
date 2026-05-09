@@ -133,3 +133,10 @@ alembic upgrade head
 1. Pastikan `.env` berisi koneksi untuk database baru.
 2. Gunakan variabel `DB_NAME_SIMPEG` (kalau tidak ada, Alembic akan fallback ke `DB_NAME`).
 3. Jika perlu aturan berbeda untuk memilih `target_metadata` atau URL koneksi, silakan sesuaikan `migrations/env.py`.
+
+### Jika di masa depan Anda ingin mengubah isi dari Jenjang (misal menambah opsi baru), MySQL memerlukan perintah ALTER TABLE khusus untuk tipe data Enum. Alembic kadang tidak mendeteksinya secara otomatis. Jika itu terjadi, Anda bisa menambahkan perintah ini secara manual di file migrasinya:
+
+```bash
+# Contoh di dalam file migrations/versions/xxxx.py
+op.execute("ALTER TABLE jns_jabatan_fungsional MODIFY COLUMN jenjang ENUM('PM', 'TR', 'MH', 'PY', 'PT', 'MU', 'MA', 'UT', 'BARU')")
+```

@@ -1,10 +1,26 @@
-from sqlalchemy import Column, Integer, String, Boolean, Text, DateTime, CHAR, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, Text, DateTime, CHAR, ForeignKey, Enum, SmallInteger
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
+import enum
 import uuid
 
 from app.db.session import Base
 
+
+class Jenjang(enum.Enum):
+    PM = "Pemula"
+    TR = "Terampil"
+    MH = "Mahir"
+    PY = "Penyelia"
+    PT = "Pertama"
+    MU = "Muda"
+    MA = "Madya"
+    UT = "Utama"
+
+class StatusJabfung(enum.Enum):
+    N = "Jabatan yang masih berlaku"
+    O = "Jabatan yang tidak berlaku"
+    X = "Jabatan yang terus berlaku"
 
 class Agama(Base):
     __tablename__ = "jns_agama"
@@ -33,7 +49,7 @@ class RumpunJabatan(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     # Relationship
-    jns_kel_jabatan = relationship("KelJabatan", back_populates="jnsRumpunJabatan")
+    jns_kel_jabatan = relationship("KelJabatan", back_populates="jns_rumpun_jabatan_rel")
     
 class JenisJabatan(Base):
     __tablename__ = "jns_jabatan"
@@ -44,29 +60,54 @@ class JenisJabatan(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     # Relationship
-    jns_kel_jabatan = relationship("KelJabatan", back_populates="jnsJabatan")
+    jns_kel_jabatan = relationship("KelJabatan", back_populates="jns_jabatan_rel")
 
 class KelJabatan(Base):
     __tablename__ = "jns_kel_jabatan"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     kode = Column(CHAR(50), index=True, nullable=False, unique=True)
     nama = Column(String(50), nullable=False)
-    
     jns_jabatan_id = Column(String(50), ForeignKey("jns_jabatan.kode"),index=True, nullable=False, comment="dari kolom kode tabel jns_jabatan")
     jns_rumpun_jabatan_id = Column(String(50), ForeignKey("jns_rumpun_jabatan.kode"),index=True, nullable=False, comment="dari kolom kode tabel jns_rumpun_jabatan")
-
     pembina_id = Column(String(50), index=True, nullable=False)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     # Relationship
-    jnsJabatan = relationship("JenisJabatan", back_populates="jns_kel_jabatan")
-    jnsRumpunJabatan = relationship("RumpunJabatan", back_populates="jns_kel_jabatan")
+    jns_jabatan_rel = relationship("JenisJabatan", back_populates="jns_kel_jabatan")
+    jns_rumpun_jabatan_rel = relationship("RumpunJabatan", back_populates="jns_kel_jabatan")
+    jns_jabatan_fungsional = relationship("JnsJabatanFungsional", back_populates="jns_kel_jabatan_rel")
 
 class JnsHukdis(Base):
     __tablename__ = "jns_hukdis"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     kode = Column(String(50), index=True, nullable=False, unique=True)
     nama = Column(String(100), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
+class JnsRiwayat(Base):
+    __tablename__ = "jns_riwayat"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(50), index=True, nullable=False, unique=True)
+    nama = Column(String(100), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class JnsJabatanFungsional(Base):
+    __tablename__ = "jns_jabatan_fungsional"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(50), index=True, nullable=False, unique=True)
+    kode_cepat = Column(String(6), index=True, nullable=False, unique=True)
+    nama = Column(String(250), nullable=False)
+    bup_usia = Column(SmallInteger, nullable=False)
+    jns_kel_jabatan_id = Column(String(50), ForeignKey("jns_kel_jabatan.kode"), index=True, nullable=False, comment="dari kolom kode tabel jns_kel_jabatan")
+    jenjang = Column(Enum(Jenjang), nullable=False, index=True)
+    status = Column(Enum(StatusJabfung), nullable=False, index=True)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    # relationship
+    jns_kel_jabatan_rel = relationship("KelJabatan", back_populates="jns_jabatan_fungsional")
 
