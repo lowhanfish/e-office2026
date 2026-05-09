@@ -1,41 +1,47 @@
 import os
+from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, declarative_base
-from dotenv import load_dotenv
 from typing import AsyncGenerator
+ 
 
 load_dotenv()
-
-# Ambil data dari .env
+# Get Data From env
 DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_HOST = os.getenv("DB_HOST")
-DB_PORT = os.getenv("DB_PORT", "3306")
+DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
 
-# URL koneksi khusus untuk MySQL Async
-ASYNC_DATABASE_URL = f"mysql+aiomysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
-# 1. Buat Engine Asinkron
+# Create Connection to MySql
+DB_CONNECTION = f"mysql+aiomysql://username:password@ip_db:port/db_name"
+
+# Create Async Engine
 engine = create_async_engine(
-    ASYNC_DATABASE_URL,
-    echo=True,           # Menampilkan log SQL di terminal (bagus untuk dev)
-    pool_pre_ping=True,  # Memastikan koneksi masih hidup sebelum dipakai
+    DB_CONNECTION,
+    echo=True,
+    pool_pre_ping = True
 )
 
-# 2. Buat Session Factory
+# Create Session Maker
+
 AsyncSessionLocal = sessionmaker(
     bind=engine,
     class_=AsyncSession,
     expire_on_commit=False
 )
 
+# Create Declarative Base
 Base = declarative_base()
 
-# 3. Fungsi untuk digunakan di Route (Dependency Injection)
+
+# Create Dependency Injection
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
-    async with AsyncSessionLocal() as session:
+   async with AsyncSessionLocal() as session:
         try:
-            yield session
+             yield session
+        except Exception as e:
+            print(f"Error DB : {e}")
         finally:
             await session.close()
