@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+venv/
+ENV/
+
+gradle/ # just in case
+
+# Env files
+.env
+.env.*
+
+# FastAPI / Uvicorn / logs
+*.log
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Build / dist
+build/
+dist/
+*.egg-info/
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+.cache/
+
+# Alembic
+alembic.ini
+versions/
+
+# SQLite (if used)
+*.db
+*.sqlite
+*.sqlite3
+
