@@ -63,8 +63,6 @@ class KelJabatan(Base):
     jnsJabatan = relationship("JenisJabatan", back_populates="jns_kel_jabatan")
     jnsRumpunJabatan = relationship("RumpunJabatan", back_populates="jns_kel_jabatan")
 
-
-
 class JnsHukdis(Base):
     __tablename__ = "jns_hukdis"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
