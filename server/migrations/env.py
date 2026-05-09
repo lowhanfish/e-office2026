@@ -28,6 +28,7 @@ Agama = simpeg_models.Agama
 Esselon = simpeg_models.Esselon
 JenisJabatan = simpeg_models.JenisJabatan
 JnsHukdis = simpeg_models.JnsHukdis
+RumpunJabatan = simpeg_models.RumpunJabatan
 
 
 config = context.config
