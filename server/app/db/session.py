@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import sessionmaker, DeclarativeBase
 from typing import AsyncGenerator
  
 
@@ -33,7 +33,8 @@ AsyncSessionLocal = sessionmaker(
 )
 
 # Create Declarative Base
-Base = declarative_base()
+class Base(DeclarativeBase):
+    pass
 
 
 # Create Dependency Injection
