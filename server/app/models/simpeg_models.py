@@ -29,6 +29,7 @@ class Agama(Base):
     nama = Column(String(100), nullable=False)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    
 
 class Esselon(Base):
     __tablename__ = "ref_esselon"
@@ -38,6 +39,7 @@ class Esselon(Base):
     jabatan_asn = Column(String(50), nullable=False)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
 
 class RumpunJabatan(Base):
     __tablename__ = "ref_rumpun_jabatan"
@@ -50,6 +52,7 @@ class RumpunJabatan(Base):
 
     # Relationship
     ref_kel_jabatan = relationship("KelJabatan", back_populates="ref_rumpun_jabatan_rel")
+
     
 class JenisJabatan(Base):
     __tablename__ = "ref_jabatan"
@@ -61,6 +64,7 @@ class JenisJabatan(Base):
 
     # Relationship
     ref_kel_jabatan = relationship("KelJabatan", back_populates="ref_jabatan_rel")
+
 
 class KelJabatan(Base):
     __tablename__ = "ref_kel_jabatan"
@@ -78,6 +82,7 @@ class KelJabatan(Base):
     ref_rumpun_jabatan_rel = relationship("RumpunJabatan", back_populates="ref_kel_jabatan")
     ref_jabatan_fungsional = relationship("JnsJabatanFungsional", back_populates="ref_kel_jabatan_rel")
 
+
 class JnsHukdis(Base):
     __tablename__ = "ref_hukdis"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
@@ -85,6 +90,7 @@ class JnsHukdis(Base):
     nama = Column(String(100), nullable=False)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
 
 class JnsRiwayat(Base):
     __tablename__ = "ref_riwayat"
@@ -132,7 +138,7 @@ class JnsTKPendidikan (Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     #relationship
     ref_pendidikan_rel = relationship("JnsPendidikan", back_populates="ref_tk_pendidikan_rel")
-    
+
 
 class JnsPendidikan (Base):
     __tablename__ = "ref_pendidikan"
@@ -144,3 +150,5 @@ class JnsPendidikan (Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     #relationship
     ref_tk_pendidikan_rel = relationship("JnsTKPendidikan", back_populates="ref_pendidikan_rel")
+
+
