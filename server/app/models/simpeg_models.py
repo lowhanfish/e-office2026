@@ -111,8 +111,6 @@ class JnsJabatanFungsional(Base):
     # relationship
     ref_kel_jabatan_rel = relationship("KelJabatan", back_populates="ref_jabatan_fungsional")
 
-
-
 class JnsJabatanFungsionalUmum(Base):
     __tablename__ = "ref_jabatan_fungsional_umum"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
@@ -120,6 +118,29 @@ class JnsJabatanFungsionalUmum(Base):
     nama = Column(String(150), nullable=False)
     cepat_kode = Column(String(10),nullable=False)
     status = Column(Boolean, default=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class JnsTKPendidikan (Base):
+    __tablename__ = "ref_tk_pendidikan"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(50), unique=True, nullable=False)
+    nama = Column(String(50), nullable=False)
+    group_tk_pend_nm = Column(String(50), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    #relationship
+    ref_pendidikan_rel = relationship("JnsPendidikan", back_populates="ref_tk_pendidikan_rel")
     
 
-
+class JnsPendidikan (Base):
+    __tablename__ = "ref_pendidikan"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    ref_tk_pendidikan_id = Column(String(50), ForeignKey("ref_tk_pendidikan.kode"), index=True, nullable=False, comment="dari kolom kode tabel ref_tk_pendidikan")
+    nama = Column(String(150), nullable=False)
+    status = Column(Boolean, default=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    #relationship
+    ref_tk_pendidikan_rel = relationship("JnsTKPendidikan", back_populates="ref_pendidikan_rel")
