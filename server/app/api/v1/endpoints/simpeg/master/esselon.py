@@ -1,5 +1,11 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 
+from app.db.session import get_db
+
+from app.schemas.simpeg.master.ref_esselon import EsselonCreate, EsselonResponse, EsselonUpdate
+from app.models.simpeg_models import Esselon
 
 router = APIRouter()
 
@@ -17,3 +23,42 @@ async def root():
             {"id": 2, "nama_esselon": "II.a"}
         ]
     }
+
+
+@router.post("/create", response_model=EsselonCreate)
+async def create_esselon(payload: EsselonCreate, db: AsyncSession = Depends(get_db)):
+    print(payload)
+    new_Data = Esselon(
+        kode = payload.kode,
+        nama = payload.nama,
+        jabatan_asn = payload.jabatan_asn,
+        created_by = "payload.created_by"
+    )
+    db.add(new_Data)
+    await db.commit()
+    await db.refresh(new_Data)
+
+    return new_Data
+
+
+@router.post("/update/{id}", response_model=EsselonResponse)
+async def update_esselon(id: str, payload: EsselonUpdate, db: AsyncSession = Depends(get_db)):
+    # 1. Cari data berdasarkan ID
+    query = select(Esselon).filter(Esselon.id == id)
+    result = await db.execute(query)
+    db_data = result.scalar_one_or_none()
+    
+    if not db_data:
+        raise HTTPException(status_code=404, detail="Data tidak ditemukan")
+    
+    # 2. Update otomatis (Mau 100 kolom pun tetap segini kodenya)
+    update_data = payload.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        if hasattr(db_data, key): # Cek tambahan: pastikan kolomnya ada di model
+            setattr(db_data, key, value)
+        
+    # 3. Simpan
+    await db.commit()
+    await db.refresh(db_data)
+    
+    return db_data
