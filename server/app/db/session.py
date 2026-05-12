@@ -44,5 +44,6 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
              yield session
         except Exception as e:
             print(f"Error DB : {e}")
+            raise e
         finally:
             await session.close()
