@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.db.session import get_db
-from app.schemas.simpeg.master.ref_esselon import EsselonCreate, EsselonResponse, EsselonUpdate, EsselonDelete
+from app.schemas.simpeg.master.ref_esselon import EsselonCreate, EsselonResponse, EsselonUpdate
 from app.models.simpeg_models import Esselon
 from typing import List
 

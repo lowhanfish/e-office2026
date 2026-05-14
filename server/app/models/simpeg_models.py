@@ -90,6 +90,7 @@ class JnsHukdis(Base):
     nama = Column(String(100), nullable=False)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    
 
 
 class JnsRiwayat(Base):
@@ -134,6 +135,7 @@ class JnsTKPendidikan (Base):
     kode = Column(String(50), unique=True, nullable=False)
     nama = Column(String(50), nullable=False)
     group_tk_pend_nm = Column(String(50), nullable=False)
+    keterangan = Column(Text, nullable=True, default="-")
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     #relationship
