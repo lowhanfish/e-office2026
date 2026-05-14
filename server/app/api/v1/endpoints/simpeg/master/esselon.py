@@ -65,7 +65,7 @@ async def update_esselon(id: str, payload: EsselonUpdate, db: AsyncSession = Dep
     return db_data
 
 
-@router.post("/delete/{id}", response_model=EsselonResponse)
+@router.post("/delete/{id}")
 async def update_esselon(id:str, db:AsyncSession = Depends(get_db)):
     query = select(Esselon).filter(Esselon.id == id)
     result = await db.execute(query)

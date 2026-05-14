@@ -9,10 +9,9 @@ class HukdisResponse(MasterResponse):
 class HukdisCreate(MasterCreate):
     pass
 
-class HukdisUpdate():
-    id : str
+class HukdisUpdate(MasterBase):
     kode : Optional[str] = None
     nama : Optional[str] = None
 
-class HukdisDelete():
+class HukdisDelete(BaseModel):
     id : str
