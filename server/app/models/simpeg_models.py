@@ -53,7 +53,17 @@ class RumpunJabatan(Base):
     # Relationship
     ref_kel_jabatan = relationship("KelJabatan", back_populates="ref_rumpun_jabatan_rel")
 
-    
+
+class RumpunJabatanJF(Base):
+    __tablename__ = "ref_rumpun_jabatan_jf"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(50), index=True, nullable=False, unique=True)
+    kode_rumpun = Column(CHAR(3), index=True, nullable=True)
+    nama = Column(String(250), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
 class JenisJabatan(Base):
     __tablename__ = "ref_jabatan"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
@@ -154,3 +164,22 @@ class JnsPendidikan (Base):
     ref_tk_pendidikan_rel = relationship("JnsTKPendidikan", back_populates="ref_pendidikan_rel")
 
 
+class JnsGolongan(Base):
+    __tablename__ = "ref_golongan"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(CHAR(3), index=True, nullable=False) 
+    nama = Column(CHAR(5), nullable=False)
+    nama_pangkat = Column(String(25), nullable=False)
+    gol_pppk = Column(CHAR(5), nullable=True)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class JnsDokumen(Base):
+    __tablename__ = "ref_dokumen"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(CHAR(10), nullable=False)
+    layanan_nama = Column(String(50), nullable=False)
+    document = Column(String(50), nullable=False)
+    file_type = Column(CHAR(5), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
