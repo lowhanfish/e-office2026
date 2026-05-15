@@ -22,6 +22,21 @@ class StatusJabfung(enum.Enum):
     O = "Jabatan yang tidak berlaku"
     X = "Jabatan yang terus berlaku"
 
+class JenisInstansi(enum.Enum):
+    P = "Pusat"
+    D = "Daerah"
+
+class JenisInstansiId(enum.Enum):
+    KO = "Kementerian Koordinator"
+    KEMENT = "Kementerian" 
+    LPNK = "Lembaga non Kementerian"
+    LNS = "Lembaga non Struktural" 
+    PROV = "Provinsi" 
+    KAB = "Kabupaten"
+    KOTA = "Kota"
+
+    
+
 class Agama(Base):
     __tablename__ = "ref_agama"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
@@ -45,7 +60,7 @@ class RumpunJabatan(Base):
     __tablename__ = "ref_rumpun_jabatan"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     kode = Column(String(50), index=True, nullable=False, unique=True)
-    cepat_kode = Column(CHAR(3), index=True, nullable=True)
+    kode_cepat = Column(CHAR(3), index=True, nullable=True)
     nama = Column(String(250), nullable=False)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -112,6 +127,15 @@ class JnsRiwayat(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
+class JnsPenugasan(Base):
+    __tablename__ = "ref_jns_penugasan"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(CHAR(5), index=True, nullable=False, unique=True)
+    nama = Column(String(50), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    create_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
 class JnsJabatanFungsional(Base):
     __tablename__ = "ref_jabatan_fungsional"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
@@ -133,7 +157,7 @@ class JnsJabatanFungsionalUmum(Base):
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     kode = Column(String(50), unique=True, nullable=False)
     nama = Column(String(150), nullable=False)
-    cepat_kode = Column(String(10),nullable=False)
+    kode_cepat = Column(String(10),nullable=False)
     status = Column(Boolean, default=False)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -183,3 +207,19 @@ class JnsDokumen(Base):
     file_type = Column(CHAR(5), nullable=False)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class Instansi(Base):
+    __tablename__ = "ref_instansi"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(50), index=True, nullable=False)
+    kode_cepat = Column(CHAR(5), index=True, nullable=True)
+    nama = Column(String(150), nullable=False)
+    jenis = Column(Enum(JenisInstansi), nullable=False)
+    jenis_instansi_id = Column(Enum(JenisInstansiId), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+
+   
