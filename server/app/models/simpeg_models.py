@@ -80,7 +80,7 @@ class RumpunJabatanJF(Base):
 
 
 class JenisJabatan(Base):
-    __tablename__ = "ref_jabatan"
+    __tablename__ = "ref_jns_jabatan"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     kode = Column(CHAR(2), index=True, nullable=False, unique=True)
     nama = Column(String(50), nullable=False)
@@ -88,7 +88,7 @@ class JenisJabatan(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     # Relationship
-    ref_kel_jabatan = relationship("KelJabatan", back_populates="ref_jabatan_rel")
+    ref_kel_jabatan = relationship("KelJabatan", back_populates="ref_jns_jabatan_rel")
 
 
 class KelJabatan(Base):
@@ -103,7 +103,7 @@ class KelJabatan(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     # Relationship
-    ref_jabatan_rel = relationship("JenisJabatan", back_populates="ref_kel_jabatan")
+    ref_jns_jabatan_rel = relationship("JenisJabatan", back_populates="ref_kel_jabatan")
     ref_rumpun_jabatan_rel = relationship("RumpunJabatan", back_populates="ref_kel_jabatan")
     ref_jabatan_fungsional = relationship("JnsJabatanFungsional", back_populates="ref_kel_jabatan_rel")
 
