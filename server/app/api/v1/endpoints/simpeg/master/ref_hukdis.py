@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.db.session import get_db
 from app.schemas.simpeg.master.ref_hukdis import HukdisCreate, HukdisUpdate, HukdisResponse
-from app.models.simpeg_models import JnsHukdis
+from app.models.simpeg_models import RefHukdis
 from typing import List
 
 router = APIRouter()
@@ -28,13 +28,13 @@ async def root():
 
 @router.post("/read", response_model=List[HukdisResponse])
 async def read_hukdis(db:AsyncSession = Depends(get_db)):
-    query = select(JnsHukdis)
+    query = select(RefHukdis)
     result = await db.execute(query)
     return result.scalars().all()
 
 @router.post("/create", response_model=HukdisResponse)
 async def create_hukdis(payload:  HukdisCreate, db: AsyncSession = Depends(get_db)):
-    query = JnsHukdis(
+    query = RefHukdis(
         kode = payload.kode,
         nama = payload.nama,
         created_by = "user.id"
@@ -46,7 +46,7 @@ async def create_hukdis(payload:  HukdisCreate, db: AsyncSession = Depends(get_d
 
 @router.post("/update/{id}", response_model=HukdisResponse)
 async def update_hukdis(id: str, payload: HukdisUpdate, db: AsyncSession = Depends(get_db)):
-    query = select(JnsHukdis).filter(JnsHukdis.id == id)
+    query = select(RefHukdis).filter(RefHukdis.id == id)
     result = await db.execute(query)
     db_data = result.scalar_one_or_none()
 
@@ -64,7 +64,7 @@ async def update_hukdis(id: str, payload: HukdisUpdate, db: AsyncSession = Depen
 
 @router.post("/delete/{id}")
 async def delete_hukdis(id:str, db : AsyncSession = Depends(get_db)):
-    query = select(JnsHukdis).filter(JnsHukdis.id == id)
+    query = select(RefHukdis).filter(RefHukdis.id == id)
     result = await db.execute(query)
     db_data = result.scalar_one_or_none()
 

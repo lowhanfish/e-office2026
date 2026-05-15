@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.db.session import get_db
-from app.models.simpeg_models import JnsRiwayat
+from app.models.simpeg_models import RefRiwayat
 from app.schemas.simpeg.master.ref_riwayat import RiwayatResponse, RiwayatCreate, RiwayatUpdate
 from typing import List
 
@@ -25,15 +25,16 @@ async def root():
     }
 
 
-@router.post("/read", response_mode= List[RiwayatResponse])
+@router.post("/read", response_model=List[RiwayatResponse])
 async def read_riwayat(db: AsyncSession = Depends(get_db)):
-    query = select(JnsRiwayat)
+
+    query = select(RefRiwayat)
     result = await db.execute(query)
     return result.scalars().all()
 
-@router.post("/create", response_mode= RiwayatResponse)
+@router.post("/create", response_model= RiwayatResponse)
 async def read_riwayat(payload : RiwayatCreate, db: AsyncSession = Depends(get_db)):
-    query = JnsRiwayat(
+    query = RefRiwayat(
         kode = payload.kode,
         nama = payload.nama,
         create_by = "user.id"
@@ -45,9 +46,9 @@ async def read_riwayat(payload : RiwayatCreate, db: AsyncSession = Depends(get_d
 
 
 
-@router.post("/update/{id}", response_mode= RiwayatResponse)
+@router.post("/update/{id}", response_model= RiwayatResponse)
 async def read_riwayat(id : str, payload: RiwayatUpdate, db: AsyncSession = Depends(get_db)):
-    query = select(JnsRiwayat).filter(JnsRiwayat.id == id)
+    query = select(RefRiwayat).filter(RefRiwayat.id == id)
     result = await db.execute(query)
     db_data = result.scalar_one_or_none()
 
@@ -67,7 +68,7 @@ async def read_riwayat(id : str, payload: RiwayatUpdate, db: AsyncSession = Depe
 
 @router.post("/delete/{id}")
 async def read_riwayat(id : str, db: AsyncSession = Depends(get_db)):
-    query = select(JnsRiwayat).filter(JnsRiwayat.id == id)
+    query = select(RefRiwayat).filter(RefRiwayat.id == id)
     result = await db.execute(query)
     db_data = result.scalar_one_or_none()
 

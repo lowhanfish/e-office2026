@@ -78,6 +78,13 @@ class RumpunJabatanJF(Base):
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
+class Unor(Base):
+    __tablename__ = "ref_unor"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(50), index=True, nullable=False, unique=True)
+    nama = Column(String(100), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class JenisJabatan(Base):
     __tablename__ = "ref_jns_jabatan"
@@ -96,7 +103,7 @@ class KelJabatan(Base):
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     kode = Column(CHAR(50), index=True, nullable=False, unique=True)
     nama = Column(String(50), nullable=False)
-    ref_jabatan_id = Column(String(50), ForeignKey("ref_jabatan.kode"),index=True, nullable=False, comment="dari kolom kode tabel ref_jabatan")
+    ref_jns_jabatan_id = Column(String(50), ForeignKey("ref_jns_jabatan.kode"),index=True, nullable=False, comment="dari kolom kode tabel ref_jns_jabatan")
     ref_rumpun_jabatan_id = Column(String(50), ForeignKey("ref_rumpun_jabatan.kode"),index=True, nullable=False, comment="dari kolom kode tabel ref_rumpun_jabatan")
     pembina_id = Column(String(50), index=True, nullable=False)
     created_by = Column(String(50), index=True, nullable=False)
@@ -105,10 +112,10 @@ class KelJabatan(Base):
     # Relationship
     ref_jns_jabatan_rel = relationship("JenisJabatan", back_populates="ref_kel_jabatan")
     ref_rumpun_jabatan_rel = relationship("RumpunJabatan", back_populates="ref_kel_jabatan")
-    ref_jabatan_fungsional = relationship("JnsJabatanFungsional", back_populates="ref_kel_jabatan_rel")
+    ref_jabatan_fungsional = relationship("RefJabatanFungsional", back_populates="ref_kel_jabatan_rel")
 
 
-class JnsHukdis(Base):
+class RefHukdis(Base):
     __tablename__ = "ref_hukdis"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     kode = Column(String(50), index=True, nullable=False, unique=True)
@@ -118,7 +125,7 @@ class JnsHukdis(Base):
     
 
 
-class JnsRiwayat(Base):
+class RefRiwayat(Base):
     __tablename__ = "ref_riwayat"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     kode = Column(String(50), index=True, nullable=False, unique=True)
@@ -127,7 +134,7 @@ class JnsRiwayat(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
-class JnsPenugasan(Base):
+class RefPenugasan(Base):
     __tablename__ = "ref_jns_penugasan"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     kode = Column(CHAR(5), index=True, nullable=False, unique=True)
@@ -136,7 +143,7 @@ class JnsPenugasan(Base):
     create_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
-class JnsJabatanFungsional(Base):
+class RefJabatanFungsional(Base):
     __tablename__ = "ref_jabatan_fungsional"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     kode = Column(String(50), index=True, nullable=False, unique=True)
@@ -148,11 +155,10 @@ class JnsJabatanFungsional(Base):
     status = Column(Enum(StatusJabfung), nullable=False, index=True)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-
     # relationship
     ref_kel_jabatan_rel = relationship("KelJabatan", back_populates="ref_jabatan_fungsional")
 
-class JnsJabatanFungsionalUmum(Base):
+class RefJabatanFungsionalUmum(Base):
     __tablename__ = "ref_jabatan_fungsional_umum"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     kode = Column(String(50), unique=True, nullable=False)
@@ -162,8 +168,18 @@ class JnsJabatanFungsionalUmum(Base):
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
+class RefJabatanStruktural(Base):
+    __tablename__ = "ref_jabatan_struktural"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(50), unique=True, nullable=False)
+    nama = Column(String(150), nullable=False)
+    kode_cepat = Column(String(10),nullable=False)
+    status = Column(Boolean, default=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-class JnsTKPendidikan (Base):
+
+class RefTKPendidikan (Base):
     __tablename__ = "ref_tk_pendidikan"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     kode = Column(String(50), unique=True, nullable=False)
@@ -173,10 +189,10 @@ class JnsTKPendidikan (Base):
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     #relationship
-    ref_pendidikan_rel = relationship("JnsPendidikan", back_populates="ref_tk_pendidikan_rel")
+    ref_pendidikan_rel = relationship("RefPendidikan", back_populates="ref_tk_pendidikan_rel")
 
 
-class JnsPendidikan (Base):
+class RefPendidikan (Base):
     __tablename__ = "ref_pendidikan"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     ref_tk_pendidikan_id = Column(String(50), ForeignKey("ref_tk_pendidikan.kode"), index=True, nullable=False, comment="dari kolom kode tabel ref_tk_pendidikan")
@@ -185,10 +201,10 @@ class JnsPendidikan (Base):
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     #relationship
-    ref_tk_pendidikan_rel = relationship("JnsTKPendidikan", back_populates="ref_pendidikan_rel")
+    ref_tk_pendidikan_rel = relationship("RefTKPendidikan", back_populates="ref_pendidikan_rel")
 
 
-class JnsGolongan(Base):
+class RefGolongan(Base):
     __tablename__ = "ref_golongan"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     kode = Column(CHAR(3), index=True, nullable=False) 
@@ -198,7 +214,7 @@ class JnsGolongan(Base):
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-class JnsDokumen(Base):
+class RefDokumen(Base):
     __tablename__ = "ref_dokumen"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     kode = Column(CHAR(10), nullable=False)
