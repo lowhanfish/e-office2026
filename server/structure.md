@@ -20,14 +20,13 @@ Dokumentasi struktur ini disesuaikan dengan struktur file yang benar-benar ada d
 │   │               │   ├── __init__.py
 │   │               │   ├── agama.py
 │   │               │   ├── esselon.py
-│   │               │   ├── jns_hukdis.py
-│   │               │   ├── jns_jabfung_umum.py
-│   │               │   ├── jns_jabfung.py
-│   │               │   ├── jns_kel_jabatan.py
-│   │               │   └── jns_riwayat.py
+│   │               │   ├── ref_hukdis.py
+│   │               │   ├── ref_jabfung.py
+│   │               │   ├── ref_jabfung_umum.py
+│   │               │   ├── ref_kel_jabatan.py
+│   │               │   └── ref_riwayat.py
 │   │               └── riwayat/
 │   │                   ├── __init__.py
-│   │                   ├── pangkat_jabatan/
 │   │                   └── pendidikan/
 │   │                       ├── __init__.py
 │   │                       ├── diklat.py
