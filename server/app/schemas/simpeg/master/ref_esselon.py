@@ -15,4 +15,4 @@ class EsselonUpdate(MasterBase):
     jabatan_asn : Optional[str] = None
 
 class EsselonDelete(BaseModel):
-    id : str
+    id : Optional[str] = None

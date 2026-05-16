@@ -40,7 +40,7 @@ async def create_RumpunJabatanJF(payload : CreateRumpunJabatanJF, db:AsyncSessio
     await db.refresh(new_data)
     return new_data
 
-@router.post("/update/{id}", response_model=ResponseRumpunJabatanJF)
+@router.post("/update/{id}")
 async def update_RumpunJabatanJF(id:str, payload: UpdateRumpunJabatanJF, db:AsyncSession = Depends(get_db)):
     query = select(RumpunJabatanJF).filter(RumpunJabatanJF.id == id)
     result = await db.execute(query)

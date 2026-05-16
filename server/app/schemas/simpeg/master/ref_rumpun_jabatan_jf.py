@@ -8,7 +8,7 @@ class CreateRumpunJabatanJF(MasterCreate):
     kode_rumpun : str
 
 class UpdateRumpunJabatanJF(MasterBase):
-    id : str
+    id : Optional[str] = None
     kode : Optional[str] = None
     nama : Optional[str] = None
     kode_rumpun : Optional[str] = None
