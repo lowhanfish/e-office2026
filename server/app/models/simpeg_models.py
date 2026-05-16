@@ -35,8 +35,6 @@ class JenisInstansiId(enum.Enum):
     KAB = "Kabupaten"
     KOTA = "Kota"
 
-    
-
 class Agama(Base):
     __tablename__ = "ref_agama"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
@@ -157,6 +155,8 @@ class RefJabatanFungsional(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     # relationship
     ref_kel_jabatan_rel = relationship("KelJabatan", back_populates="ref_jabatan_fungsional")
+    created_by = Column(String(50), index=True, nullable=False)
+    create_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class RefJabatanFungsionalUmum(Base):
     __tablename__ = "ref_jabatan_fungsional_umum"

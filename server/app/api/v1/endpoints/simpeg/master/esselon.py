@@ -76,6 +76,7 @@ async def update_esselon(id:str, db:AsyncSession = Depends(get_db)):
     
     await db.delete(db_data)
     await db.commit()
+
     return {"message": f"Esselon {db_data.nama} berhasil dihapus"}
 
 
