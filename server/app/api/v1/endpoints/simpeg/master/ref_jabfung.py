@@ -31,8 +31,13 @@ async def create_jabfung(payload: RefJabfungCreate, db:AsyncSession = Depends(ge
     
     data = RefJabatanFungsional(
         kode = payload.kode,
+        kode_cepat = payload.kode_cepat,
+        bup_usia = payload.bup_usia,
         nama = payload.nama,
-        create_by = "payload.user"
+        ref_kel_jabatan_id = payload.ref_kel_jabatan_id,
+        jenjang = payload.jenjang,
+        status = payload.status,
+        created_by = "payload.user"
     )
 
     db.add(data)

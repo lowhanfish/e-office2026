@@ -66,6 +66,13 @@ class RumpunJabatan(Base):
     # Relationship
     ref_kel_jabatan = relationship("KelJabatan", back_populates="ref_rumpun_jabatan_rel")
 
+class Unor(Base):
+    __tablename__ = "ref_unor"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(50), index=True, nullable=False, unique=True)
+    nama = Column(String(100), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class RumpunJabatanJF(Base):
     __tablename__ = "ref_rumpun_jabatan_jf"
@@ -73,14 +80,6 @@ class RumpunJabatanJF(Base):
     kode = Column(String(50), index=True, nullable=False, unique=True)
     kode_rumpun = Column(CHAR(3), index=True, nullable=True)
     nama = Column(String(250), nullable=False)
-    created_by = Column(String(50), index=True, nullable=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-
-class Unor(Base):
-    __tablename__ = "ref_unor"
-    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
-    kode = Column(String(50), index=True, nullable=False, unique=True)
-    nama = Column(String(100), nullable=False)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
@@ -156,7 +155,7 @@ class RefJabatanFungsional(Base):
     # relationship
     ref_kel_jabatan_rel = relationship("KelJabatan", back_populates="ref_jabatan_fungsional")
     created_by = Column(String(50), index=True, nullable=False)
-    create_at = Column(DateTime(timezone=True), server_default=func.now())
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class RefJabatanFungsionalUmum(Base):
     __tablename__ = "ref_jabatan_fungsional_umum"

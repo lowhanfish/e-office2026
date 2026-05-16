@@ -27,7 +27,7 @@ from app.models import simpeg_models
 Agama = simpeg_models.Agama
 Esselon = simpeg_models.Esselon
 JenisJabatan = simpeg_models.JenisJabatan
-JnsHukdis = simpeg_models.JnsHukdis
+RefHukdis = simpeg_models.RefHukdis
 RumpunJabatan = simpeg_models.RumpunJabatan
 
 

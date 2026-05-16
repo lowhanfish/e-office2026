@@ -75,8 +75,8 @@ async def read_riwayat(id : str, db: AsyncSession = Depends(get_db)):
     if not db_data:
         HTTPException(status_code=404, detail="Data tidak ditemukan")
 
+    nama = db_data.nama
     await db.delete(db_data)
     await db.commit()
-    await db.refresh(db_data)
 
-    return {"message": f"Ref Riwayat : {db_data.nama}, berhasil dihapus"}
+    return {"message": f"Ref Riwayat : {nama}, berhasil dihapus"}
