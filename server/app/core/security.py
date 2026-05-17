@@ -9,6 +9,7 @@ load_dotenv()
 
 # Konfigurasi Enkripsi Password
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+myctx = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Ambil Secret Key dari .env
 JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
@@ -18,6 +19,21 @@ ALGORITHM = "HS256"
 # Waktu kedaluwarsa token
 ACCESS_TOKEN_EXPIRE_MINUTES = 15  # 15 Menit
 REFRESH_TOKEN_EXPIRE_DAYS = 7     # 7 Hari
+
+
+
+# def ver_pwd(pwd_plain:str, pwd_hash:str)->bool:
+#     return myctx.verify(pwd_plain, pwd_hash)
+
+# def get_pwd_hash(pwd_plain:str)->str:
+#     return myctx.hash(pwd_plain)
+
+# def create_pwd_hash()->str:
+#     pass
+
+# def create_refresh_tkn()->str:
+#     pass
+
 
 # --- 1. FUNGSI UNTUK PASSWORD ---
 def verify_password(plain_password: str, hashed_password: str) -> bool:
