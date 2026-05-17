@@ -19,3 +19,5 @@ python-multipart
 
 # HTTP Client (BFF Gateway needs this for Microservices)
 httpx
+PyJWT
+
