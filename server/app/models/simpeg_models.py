@@ -25,6 +25,25 @@ class StatusJabfung(enum.Enum):
 class JenisInstansi(enum.Enum):
     P = "Pusat"
     D = "Daerah"
+    
+
+class User(Base):
+    __tablename__ = "sys_user"
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    username = Column(String(50), nullable=False, unique=True, index=True)
+    email = Column(String(100), nullable=False, unique=True)
+    
+    # KUNCI KEAMANAN: Kita simpan password yang sudah di-hash di sini
+    hashed_password = Column(String(255), nullable=False)
+    
+    nama_lengkap = Column(String(100), nullable=True)
+    nip = Column(String(20), nullable=True, unique=True) # Khusus ASN/Pegawai
+    
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, onupdate=func.now())
+
+    
 
 class JenisInstansiId(enum.Enum):
     KO = "Kementerian Koordinator"
