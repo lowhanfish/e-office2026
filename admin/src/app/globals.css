@@ -1,0 +1,228 @@
+@import "tailwindcss";
+
+/* =============================================
+   LIGHT MODE VARIABLES
+   ============================================= */
+:root {
+  --background: #ededed;
+  --foreground: #171717;
+
+  /* b-gray */
+  /* --color-b-gray-1: #242424;
+  --color-b-gray-2: #3f3f3f;
+  --color-b-gray-3: #717171;
+  --color-b-gray-4: #a2a2a2;
+  --color-b-gray-5: #d0cfcf;
+  --color-b-gray-6: #fcfcfc; */
+  /* --color-b-gray-6: #ea5d5d; */
+
+  --color-b-gray-1: #fbfbfb;
+  --color-b-gray-2: #d4d4d4;
+  --color-b-gray-3: #a3a3a3;
+  --color-b-gray-4: #737373;
+  --color-b-gray-5: #525252;
+  --color-b-gray-6: #2a2a2a;
+
+  /* b-blue */
+  --color-b-blue-1: #1a51b8;
+  --color-b-blue-2: #2563db;
+  --color-b-blue-3: #4d82cc;
+  --color-b-blue-4: #6b99d0;
+  --color-b-blue-5: #92b5dd;
+  --color-b-blue-6: #bed2ee;
+
+  /* b-green */
+  --color-b-green-1: #1b7a1b;
+  --color-b-green-2: #2a8a2a;
+  --color-b-green-3: #3a9a3a;
+  --color-b-green-4: #55aa55;
+  --color-b-green-5: #77bb77;
+  --color-b-green-6: #99cc99;
+
+  /* b-yellow */
+  --color-b-yellow-1: #f0a000;
+  --color-b-yellow-2: #f5ab00;
+  --color-b-yellow-3: #f8bc20;
+  --color-b-yellow-4: #fac840;
+  --color-b-yellow-5: #fbdb78;
+  --color-b-yellow-6: #fdedb8;
+
+  /* b-red */
+  --color-b-red-1: #c03030;
+  --color-b-red-2: #c94040;
+  --color-b-red-3: #ce5050;
+  --color-b-red-4: #d46868;
+  --color-b-red-5: #de8c8c;
+  --color-b-red-6: #ecb4b4;
+}
+
+/* =============================================
+   DARK MODE VARIABLES (class-based: <html class="dark">)
+   ============================================= */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+
+  /* b-gray — lebih terang di dark mode */
+  --color-b-gray-1: #f5f5f5;
+  --color-b-gray-2: #d4d4d4;
+  --color-b-gray-3: #a3a3a3;
+  --color-b-gray-4: #737373;
+  --color-b-gray-5: #525252;
+  --color-b-gray-6: #2a2a2a;
+
+  /* b-blue */
+  --color-b-blue-1: #bed2ee;
+  --color-b-blue-2: #92b5dd;
+  --color-b-blue-3: #6b99d0;
+  --color-b-blue-4: #4d82cc;
+  --color-b-blue-5: #2563db;
+  --color-b-blue-6: #1a51b8;
+
+  /* b-green */
+  --color-b-green-1: #99cc99;
+  --color-b-green-2: #77bb77;
+  --color-b-green-3: #55aa55;
+  --color-b-green-4: #3a9a3a;
+  --color-b-green-5: #2a8a2a;
+  --color-b-green-6: #1b7a1b;
+
+  /* b-yellow */
+  --color-b-yellow-1: #fdedb8;
+  --color-b-yellow-2: #fbdb78;
+  --color-b-yellow-3: #fac840;
+  --color-b-yellow-4: #f8bc20;
+  --color-b-yellow-5: #f5ab00;
+  --color-b-yellow-6: #f0a000;
+
+  /* b-red */
+  --color-b-red-1: #ecb4b4;
+  --color-b-red-2: #de8c8c;
+  --color-b-red-3: #d46868;
+  --color-b-red-4: #ce5050;
+  --color-b-red-5: #c94040;
+  --color-b-red-6: #c03030;
+}
+
+/* Fallback: media query dark mode */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --background: #0a0a0a;
+    --foreground: #fbfbfb;
+
+    /* --color-b-gray-1: #f5f5f5;
+    --color-b-gray-2: #d4d4d4;
+    --color-b-gray-3: #a3a3a3;
+    --color-b-gray-4: #737373;
+    --color-b-gray-5: #525252;
+    --color-b-gray-6: #2a2a2a; */
+
+
+    --color-b-gray-1: #242424;
+    --color-b-gray-2: #3f3f3f;
+    --color-b-gray-3: #717171;
+    --color-b-gray-4: #a2a2a2;
+    --color-b-gray-5: #d0cfcf;
+    --color-b-gray-6: #fcfcfc;
+
+    --color-b-blue-1: #bed2ee;
+    --color-b-blue-2: #92b5dd;
+    --color-b-blue-3: #6b99d0;
+    --color-b-blue-4: #4d82cc;
+    --color-b-blue-5: #2563db;
+    --color-b-blue-6: #1a51b8;
+
+    --color-b-green-1: #99cc99;
+    --color-b-green-2: #77bb77;
+    --color-b-green-3: #55aa55;
+    --color-b-green-4: #3a9a3a;
+    --color-b-green-5: #2a8a2a;
+    --color-b-green-6: #1b7a1b;
+
+    --color-b-yellow-1: #fdedb8;
+    --color-b-yellow-2: #fbdb78;
+    --color-b-yellow-3: #fac840;
+    --color-b-yellow-4: #f8bc20;
+    --color-b-yellow-5: #f5ab00;
+    --color-b-yellow-6: #f0a000;
+
+    --color-b-red-1: #ecb4b4;
+    --color-b-red-2: #de8c8c;
+    --color-b-red-3: #d46868;
+    --color-b-red-4: #ce5050;
+    --color-b-red-5: #c94040;
+    --color-b-red-6: #c03030;
+  }
+}
+
+/* =============================================
+   TAILWIND THEME REGISTRATION
+   Mendaftarkan semua custom color ke Tailwind
+   sehingga bisa digunakan sebagai:
+   bg-b-red-1, text-b-blue-3, border-b-green-2, dll.
+   ============================================= */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-poppins: var(--font-poppins);
+  --font-roboto: var(--font-roboto);
+
+  /* b-gray */
+  --color-b-gray-1: var(--color-b-gray-1);
+  --color-b-gray-2: var(--color-b-gray-2);
+  --color-b-gray-3: var(--color-b-gray-3);
+  --color-b-gray-4: var(--color-b-gray-4);
+  --color-b-gray-5: var(--color-b-gray-5);
+  --color-b-gray-6: var(--color-b-gray-6);
+
+  /* b-blue */
+  --color-b-blue-1: var(--color-b-blue-1);
+  --color-b-blue-2: var(--color-b-blue-2);
+  --color-b-blue-3: var(--color-b-blue-3);
+  --color-b-blue-4: var(--color-b-blue-4);
+  --color-b-blue-5: var(--color-b-blue-5);
+  --color-b-blue-6: var(--color-b-blue-6);
+
+  /* b-green */
+  --color-b-green-1: var(--color-b-green-1);
+  --color-b-green-2: var(--color-b-green-2);
+  --color-b-green-3: var(--color-b-green-3);
+  --color-b-green-4: var(--color-b-green-4);
+  --color-b-green-5: var(--color-b-green-5);
+  --color-b-green-6: var(--color-b-green-6);
+
+  /* b-yellow */
+  --color-b-yellow-1: var(--color-b-yellow-1);
+  --color-b-yellow-2: var(--color-b-yellow-2);
+  --color-b-yellow-3: var(--color-b-yellow-3);
+  --color-b-yellow-4: var(--color-b-yellow-4);
+  --color-b-yellow-5: var(--color-b-yellow-5);
+  --color-b-yellow-6: var(--color-b-yellow-6);
+
+  /* b-red */
+  --color-b-red-1: var(--color-b-red-1);
+  --color-b-red-2: var(--color-b-red-2);
+  --color-b-red-3: var(--color-b-red-3);
+  --color-b-red-4: var(--color-b-red-4);
+  --color-b-red-5: var(--color-b-red-5);
+  --color-b-red-6: var(--color-b-red-6);
+}
+
+/* =============================================
+   DARK MODE VARIANT untuk class-based
+   ============================================= */
+@custom-variant dark (&:where(.dark, .dark *));
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-poppins);
+}
+
+
+html,
+body {
+  height: 100%;
+}

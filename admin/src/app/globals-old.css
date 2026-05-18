@@ -1,0 +1,533 @@
+@import "tailwindcss";
+
+/* =============================================
+   LIGHT MODE VARIABLES
+   Pakai prefix --b- agar tidak circular dengan
+   @theme inline yang pakai prefix --color-b-
+   ============================================= */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+
+  /* b-gray */
+  --b-gray-1: #000000;
+  --b-gray-2: #222222;
+  --b-gray-3: #3a3a3a;
+  --b-gray-4: #555555;
+  --b-gray-5: #777777;
+  --b-gray-6: #aaaaaa;
+
+  /* b-blue */
+  --b-blue-1: #1a51b8;
+  --b-blue-2: #2563db;
+  --b-blue-3: #4d82cc;
+  --b-blue-4: #6b99d0;
+  --b-blue-5: #92b5dd;
+  --b-blue-6: #bed2ee;
+
+  /* b-green */
+  --b-green-1: #1b7a1b;
+  --b-green-2: #2a8a2a;
+  --b-green-3: #3a9a3a;
+  --b-green-4: #55aa55;
+  --b-green-5: #77bb77;
+  --b-green-6: #99cc99;
+
+  /* b-yellow */
+  --b-yellow-1: #f0a000;
+  --b-yellow-2: #f5ab00;
+  --b-yellow-3: #f8bc20;
+  --b-yellow-4: #fac840;
+  --b-yellow-5: #fbdb78;
+  --b-yellow-6: #fdedb8;
+
+  /* b-red */
+  --b-red-1: #c03030;
+  --b-red-2: #c94040;
+  --b-red-3: #ce5050;
+  --b-red-4: #d46868;
+  --b-red-5: #de8c8c;
+  --b-red-6: #ecb4b4;
+}
+
+/* =============================================
+   DARK MODE VARIABLES (class-based: <html class="dark">)
+   html.dark lebih spesifik dari :root (0,1,1 vs 0,1,0)
+   ============================================= */
+html.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+
+  /* b-gray — lebih terang di dark mode */
+  --b-gray-1: #f5f5f5;
+  --b-gray-2: #d4d4d4;
+  --b-gray-3: #a3a3a3;
+  --b-gray-4: #737373;
+  --b-gray-5: #525252;
+  --b-gray-6: #2a2a2a;
+
+  /* b-blue */
+  --b-blue-1: #bed2ee;
+  --b-blue-2: #92b5dd;
+  --b-blue-3: #6b99d0;
+  --b-blue-4: #4d82cc;
+  --b-blue-5: #2563db;
+  --b-blue-6: #1a51b8;
+
+  /* b-green */
+  --b-green-1: #99cc99;
+  --b-green-2: #77bb77;
+  --b-green-3: #55aa55;
+  --b-green-4: #3a9a3a;
+  --b-green-5: #2a8a2a;
+  --b-green-6: #1b7a1b;
+
+  /* b-yellow */
+  --b-yellow-1: #fdedb8;
+  --b-yellow-2: #fbdb78;
+  --b-yellow-3: #fac840;
+  --b-yellow-4: #f8bc20;
+  --b-yellow-5: #f5ab00;
+  --b-yellow-6: #f0a000;
+
+  /* b-red */
+  --b-red-1: #ecb4b4;
+  --b-red-2: #de8c8c;
+  --b-red-3: #d46868;
+  --b-red-4: #ce5050;
+  --b-red-5: #c94040;
+  --b-red-6: #c03030;
+}
+
+/* Fallback: media query dark mode */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+
+    --b-gray-1: #f5f5f5;
+    --b-gray-2: #d4d4d4;
+    --b-gray-3: #a3a3a3;
+    --b-gray-4: #737373;
+    --b-gray-5: #525252;
+    --b-gray-6: #2a2a2a;
+
+    --b-blue-1: #bed2ee;
+    --b-blue-2: #92b5dd;
+    --b-blue-3: #6b99d0;
+    --b-blue-4: #4d82cc;
+    --b-blue-5: #2563db;
+    --b-blue-6: #1a51b8;
+
+    --b-green-1: #99cc99;
+    --b-green-2: #77bb77;
+    --b-green-3: #55aa55;
+    --b-green-4: #3a9a3a;
+    --b-green-5: #2a8a2a;
+    --b-green-6: #1b7a1b;
+
+    --b-yellow-1: #fdedb8;
+    --b-yellow-2: #fbdb78;
+    --b-yellow-3: #fac840;
+    --b-yellow-4: #f8bc20;
+    --b-yellow-5: #f5ab00;
+    --b-yellow-6: #f0a000;
+
+    --b-red-1: #ecb4b4;
+    --b-red-2: #de8c8c;
+    --b-red-3: #d46868;
+    --b-red-4: #ce5050;
+    --b-red-5: #c94040;
+    --b-red-6: #c03030;
+  }
+}
+
+/* =============================================
+   TAILWIND THEME — hanya font & background/foreground
+   ============================================= */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* =============================================
+   CUSTOM COLOR UTILITIES
+   Tulis langsung agar CSS variable di-resolve
+   secara runtime (dark/light berubah otomatis)
+   ============================================= */
+/* Dark mode variant untuk Tailwind v4 class-based */
+@custom-variant dark (&:where(html.dark, html.dark *));
+
+@layer utilities {
+
+  /* --- background --- */
+  .bg-b-gray-1 {
+    background-color: var(--b-gray-1);
+  }
+
+  .bg-b-gray-2 {
+    background-color: var(--b-gray-2);
+  }
+
+  .bg-b-gray-3 {
+    background-color: var(--b-gray-3);
+  }
+
+  .bg-b-gray-4 {
+    background-color: var(--b-gray-4);
+  }
+
+  .bg-b-gray-5 {
+    background-color: var(--b-gray-5);
+  }
+
+  .bg-b-gray-6 {
+    background-color: var(--b-gray-6);
+  }
+
+  .bg-b-blue-1 {
+    background-color: var(--b-blue-1);
+  }
+
+  .bg-b-blue-2 {
+    background-color: var(--b-blue-2);
+  }
+
+  .bg-b-blue-3 {
+    background-color: var(--b-blue-3);
+  }
+
+  .bg-b-blue-4 {
+    background-color: var(--b-blue-4);
+  }
+
+  .bg-b-blue-5 {
+    background-color: var(--b-blue-5);
+  }
+
+  .bg-b-blue-6 {
+    background-color: var(--b-blue-6);
+  }
+
+  .bg-b-green-1 {
+    background-color: var(--b-green-1);
+  }
+
+  .bg-b-green-2 {
+    background-color: var(--b-green-2);
+  }
+
+  .bg-b-green-3 {
+    background-color: var(--b-green-3);
+  }
+
+  .bg-b-green-4 {
+    background-color: var(--b-green-4);
+  }
+
+  .bg-b-green-5 {
+    background-color: var(--b-green-5);
+  }
+
+  .bg-b-green-6 {
+    background-color: var(--b-green-6);
+  }
+
+  .bg-b-yellow-1 {
+    background-color: var(--b-yellow-1);
+  }
+
+  .bg-b-yellow-2 {
+    background-color: var(--b-yellow-2);
+  }
+
+  .bg-b-yellow-3 {
+    background-color: var(--b-yellow-3);
+  }
+
+  .bg-b-yellow-4 {
+    background-color: var(--b-yellow-4);
+  }
+
+  .bg-b-yellow-5 {
+    background-color: var(--b-yellow-5);
+  }
+
+  .bg-b-yellow-6 {
+    background-color: var(--b-yellow-6);
+  }
+
+  .bg-b-red-1 {
+    background-color: var(--b-red-1);
+  }
+
+  .bg-b-red-2 {
+    background-color: var(--b-red-2);
+  }
+
+  .bg-b-red-3 {
+    background-color: var(--b-red-3);
+  }
+
+  .bg-b-red-4 {
+    background-color: var(--b-red-4);
+  }
+
+  .bg-b-red-5 {
+    background-color: var(--b-red-5);
+  }
+
+  .bg-b-red-6 {
+    background-color: var(--b-red-6);
+  }
+
+  /* --- text --- */
+  .text-b-gray-1 {
+    color: var(--b-gray-1);
+  }
+
+  .text-b-gray-2 {
+    color: var(--b-gray-2);
+  }
+
+  .text-b-gray-3 {
+    color: var(--b-gray-3);
+  }
+
+  .text-b-gray-4 {
+    color: var(--b-gray-4);
+  }
+
+  .text-b-gray-5 {
+    color: var(--b-gray-5);
+  }
+
+  .text-b-gray-6 {
+    color: var(--b-gray-6);
+  }
+
+  .text-b-blue-1 {
+    color: var(--b-blue-1);
+  }
+
+  .text-b-blue-2 {
+    color: var(--b-blue-2);
+  }
+
+  .text-b-blue-3 {
+    color: var(--b-blue-3);
+  }
+
+  .text-b-blue-4 {
+    color: var(--b-blue-4);
+  }
+
+  .text-b-blue-5 {
+    color: var(--b-blue-5);
+  }
+
+  .text-b-blue-6 {
+    color: var(--b-blue-6);
+  }
+
+  .text-b-green-1 {
+    color: var(--b-green-1);
+  }
+
+  .text-b-green-2 {
+    color: var(--b-green-2);
+  }
+
+  .text-b-green-3 {
+    color: var(--b-green-3);
+  }
+
+  .text-b-green-4 {
+    color: var(--b-green-4);
+  }
+
+  .text-b-green-5 {
+    color: var(--b-green-5);
+  }
+
+  .text-b-green-6 {
+    color: var(--b-green-6);
+  }
+
+  .text-b-yellow-1 {
+    color: var(--b-yellow-1);
+  }
+
+  .text-b-yellow-2 {
+    color: var(--b-yellow-2);
+  }
+
+  .text-b-yellow-3 {
+    color: var(--b-yellow-3);
+  }
+
+  .text-b-yellow-4 {
+    color: var(--b-yellow-4);
+  }
+
+  .text-b-yellow-5 {
+    color: var(--b-yellow-5);
+  }
+
+  .text-b-yellow-6 {
+    color: var(--b-yellow-6);
+  }
+
+  .text-b-red-1 {
+    color: var(--b-red-1);
+  }
+
+  .text-b-red-2 {
+    color: var(--b-red-2);
+  }
+
+  .text-b-red-3 {
+    color: var(--b-red-3);
+  }
+
+  .text-b-red-4 {
+    color: var(--b-red-4);
+  }
+
+  .text-b-red-5 {
+    color: var(--b-red-5);
+  }
+
+  .text-b-red-6 {
+    color: var(--b-red-6);
+  }
+
+  /* --- border --- */
+  .border-b-gray-1 {
+    border-color: var(--b-gray-1);
+  }
+
+  .border-b-gray-2 {
+    border-color: var(--b-gray-2);
+  }
+
+  .border-b-gray-3 {
+    border-color: var(--b-gray-3);
+  }
+
+  .border-b-gray-4 {
+    border-color: var(--b-gray-4);
+  }
+
+  .border-b-gray-5 {
+    border-color: var(--b-gray-5);
+  }
+
+  .border-b-gray-6 {
+    border-color: var(--b-gray-6);
+  }
+
+  .border-b-blue-1 {
+    border-color: var(--b-blue-1);
+  }
+
+  .border-b-blue-2 {
+    border-color: var(--b-blue-2);
+  }
+
+  .border-b-blue-3 {
+    border-color: var(--b-blue-3);
+  }
+
+  .border-b-blue-4 {
+    border-color: var(--b-blue-4);
+  }
+
+  .border-b-blue-5 {
+    border-color: var(--b-blue-5);
+  }
+
+  .border-b-blue-6 {
+    border-color: var(--b-blue-6);
+  }
+
+  .border-b-green-1 {
+    border-color: var(--b-green-1);
+  }
+
+  .border-b-green-2 {
+    border-color: var(--b-green-2);
+  }
+
+  .border-b-green-3 {
+    border-color: var(--b-green-3);
+  }
+
+  .border-b-green-4 {
+    border-color: var(--b-green-4);
+  }
+
+  .border-b-green-5 {
+    border-color: var(--b-green-5);
+  }
+
+  .border-b-green-6 {
+    border-color: var(--b-green-6);
+  }
+
+  .border-b-yellow-1 {
+    border-color: var(--b-yellow-1);
+  }
+
+  .border-b-yellow-2 {
+    border-color: var(--b-yellow-2);
+  }
+
+  .border-b-yellow-3 {
+    border-color: var(--b-yellow-3);
+  }
+
+  .border-b-yellow-4 {
+    border-color: var(--b-yellow-4);
+  }
+
+  .border-b-yellow-5 {
+    border-color: var(--b-yellow-5);
+  }
+
+  .border-b-yellow-6 {
+    border-color: var(--b-yellow-6);
+  }
+
+  .border-b-red-1 {
+    border-color: var(--b-red-1);
+  }
+
+  .border-b-red-2 {
+    border-color: var(--b-red-2);
+  }
+
+  .border-b-red-3 {
+    border-color: var(--b-red-3);
+  }
+
+  .border-b-red-4 {
+    border-color: var(--b-red-4);
+  }
+
+  .border-b-red-5 {
+    border-color: var(--b-red-5);
+  }
+
+  .border-b-red-6 {
+    border-color: var(--b-red-6);
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
