@@ -10,7 +10,7 @@ const Welcome = () => {
                 <div className='flex items-end text-[12px] text-center md:text-left'>
 
                     <div className='flex flex-row gap-1 items-center w-full justify-center md:justify-normal'>
-                        <span className='text-[30px] font-bold text-b-blue-4 '>23:06</span>
+                        <span className='text-[30px] font-bold text-b-yellow-4 '>23:06</span>
                         <span className='text-[12px] '>PM</span>
                     </div>
                 </div>

@@ -2,7 +2,11 @@ import { useState } from 'react'
 
 import ChartVolume from '@/components/items/chart/ChartVolume'
 
-const LineChart = () => {
+type LineChartProps = {
+    title: string
+}
+
+const LineChart = ({ title }: LineChartProps) => {
 
     const labels_volume = Array.from({ length: 5 }, (_, i) => `${i.toString().padStart(2, '0')}:00`); // ['00:00', '01:00', '02:00', dst...]
     const datasets = [
@@ -22,7 +26,7 @@ const LineChart = () => {
     return (
         <>
             <div className='flex justify-center items-center border-[0.1] border-b-gray-2 mb-2 bg-linear-to-r from-b-gray-2/50 to-b-gray-1 rounded-sm'>
-                <p className='text-b-gray-4'>Line Chart</p>
+                <p className='text-b-gray-4'>{title}</p>
             </div>
 
             <ChartVolume
