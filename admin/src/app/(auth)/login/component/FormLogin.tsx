@@ -18,7 +18,7 @@ const FormLogin = () => {
 
     return (
         <div>
-            <div className='bg-gray-700/40 px-5 py-5 md:px-12 md:py-10 backdrop-blur-sm border-l-8 border-gray-600/20 h-full flex flex-col gap-1 rounded-[10] shadow-lg'>
+            <div className='bg-black/40 px-5 py-5 md:px-12 md:py-10 backdrop-blur-sm border-l-8 border-gray-600/20 h-full flex flex-col gap-1 rounded-[10] shadow-lg'>
 
                 <div className='flex justify-center items-center'>
                     <Image
@@ -65,8 +65,8 @@ const FormLogin = () => {
                     <div className='mt-5'>
                         <Link href="/home">
                             <BButton
-                                mode="glossy"
-                                color='blue'
+                                mode="3d"
+                                color='yellow'
                                 size='lg'
                                 onClick={() => LoginBtn()}
                             >
@@ -81,42 +81,10 @@ const FormLogin = () => {
 
 
                     <div className='flex justify-center items-center gap-1 my-2'>
-                        <div className='border-b-[0.2px] w-full border-b-gray-50'></div>
-                        <p className='text-[12px]'>Or</p>
-                        <div className='border-b-[0.2px] w-full border-b-gray-50'></div>
-                    </div>
-
-
-                    <div>
-
-                        <div className='mt-5'>
-                            <Link href="/home">
-                                <BButton
-                                    mode="glossy"
-                                    color='gray'
-                                    size='md'
-                                    onClick={() => LoginBtn()}
-                                >
-                                    <div className='flex gap-2'>
-                                        <Image
-                                            alt='Icon Google'
-                                            width={20}
-                                            height={10}
-                                            src="/images/google.webp"
-
-                                        />
-                                        <p className='text-white text-[12px] text-shadow-xs'>
-                                            Login with google
-                                        </p>
-
-                                    </div>
-                                </BButton>
-
-                            </Link>
-                        </div>
-
 
                     </div>
+
+
 
 
                 </div>

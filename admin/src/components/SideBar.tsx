@@ -73,7 +73,7 @@ const SideBar = () => {
                 <div className='flex pl-2 pr-1 items-center py-3 pb-20'>
 
                     <BButton
-                        color='blue'
+                        color='yellow'
                         mode="glossy"
                         size='sm'
                         onClick={() => LogOut()}

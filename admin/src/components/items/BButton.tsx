@@ -48,10 +48,10 @@ const glossyMap: Record<string, string> = {
     `,
     yellow: `
     rounded-full text-white
-    bg-linear-to-b from-b-yellow-6 via-b-yellow-5 to-b-yellow-4
+    bg-linear-to-b from-b-yellow-4 via-b-yellow-5 to-b-yellow-3
     shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),0_4px_8px_rgba(0,0,0,0.2)]
     border-t border-white/30
-    hover:brightness-110 active:scale-95 transition-all
+    hover:brightness-105 active:scale-95 transition-all
     `,
     red: `
     rounded-full text-white
