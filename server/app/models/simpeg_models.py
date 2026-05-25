@@ -140,7 +140,6 @@ class RefHukdis(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     
 
-
 class RefRiwayat(Base):
     __tablename__ = "ref_riwayat"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
