@@ -62,3 +62,15 @@ async def read_JenisJabatan(id:str, payload:JenisJabatanUpdate ,db:AsyncSession 
     return db_data
 
 
+@router.post("/delete/")
+async def read_JenisJabatan(id:str, db:AsyncSession = Depends(get_db)):
+    query = select(JenisJabatan).filter(JenisJabatan.id == id)
+    result = await db.execute(query)
+    db_data = result.scalar_one_or_none()
+
+    if not db_data:
+        raise HTTPException(status_code=404, detail="Data tidak ditemukan")
+    
+    await db.delete(db_data)
+    await db.commit()
+    return {"message": f"Esselon {db_data.nama} berhasil dihapus"}
