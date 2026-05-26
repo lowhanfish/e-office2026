@@ -11,7 +11,7 @@ router = APIRouter()
 @router.get("/")
 async def root():
     """
-    Mengecek Router Rumpun Jabata
+    Mengecek Router Rumpun Jabatan JF
     """
     return {
         "status": "success",
