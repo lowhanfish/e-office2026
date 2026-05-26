@@ -43,10 +43,22 @@ async def read_JenisJabatan(payload : JenisJabatanCreate, db:AsyncSession = Depe
     return new_data
 
 
-@router.post("/update")
-async def read_JenisJabatan():
-    pass
+@router.post("/update/{id}")
+async def read_JenisJabatan(id:str, payload:JenisJabatanUpdate ,db:AsyncSession = Depends(get_db)):
+    query = select(JenisJabatan).filter(JenisJabatan.id == id)
+    result = await db.execute(query)
+    db_data = result.scalar_one_or_none()
 
-@router.post("/delete")
-async def read_JenisJabatan():
-    pass
+    if not db_data:
+        raise HTTPException(status_code=404, detail="Data tidak ditemukan")
+    
+    update_data = payload.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        if hasattr(db_data, key):
+            setattr(db_data, key, value)
+    
+    await db.commit()
+    await db.refresh(db_data)
+    return db_data
+
+
