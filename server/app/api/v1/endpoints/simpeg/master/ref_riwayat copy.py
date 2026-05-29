@@ -6,7 +6,6 @@ from app.models.simpeg_models import RefRiwayat
 from app.schemas.simpeg.master.ref_riwayat import RiwayatResponse, RiwayatCreate, RiwayatUpdate
 from typing import List
 
-
 router = APIRouter()
 
 @router.get("/")
@@ -63,8 +62,6 @@ async def read_riwayat(id : str, payload: RiwayatUpdate, db: AsyncSession = Depe
     await db.commit()
     await db.refresh(db_data)
     return db_data
-
-
 
 @router.post("/delete/{id}")
 async def read_riwayat(id : str, db: AsyncSession = Depends(get_db)):
