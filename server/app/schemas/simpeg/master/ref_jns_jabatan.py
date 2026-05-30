@@ -10,6 +10,5 @@ class JenisJabatanCreate(MasterCreate):
     pass
 
 class JenisJabatanUpdate(MasterBase):
-    id : Optional[str] = None
     kode : Optional[str] = None
     nama : Optional[str] = None

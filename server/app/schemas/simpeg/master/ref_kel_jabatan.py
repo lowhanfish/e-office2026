@@ -14,7 +14,6 @@ class KelJabatanCreate(MasterCreate):
     pembina_id : str
 
 class KelJabatanUpdate(MasterBase):
-    id : Optional[str] = None
     kode : Optional[str] = None
     nama : Optional[str] = None
     ref_jns_jabatan_id : Optional[str] = None

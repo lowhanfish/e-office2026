@@ -22,7 +22,7 @@ async def read_esselon(
     **Parameter:**
     - `search`   : String, Untuk mencari data value dari esselon.
     - `page_start`: Int, Data page pertama akses page.
-    - `page_end` : Int, Data page terahir akses page.
+    - `page_limit` : Int, Jumlah data yang ditarik.
 
     **Error yang mungkin terjadi:**
     - `422`: Jika format input tidak sesuai skema.
@@ -119,7 +119,7 @@ async def delete_esselon( # Diperbaiki nama fungsinya biar tidak bentrok dengan 
 ):
     
     """
-    ## Mengubah Esselon
+    ## Menghapus Esselon
     Menghapus data item Esselon di dalam sistem.
 
     **Key Path:**
