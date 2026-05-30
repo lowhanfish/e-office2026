@@ -8,20 +8,6 @@ from sqlalchemy.future import select
 
 router = APIRouter()
 
-
-@router.get("/")
-async def root():
-    """
-    Mengecek Router Jenis Jabatan
-    """
-    return {
-        "status": "success",
-        "module": "Simpeg",
-        "category": "Jumpun Jabatan JF",
-        "data": "active"
-    }
-
-
 @router.get("/read", response_model = List[JenisJabatanResponse])
 async def read_JenisJabatan(db:AsyncSession = Depends(get_db)):
     """

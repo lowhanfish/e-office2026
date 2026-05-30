@@ -8,27 +8,42 @@ from app.models.simpeg_models import RumpunJabatanJF
 
 router = APIRouter()
 
-@router.get("/")
-async def root():
-    """
-    Mengecek Router Rumpun Jabatan JF
-    """
-    return {
-        "status": "success",
-        "module": "Simpeg",
-        "category": "Jumpun Jabatan JF",
-        "data": "active"
-    }
-
 
 @router.post("/read", response_model=List[ResponseRumpunJabatanJF])
 async def read_RumpunJabatanJF(db: AsyncSession = Depends(get_db)):
+
+    """
+    ## Mengambil semua List Rumpun Jabatan JF
+    Membaca data Rumpun Jabatan JF baru dari sistem.
+
+    **Parameter:**
+    - `search`   : String, Untuk mencari data value dari Rumpun Jabatan JF.
+    - `page_start`: Int, Data page pertama akses page.
+    - `page_limit` : Int, Jumlah data yang ditarik.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     query = select(RumpunJabatanJF)
     result = await db.execute(query)
     return result.scalars().all()
 
 @router.post("/create", response_model=ResponseRumpunJabatanJF)
 async def create_RumpunJabatanJF(payload : CreateRumpunJabatanJF, db:AsyncSession = Depends(get_db)):
+    """
+    ## Membuat Rumpun Jabatan JF
+    Menambahkan data Rumpun Jabatan JF baru ke dalam sistem.
+
+    **Parameter:**
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Nama Rumpun Jabatan JF.
+    - `kode_rumpun`: **String**, diambil dari Referensi `kode` Rumpun Jabatan.
+   
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+    
     new_data = RumpunJabatanJF(
         kode = payload.kode,
         kode_rumpun = payload.kode_rumpun,
@@ -42,6 +57,24 @@ async def create_RumpunJabatanJF(payload : CreateRumpunJabatanJF, db:AsyncSessio
 
 @router.post("/update/{id}")
 async def update_RumpunJabatanJF(id:str, payload: UpdateRumpunJabatanJF, db:AsyncSession = Depends(get_db)):
+    
+    """
+    ## Mengubah Rumpun Jabatan JF
+    Mengubah data item Esselon di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Parameter:**
+    *(Parameter dapat dihapus jika tidak diperlukan)*
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Nama Rumpun Jabatan JF.
+    - `kode_rumpun`: **String**, diambil dari Referensi `kode` Rumpun Jabatan.
+    
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     query = select(RumpunJabatanJF).filter(RumpunJabatanJF.id == id)
     result = await db.execute(query)
     data_db = result.scalar_one_or_none()

@@ -61,8 +61,8 @@ async def read_RumpunJabatan(payload : CreateRumpunJabatan, db: AsyncSession = D
 @router.put("/update/{id}", response_model=ResponseRumpunJabatan)
 async def read_RumpunJabatan(id:str, payload : UpdateRumpunJabatan, db: AsyncSession = Depends(get_db)):
     """
-    ## Mengubah Jabfung
-    Mengubah data item Esselon di dalam sistem.
+    ## Mengubah Rumpun Jabatan
+    Mengubah data item Rumpun Jabatan di dalam sistem.
 
     **Key Path:**
     - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
