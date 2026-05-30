@@ -22,8 +22,21 @@ async def root():
     }
 
 
-@router.post("/read", response_model = List[JenisJabatanResponse])
+@router.get("/read", response_model = List[JenisJabatanResponse])
 async def read_JenisJabatan(db:AsyncSession = Depends(get_db)):
+    """
+    ## Mengambil semua List Jenis Jabatan
+    Membaca data Jenis Jabatan baru dari sistem.
+
+    **Parameter:**
+    - `search`   : String, Untuk mencari data value dari Jenis Jabatan.
+    - `page_start`: Int, Data page pertama akses page.
+    - `page_limit` : Int, Jumlah data yang ditarik.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     query = select(JenisJabatan)
     result = await db.execute(query)
     return result.scalars().all()
@@ -31,6 +44,19 @@ async def read_JenisJabatan(db:AsyncSession = Depends(get_db)):
 
 @router.post("/create", response_model=JenisJabatanResponse)
 async def read_JenisJabatan(payload : JenisJabatanCreate, db:AsyncSession = Depends(get_db)):
+    
+    """
+    ## Membuat Jenis Jabatan
+    Menambahkan data Jenis Jabatan baru ke dalam sistem.
+
+    **Parameter:**
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Nama Jenis Jabatan.
+    
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     new_data = JenisJabatan(
         kode = payload.kode,
         nama = payload.nama,
@@ -43,8 +69,25 @@ async def read_JenisJabatan(payload : JenisJabatanCreate, db:AsyncSession = Depe
     return new_data
 
 
-@router.post("/update/{id}")
+@router.put("/update/{id}")
 async def read_JenisJabatan(id:str, payload:JenisJabatanUpdate ,db:AsyncSession = Depends(get_db)):
+    
+    """
+    ## Mengubah Jabfung
+    Mengubah data item Esselon di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Parameter:**
+    *(Parameter dapat dihapus jika tidak diperlukan)*
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Nama Jenis Jabatan.
+   
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     query = select(JenisJabatan).filter(JenisJabatan.id == id)
     result = await db.execute(query)
     db_data = result.scalar_one_or_none()
@@ -62,8 +105,20 @@ async def read_JenisJabatan(id:str, payload:JenisJabatanUpdate ,db:AsyncSession 
     return db_data
 
 
-@router.post("/delete/")
+@router.delete("/delete/")
 async def read_JenisJabatan(id:str, db:AsyncSession = Depends(get_db)):
+
+    """
+    ## Menghapus Jenis Jabatan
+    Menghapus data item Jenis Jabatan di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     query = select(JenisJabatan).filter(JenisJabatan.id == id)
     result = await db.execute(query)
     db_data = result.scalar_one_or_none()

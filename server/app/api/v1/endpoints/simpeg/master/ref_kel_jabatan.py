@@ -12,7 +12,7 @@ router = APIRouter()
 @router.get("/read", response_model=List[KelJabatanResponse])
 async def create_KelJabatan(db: AsyncSession = Depends(get_db)):
     """
-    ## Mengambil semua List Esselon
+    ## Mengambil semua List Jabatan Fungsional
     Membaca data Jabatan fungsional baru dari sistem.
 
     **Parameter:**
@@ -33,7 +33,7 @@ async def create_KelJabatan(db: AsyncSession = Depends(get_db)):
 async def create_KelJabatan(payload : KelJabatanCreate, db : AsyncSession = Depends(get_db)):
     """
     ## Membuat Jabfung
-    Menambahkan data Esselon baru ke dalam sistem.
+    Menambahkan data Jabfung baru ke dalam sistem.
 
     **Parameter:**
     - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
@@ -65,7 +65,7 @@ async def create_KelJabatan(id:str, payload : KelJabatanUpdate, db: AsyncSession
     
     """
     ## Mengubah Jabfung
-    Mengubah data item Esselon di dalam sistem.
+    Mengubah data item Jabfung di dalam sistem.
 
     **Key Path:**
     - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
