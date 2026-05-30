@@ -20,7 +20,7 @@ async def create_agama(payload: AgamaCreate, db: AsyncSession = Depends(get_db))
     return await crud_agama.create(db, obj_in=payload.model_dump())
 
 # Edit Data (Metode POST)
-@router.post("/update/{id}", response_model=AgamaResponse)
+@router.put("/update/{id}", response_model=AgamaResponse)
 async def update_agama(id: str, payload: AgamaUpdate, db: AsyncSession = Depends(get_db)):
     # exclude_unset=True agar kolom yang tidak diisi di Next.js tidak merusak data lama
     updated = await crud_agama.update(db, id=id, obj_in=payload.model_dump(exclude_unset=True))
@@ -29,7 +29,7 @@ async def update_agama(id: str, payload: AgamaUpdate, db: AsyncSession = Depends
     return updated
 
 # Hapus Data (Metode POST)
-@router.post("/delete/{id}")
+@router.delete("/delete/{id}")
 async def delete_agama(id: str, db: AsyncSession = Depends(get_db)):
     success = await crud_agama.remove(db, id=id)
     if not success:

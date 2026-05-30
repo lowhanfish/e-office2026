@@ -8,27 +8,26 @@ from app.api.deps import get_current_user # <--- IMPORT PAGAR GHAIB DI SINI
 from typing import List
 
 router = APIRouter()
+@router.get("/read", response_model=List[EsselonResponse])
 
-@router.get("/")
-async def root():
-    """
-    Mengambil semua data master esselon (Terbuka untuk umum/Tes)
-    """
-    return {
-        "status": "success",
-        "module": "Simpeg",
-        "category": "Master Data",
-        "data": [
-            {"id": 1, "nama_esselon": "I.a"},
-            {"id": 2, "nama_esselon": "II.a"}
-        ]
-    }
-
-@router.post("/read", response_model=List[EsselonResponse])
 async def read_esselon(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user) # <--- DIKUNCI
 ):
+    
+    """
+    ## Mengambil semua List Esselon
+    Membaca data Esselon baru dari sistem.
+
+    **Parameter:**
+    - `search`   : String, Untuk mencari data value dari esselon.
+    - `page_start`: Int, Data page pertama akses page.
+    - `page_end` : Int, Data page terahir akses page.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     query = select(Esselon)
     result = await db.execute(query)
     return result.scalars().all()
@@ -40,6 +39,20 @@ async def create_esselon(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user) # <--- DIKUNCI
 ):
+    
+    """
+    ## Membuat Esselon
+    Menambahkan data Esselon baru ke dalam sistem.
+
+    **Parameter:**
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Pangkat Esselon misalkan (I.a, II.b).
+    - `jabatan_asn`: **String**, nama jabatan terkait esselon. misalkan (JPT UTAMA, ADMINISTRATOR).
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     # Bapak bisa lihat di log terminal siapa yang sedang nge-create data
     print(f"User yang membuat data: {current_user.username}") 
     
@@ -56,13 +69,31 @@ async def create_esselon(
     return new_Data
 
 
-@router.post("/update/{id}", response_model=EsselonResponse)
+@router.put("/update/{id}", response_model=EsselonResponse)
 async def update_esselon(
     id: str, 
     payload: EsselonUpdate, 
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user) # <--- DIKUNCI
 ):
+    
+    """
+    ## Mengubah Esselon
+    Mengubah data item Esselon di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Parameter:**
+    *(Parameter dapat dihapus jika tidak diperlukan)*
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Pangkat Esselon misalkan (I.a, II.b).
+    - `jabatan_asn`: **String**, nama jabatan terkait esselon. misalkan (JPT UTAMA, ADMINISTRATOR).
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     query = select(Esselon).filter(Esselon.id == id)
     result = await db.execute(query)
     db_data = result.scalar_one_or_none()
@@ -80,12 +111,23 @@ async def update_esselon(
     return db_data
 
 
-@router.post("/delete/{id}")
+@router.delete("/delete/{id}")
 async def delete_esselon( # Diperbaiki nama fungsinya biar tidak bentrok dengan fungsi update di atas
     id: str, 
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user) # <--- DIKUNCI
 ):
+    
+    """
+    ## Mengubah Esselon
+    Menghapus data item Esselon di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
     query = select(Esselon).filter(Esselon.id == id)
     result = await db.execute(query)
     db_data = result.scalar_one_or_none()

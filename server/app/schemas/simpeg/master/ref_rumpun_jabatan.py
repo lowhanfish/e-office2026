@@ -9,7 +9,6 @@ class CreateRumpunJabatan(MasterCreate):
     kode_cepat : str
 
 class UpdateRumpunJabatan(MasterBase):
-    id : Optional[str] = None
     kode : Optional[str] = None
     nama : Optional[str] = None
     kode_cepat : Optional[str] = None

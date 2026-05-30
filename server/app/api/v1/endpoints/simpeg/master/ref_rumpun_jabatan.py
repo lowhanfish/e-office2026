@@ -9,19 +9,7 @@ from app.models.simpeg_models import RumpunJabatan
 
 router = APIRouter()
 
-@router.get("/")
-async def root():
-    """
-    Mengecek Router Rumpun Jabatan
-    """
-    return {
-        "status": "success",
-        "module": "Simpeg",
-        "category": "Jumpun Jabatan",
-        "data": "active"
-    }
-
-@router.post("/read", response_model=List[ResponseRumpunJabatan])
+@router.get("/read", response_model=List[ResponseRumpunJabatan])
 async def read_RumpunJabatan(db : AsyncSession = Depends(get_db)):
     query = select(RumpunJabatan)
     result = await db.execute(query)
@@ -42,13 +30,13 @@ async def read_RumpunJabatan(payload : CreateRumpunJabatan, db: AsyncSession = D
     return new_data
 
 
-@router.post("/update/{id}")
+@router.put("/update/{id}", response_model=ResponseRumpunJabatan)
 async def read_RumpunJabatan(id:str, payload : UpdateRumpunJabatan, db: AsyncSession = Depends(get_db)):
     query = select(RumpunJabatan).filter(RumpunJabatan.id == id)
     result = await db.execute(query)
     db_data = result.scalar_one_or_none()
 
-    if not db_data():
+    if not db_data:
         raise HTTPException(status_code=404, detail="Data tidak ditemukan")
 
     update_data = payload.model_dump(exclude_unset=True)
@@ -61,7 +49,7 @@ async def read_RumpunJabatan(id:str, payload : UpdateRumpunJabatan, db: AsyncSes
     return db_data
 
 
-@router.post("/delete/{id}")
+@router.delete("/delete/{id}")
 async def read_RumpunJabatan(id:str, db: AsyncSession = Depends(get_db)):
     query = select(RumpunJabatan).filter(RumpunJabatan.id == id)
     result = await db.execute(query)
