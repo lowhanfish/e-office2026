@@ -14,4 +14,4 @@ class HukdisUpdate(MasterBase):
     nama : Optional[str] = None
 
 class HukdisDelete(BaseModel):
-    id : str
+    pass
