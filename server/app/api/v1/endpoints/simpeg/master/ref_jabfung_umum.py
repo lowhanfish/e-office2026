@@ -10,12 +10,42 @@ router = APIRouter()
 
 @router.get("/read",response_model=List[RefJabatanFungsionalUmumResponse])
 async def read_RefJabatanFungsionalUmum(db: AsyncSession = Depends(get_db)):
+
+    """
+    ## Mengambil semua List Jabatan Fungsional Umum
+    Membaca data Jabatan fungsional baru dari sistem.
+
+    **Parameter:**
+    - `search`   : String, Untuk mencari data value dari Jabatan Fungsional Umum.
+    - `page_start`: Int, Data page pertama akses page.
+    - `page_limit` : Int, Jumlah data yang ditarik.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     query = select(RefJabatanFungsionalUmum)
     result = await db.execute(query)
     return result.scalars().all()
 
 @router.post("/create", response_model=RefJabatanFungsionalUmumResponse)
 async def read_RefJabatanFungsionalUmum(payload : RefJabatanFungsionalUmumCreate, db :AsyncSession = Depends(get_db)):
+    """
+    ## Membuat Ref Jabatan Fungsional Umum
+    Menambahkan data Jabatan Fungsional Umum baru ke dalam sistem.
+
+    **Parameter:**
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Nama Jabatan Fungsional Umum.
+    - `kode_cepat`: **String**, harus unik (sebaiknya di ambil dari `kode_cepat` tabel referensi BKN).
+    - `status`: **Boolean**, status jabatan (masih digunakan atau tidak).
+
+    
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+    
     query = RefJabatanFungsionalUmum(
         nama = payload.nama,
         kode = payload.kode,
@@ -31,6 +61,24 @@ async def read_RefJabatanFungsionalUmum(payload : RefJabatanFungsionalUmumCreate
 
 @router.put("/update/{id}", response_model=RefJabatanFungsionalUmumResponse)
 async def read_RefJabatanFungsionalUmum(id:str, payload : RefJabatanFungsionalUmumUpdate, db:AsyncSession = Depends(get_db)):
+    """
+    ## Mengubah Jabatan Fungsional Umum
+    Mengubah data item Jabatan Fungsional Umum di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Parameter:**
+    *(Parameter dapat dihapus jika tidak diperlukan)*
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Nama Jabatan Fungsional Umum.
+    - `kode_cepat`: **String**, harus unik (sebaiknya di ambil dari `kode_cepat` tabel referensi BKN).
+    - `status`: **Boolean**, status jabatan (masih digunakan atau tidak).
+    
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+    
     query = select(RefJabatanFungsionalUmum).filter(RefJabatanFungsionalUmum.id == id)
     result = await db.execute(query)
     db_data = result.scalar_one_or_none()
@@ -50,6 +98,18 @@ async def read_RefJabatanFungsionalUmum(id:str, payload : RefJabatanFungsionalUm
 
 @router.delete("/delete/{id}")
 async def read_RefJabatanFungsionalUmum(id:str, db:AsyncSession = Depends(get_db)):
+    
+    """
+    ## Menghapus Jabatan Fungsional Umum
+    Menghapus data item Jabatan Fungsional Umum di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     query = select(RefJabatanFungsionalUmum).filter(RefJabatanFungsionalUmum.id == id)
     result = await db.execute(query)
     db_data = result.scalar_one_or_none()

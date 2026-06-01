@@ -32,7 +32,7 @@ async def create_KelJabatan(db: AsyncSession = Depends(get_db)):
 @router.post("/create", response_model=KelJabatanResponse)
 async def create_KelJabatan(payload : KelJabatanCreate, db : AsyncSession = Depends(get_db)):
     """
-    ## Membuat Jabfung
+    ## Membuat Ref Jabfung
     Menambahkan data Jabfung baru ke dalam sistem.
 
     **Parameter:**
@@ -64,7 +64,7 @@ async def create_KelJabatan(payload : KelJabatanCreate, db : AsyncSession = Depe
 async def create_KelJabatan(id:str, payload : KelJabatanUpdate, db: AsyncSession = Depends(get_db)):
     
     """
-    ## Mengubah Jabfung
+    ## Mengubah Ref Jabfung
     Mengubah data item Jabfung di dalam sistem.
 
     **Key Path:**
@@ -102,7 +102,7 @@ async def create_KelJabatan(id:str, payload : KelJabatanUpdate, db: AsyncSession
 async def create_KelJabatan(id:str, db: AsyncSession = Depends(get_db)):
 
     """
-    ## Menghapus Jabfung
+    ## Menghapus Ref Jabfung
     Menghapus data item Esselon di dalam sistem.
 
     **Key Path:**
