@@ -11,6 +11,20 @@ router = APIRouter()
 
 @router.get("/read", response_model=List[SatkerResponse])
 async def read_satker(db: AsyncSession = Depends(get_db)):
+
+    """
+    ## Mengambil semua List Satker
+    Membaca data Jabatan fungsional baru dari sistem.
+
+    **Parameter:**
+    - `search`   : String, Untuk mencari data value dari Satker.
+    - `page_start`: Int, Data page pertama akses page.
+    - `page_limit` : Int, Jumlah data yang ditarik.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     query = select(Satker)
     result = await db.execute(query)
     return result.scalars().all()
@@ -20,12 +34,26 @@ async def read_satker(db: AsyncSession = Depends(get_db)):
 
 @router.post("/creat", response_model=SatkerResponse)
 async def create_satker(payload:SatkerCreat, db: AsyncSession = Depends(get_db)):
+    """
+    ## Membuat Ref Satker
+    Menambahkan data Satker baru ke dalam sistem.
+
+    **Parameter:**
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Nama Satker.
+    - `instansi_id`: **String**, di ambil dari kode tabel instansi.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     query = Satker(
         kode = payload.kode,
         nama = payload.nama,
         instansi_id = payload.instansi_id,
         created_by = "user.id"
     )
+
     db.add(query)
     await db.commit()
     await db.refresh(query)
@@ -35,6 +63,23 @@ async def create_satker(payload:SatkerCreat, db: AsyncSession = Depends(get_db))
 
 @router.put("/update/{id}")
 async def update_satker(id:str, payload : SatkerUpdate, db: AsyncSession = Depends(get_db)):
+    """
+    ## Mengubah Satker
+    Mengubah data item Satker di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Parameter:**
+    *(Parameter dapat dihapus jika tidak diperlukan)*
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Nama Satker.
+    - `instansi_id`: **String**, di ambil dari kode tabel instansi.
+    
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+    
     query = select(Satker).filter(Satker.id == id)
     result = await db.execute(query)
 
@@ -59,6 +104,17 @@ async def update_satker(id:str, payload : SatkerUpdate, db: AsyncSession = Depen
 
 @router.delete("/delete/{id}")
 async def root(id:str, db: AsyncSession = Depends(get_db)):
+
+    """
+    ## Menghapus Satker
+    Menghapus data item Satker di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
 
     query = select(Satker).filter(Satker.id == id)
     result = await db.execute(query)
