@@ -241,7 +241,6 @@ class RefDokumen(Base):
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-
 class Instansi(Base):
     __tablename__ = "ref_instansi"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
@@ -253,6 +252,18 @@ class Instansi(Base):
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
+    ref_satker_rel = relationship("Satker", back_populates="ref_instansi_rel", cascade="all, delete-orphan")
+
+class Satker(Base):
+    __tablename__ = "satker"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4())) 
+    kode = Column(String(50), index=True, nullable=False)
+    nama = Column(String(250), nullable=False)
+    instansi_id = Column(String(50), ForeignKey("ref_instansi.kode", ondelete="CASCADE"), index=True, nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    ref_instansi_rel = relationship("Instansi", back_populates="ref_satker_rel")
 
 
    

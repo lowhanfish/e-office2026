@@ -8,8 +8,6 @@ from app.models.simpeg_models import Instansi
 
 router = APIRouter()
 
-
-
 @router.get("/read", response_model=List[InstansiResponse])
 async def read_Instansi(db:AsyncSession = Depends(get_db)):
 

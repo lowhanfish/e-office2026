@@ -36,7 +36,6 @@ AsyncSessionLocal = sessionmaker(
 class Base(DeclarativeBase):
     pass
 
-
 # Create Dependency Injection
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
    async with AsyncSessionLocal() as session:
