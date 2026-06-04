@@ -28,12 +28,38 @@ async def root():
 @router.post("/read", response_model=List[RiwayatResponse])
 async def read_riwayat(db: AsyncSession = Depends(get_db)):
 
+    """
+    ## Mengambil semua List Ref Jenis Riwayat
+    Membaca data Jabatan fungsional baru dari sistem.
+
+    **Parameter:**
+    - `search`   : String, Untuk mencari data value dari Ref Jenis Riwayat.
+    - `page_start`: Int, Data page pertama akses page.
+    - `page_limit` : Int, Jumlah data yang ditarik.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     query = select(RefRiwayat)
     result = await db.execute(query)
     return result.scalars().all()
 
 @router.post("/create", response_model= RiwayatResponse)
 async def read_riwayat(payload : RiwayatCreate, db: AsyncSession = Depends(get_db)):
+    
+    """
+    ## Membuat Ref Ref Jenis Riwayat
+    Menambahkan data Ref Jenis Riwayat baru ke dalam sistem.
+
+    **Parameter:**
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Nama Ref Jenis Riwayat.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+     
     query = RefRiwayat(
         kode = payload.kode,
         nama = payload.nama,
@@ -48,6 +74,23 @@ async def read_riwayat(payload : RiwayatCreate, db: AsyncSession = Depends(get_d
 
 @router.post("/update/{id}", response_model= RiwayatResponse)
 async def read_riwayat(id : str, payload: RiwayatUpdate, db: AsyncSession = Depends(get_db)):
+    
+    """
+    ## Mengubah Ref Jenis Riwayat
+    Mengubah data item Ref Jenis Riwayat di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Parameter:**
+    *(Parameter dapat dihapus jika tidak diperlukan)*
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Nama Ref Jenis Riwayat.
+    
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+    
     query = select(RefRiwayat).filter(RefRiwayat.id == id)
     result = await db.execute(query)
     db_data = result.scalar_one_or_none()
@@ -68,6 +111,18 @@ async def read_riwayat(id : str, payload: RiwayatUpdate, db: AsyncSession = Depe
 
 @router.post("/delete/{id}")
 async def read_riwayat(id : str, db: AsyncSession = Depends(get_db)):
+
+    """
+    ## Menghapus Ref Jenis Riwayat
+    Menghapus data item Ref Jenis Riwayat di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     query = select(RefRiwayat).filter(RefRiwayat.id == id)
     result = await db.execute(query)
     db_data = result.scalar_one_or_none()
