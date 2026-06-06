@@ -195,32 +195,6 @@ class RefJabatanStruktural(Base):
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-
-class RefTKPendidikan (Base):
-    __tablename__ = "ref_tk_pendidikan"
-    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
-    kode = Column(String(50), unique=True, nullable=False)
-    nama = Column(String(50), nullable=False)
-    group_tk_pend_nm = Column(String(50), nullable=False)
-    keterangan = Column(Text, nullable=True, default="-")
-    created_by = Column(String(50), index=True, nullable=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    #relationship
-    ref_pendidikan_rel = relationship("RefPendidikan", back_populates="ref_tk_pendidikan_rel")
-
-
-class RefPendidikan (Base):
-    __tablename__ = "ref_pendidikan"
-    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
-    ref_tk_pendidikan_id = Column(String(50), ForeignKey("ref_tk_pendidikan.kode"), index=True, nullable=False, comment="dari kolom kode tabel ref_tk_pendidikan")
-    nama = Column(String(150), nullable=False)
-    status = Column(Boolean, default=False)
-    created_by = Column(String(50), index=True, nullable=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    #relationship
-    ref_tk_pendidikan_rel = relationship("RefTKPendidikan", back_populates="ref_pendidikan_rel")
-
-
 class RefGolongan(Base):
     __tablename__ = "ref_golongan"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
@@ -264,6 +238,43 @@ class Satker(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     ref_instansi_rel = relationship("Instansi", back_populates="ref_satker_rel")
+
+
+class RumpunPendidikan(Base):
+    __tablename__ = "ref_rumpun_pendidikan"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(3), index=True, nullable=False)
+    nama = Column(String(150), nullable=False)
+    kode_cepat = Column(String(3), index=True, nullable=True)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class RefTKPendidikan (Base):
+    __tablename__ = "ref_tk_pendidikan"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(50), unique=True, nullable=False)
+    nama = Column(String(50), nullable=False)
+    group_tk_pend_nm = Column(String(50), nullable=False)
+    keterangan = Column(Text, nullable=True, default="-")
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    ref_pendidikan_rel = relationship("RefPendidikan", back_populates="ref_tk_pendidikan_rel")
+
+class RefPendidikan (Base):
+    __tablename__ = "ref_pendidikan"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    ref_tk_pendidikan_id = Column(String(50), ForeignKey("ref_tk_pendidikan.kode"), index=True, nullable=False, comment="dari kolom kode tabel ref_tk_pendidikan")
+    nama = Column(String(150), nullable=False)
+    status = Column(Boolean, default=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    #relationship
+    ref_tk_pendidikan_rel = relationship("RefTKPendidikan", back_populates="ref_pendidikan_rel")
+
+
+
+    
 
 
    
