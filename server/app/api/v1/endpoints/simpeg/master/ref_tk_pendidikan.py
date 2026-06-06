@@ -10,14 +10,41 @@ router = APIRouter()
 
 
 
-@router.post("/read", response_model=List[RefTKPendidikanResponse])
+@router.get("/read", response_model=List[RefTKPendidikanResponse])
 async def read_ref_tk_pendidikan(db:AsyncSession = Depends(get_db)):
+    """
+    ## Mengambil semua List Ref Tk Pendidikan
+    Membaca data Ref Tk Pendidikan baru dari sistem.
+
+    **Parameter:**
+    - `search`   : String, Untuk mencari data value dari Ref Tk Pendidikan.
+    - `page_start`: Int, Data page pertama akses page.
+    - `page_limit` : Int, Jumlah data yang ditarik.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
     query = select(RefTKPendidikan)
     result = await db.execute(query)
     return result.scalars().all()
 
 @router.post("/create", response_model=RefTKPendidikanResponse)
 async def create_ref_tk_pendidikan(payload: RefTKPendidikanCreate, db:AsyncSession = Depends(get_db)):
+    
+    """
+    ## Membuat Ref Tk Pendidikan
+    Menambahkan data Ref Tk Pendidikan baru ke dalam sistem.
+
+    **Parameter:**
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Nama Ref Tk Pendidikan.
+    - `group_tk_pend_nm`: **String**, Nama Group Tk. Pendidikan (ex : SD/MI, SLTP/MTs, SLTA/SMK/MA/D-I dst). untuk lengkapnya lihat di tabel referensi BKN.
+    - `keterangan`: **String**, penjelasan singkat jika diperlukan (optional).
+   
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     new_data = RefTKPendidikan(
         kode = payload.kode,
         nama = payload.nama,
@@ -30,8 +57,27 @@ async def create_ref_tk_pendidikan(payload: RefTKPendidikanCreate, db:AsyncSessi
     await db.refresh(new_data)
     return new_data
 
-@router.post("/update/{id}", response_model=RefTKPendidikanResponse)
+@router.put("/update/{id}", response_model=RefTKPendidikanResponse)
 async def update_ref_tk_pendidikan(id:str, payload:RefTKPendidikanUpdate, db:AsyncSession = Depends(get_db)):
+    
+    """
+    ## Mengubah Ref Tk Pendidikan
+    Mengubah data item Ref Tk Pendidikan di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Parameter:**
+    *(Parameter dapat dihapus jika tidak diperlukan)*
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Nama Ref Tk Pendidikan.
+    - `group_tk_pend_nm`: **String**, Nama Group Tk. Pendidikan (ex : SD/MI, SLTP/MTs, SLTA/SMK/MA/D-I dst). untuk lengkapnya lihat di tabel referensi BKN.
+    - `keterangan`: **String**, penjelasan singkat jika diperlukan (optional).
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     query = select(RefTKPendidikan).where(RefTKPendidikan.id == id)
     result = await db.execute(query)
     db_data = result.scalar_one_or_none()
@@ -49,8 +95,20 @@ async def update_ref_tk_pendidikan(id:str, payload:RefTKPendidikanUpdate, db:Asy
     return db_data
 
 
-@router.post("/delete/{id}")
+@router.delete("/delete/{id}")
 async def delete_ref_tk_pendidikan(id:str, db:AsyncSession = Depends(get_db)):
+
+    """
+    ## Menghapus Ref Tk Pendidikan
+    Menghapus data item Ref Tk Pendidikan di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     query = select(RefTKPendidikan).where(RefTKPendidikan.id == id)
     result = await db.execute(query)
     db_data = result.scalar_one_or_none()
