@@ -39,7 +39,7 @@ async def read_RumpunJabatan(payload : CreateRumpunJabatan, db: AsyncSession = D
     **Parameter:**
     - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
     - `nama`: **String**, Nama Rumpun Jabatan.
-     - `kode_cepat`: **String**, Kode Cepat Rumpun Jabatan (sebaiknya di ambil dari `kode_cepat` tabel referensi BKN).
+    - `kode_cepat`: **String**, Kode Cepat Rumpun Jabatan (sebaiknya di ambil dari `kode_cepat` tabel referensi BKN).
    
     **Error yang mungkin terjadi:**
     - `422`: Jika format input tidak sesuai skema.

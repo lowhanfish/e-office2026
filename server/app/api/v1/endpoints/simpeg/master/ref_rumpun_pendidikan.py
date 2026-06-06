@@ -10,12 +10,41 @@ router = APIRouter()
 
 @router.get("/read", response_model=List[RumpunPendidikanResponse])
 async def read_rumpun_pendidikan(db:AsyncSession = Depends(get_db)):
+
+    """
+    ## Mengambil semua List Ref Ref Rumpun Pendidikan
+    Membaca data Jabatan fungsional baru dari sistem.
+
+    **Parameter:**
+    - `search`   : String, Untuk mencari data value dari Ref Ref Rumpun Pendidikan.
+    - `page_start`: Int, Data page pertama akses page.
+    - `page_limit` : Int, Jumlah data yang ditarik.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     query = select(RumpunPendidikan)
     result = await db.execute(query)
     return result.scalars().all()
 
+
 @router.post("/create", response_model=RumpunPendidikanResponse)
 async def create_rumpun_pendidikan(payload: RumpunPendidikanCreate, db: AsyncSession = Depends(get_db)):
+
+    """
+    ## Membuat Ref Ref Ref Rumpun Pendidikan
+    Menambahkan data Ref Ref Rumpun Pendidikan baru ke dalam sistem.
+
+    **Parameter:**
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Nama Ref Ref Rumpun Pendidikan.
+    - `kode_cepat`: **String**, Kode Cepat Ref Rumpun Pendidikan (sebaiknya di ambil dari `kode_cepat` tabel referensi BKN).
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     query = RumpunPendidikan(
         kode = payload.kode,
         nama = payload.nama,
@@ -30,6 +59,24 @@ async def create_rumpun_pendidikan(payload: RumpunPendidikanCreate, db: AsyncSes
 
 @router.put("/update/{id}", response_model=RumpunPendidikanResponse)
 async def update_rumpun_pendidikan(id:str, payload : RumpunPendidikanUpdate, db:AsyncSession = Depends(get_db)):
+    
+    """
+    ## Mengubah Ref Ref Rumpun Pendidikan
+    Mengubah data item Ref Ref Rumpun Pendidikan di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Parameter:**
+    *(Parameter dapat dihapus jika tidak diperlukan)*
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Nama Ref Ref Rumpun Pendidikan.
+    - `kode_cepat`: **String**, Kode Cepat Ref Rumpun Pendidikan (sebaiknya di ambil dari `kode_cepat` tabel referensi BKN).
+    
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+    
     query = select(RumpunPendidikan).filter(RumpunPendidikan.id == id)
     result = await db.execute(query)
     db_data = result.scalar_one_or_none()
@@ -49,6 +96,18 @@ async def update_rumpun_pendidikan(id:str, payload : RumpunPendidikanUpdate, db:
 
 @router.delete("/delete/{id}")
 async def delete_rumpun_pendidikan(id:str,  db:AsyncSession = Depends(get_db)):
+
+    """
+    ## Menghapus Ref Ref Rumpun Pendidikan
+    Menghapus data item Ref Ref Rumpun Pendidikan di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     query = select(RumpunPendidikan).filter(RumpunPendidikan.id == id)
     result = await db.execute(query)
 
