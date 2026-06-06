@@ -9,22 +9,6 @@ from typing import List
 
 router = APIRouter()
 
-@router.get("/")
-async def root():
-    """
-    Mengambil semua data master Jenis Riwayat
-    """
-    return {
-        "status": "success",
-        "module": "Simpeg",
-        "category": "Jenis Riwayat",
-        "data": [
-            {"id": 1, "nama": "xxxxx"},
-            {"id": 2, "nama": "yyyyy"}
-        ]
-    }
-
-
 @router.post("/read", response_model=List[RiwayatResponse])
 async def read_riwayat(db: AsyncSession = Depends(get_db)):
 
