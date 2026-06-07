@@ -43,8 +43,6 @@ class User(Base):
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, onupdate=func.now())
 
-    
-
 class JenisInstansiId(enum.Enum):
     KO = "Kementerian Koordinator"
     KEMENT = "Kementerian" 
@@ -53,6 +51,30 @@ class JenisInstansiId(enum.Enum):
     PROV = "Provinsi" 
     KAB = "Kabupaten"
     KOTA = "Kota"
+
+class RefJnsPegawai(Base):
+    __tablename__ = "ref_jns_pegawai"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(2), index=True, nullable=False, unique=True)
+    nama = Column(String(100), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class RefJnsKawin(Base):
+    __tablename__ = "ref_jns_kawin"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(2), index=True, nullable=False, unique=True)
+    nama = Column(String(100), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class RefStatusHidup(Base):
+    __tablename__ = "ref_status_hidup"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(2), index=True, nullable=False, unique=True)
+    nama = Column(String(100), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class Agama(Base):
     __tablename__ = "ref_agama"
@@ -72,7 +94,6 @@ class Esselon(Base):
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-
 class RumpunJabatan(Base):
     __tablename__ = "ref_rumpun_jabatan"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
@@ -81,7 +102,6 @@ class RumpunJabatan(Base):
     nama = Column(String(250), nullable=False)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-
     # Relationship
     ref_kel_jabatan = relationship("KelJabatan", back_populates="ref_rumpun_jabatan_rel")
 

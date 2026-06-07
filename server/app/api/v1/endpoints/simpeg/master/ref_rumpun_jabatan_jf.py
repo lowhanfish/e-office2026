@@ -9,7 +9,7 @@ from app.models.simpeg_models import RumpunJabatanJF
 router = APIRouter()
 
 
-@router.post("/read", response_model=List[ResponseRumpunJabatanJF])
+@router.get("/read", response_model=List[ResponseRumpunJabatanJF])
 async def read_RumpunJabatanJF(db: AsyncSession = Depends(get_db)):
 
     """
@@ -55,7 +55,7 @@ async def create_RumpunJabatanJF(payload : CreateRumpunJabatanJF, db:AsyncSessio
     await db.refresh(new_data)
     return new_data
 
-@router.post("/update/{id}")
+@router.put("/update/{id}")
 async def update_RumpunJabatanJF(id:str, payload: UpdateRumpunJabatanJF, db:AsyncSession = Depends(get_db)):
     
     """
@@ -91,7 +91,7 @@ async def update_RumpunJabatanJF(id:str, payload: UpdateRumpunJabatanJF, db:Asyn
     await db.refresh(data_db)
     return data_db
 
-@router.post("/delete/{id}")
+@router.delete("/delete/{id}")
 async def delete_RumpunJabatanJF(id:str, db:AsyncSession = Depends(get_db)):
     query = select(RumpunJabatanJF).filter(RumpunJabatanJF.id == id)
     result = await db.execute(query)
