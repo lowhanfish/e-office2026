@@ -49,7 +49,7 @@ async def read_RumpunJabatan(payload : CreateRumpunJabatan, db: AsyncSession = D
         kode = payload.kode,
         nama = payload.nama,
         kode_cepat = payload.kode_cepat,
-        created_by = "user.created_by"
+        created_by = "user.id"
     )
 
     db.add(new_data)

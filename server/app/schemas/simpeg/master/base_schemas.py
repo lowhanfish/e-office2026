@@ -9,6 +9,12 @@ class MasterBase(BaseModel):
 class MasterCreate(MasterBase):
     created_by : Optional[str] = None
 
+class MasterUpdate(BaseModel):
+    id : Optional[str] = None
+    kode : Optional[str] = None
+    nama : Optional[str] = None
+    created_by : Optional[str] = None
+
 class MasterResponse(MasterBase):
     id : str
     created_by : Optional[str] = None
