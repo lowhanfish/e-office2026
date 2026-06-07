@@ -11,12 +11,41 @@ router = APIRouter()
 
 @router.get("/read", response_model=List[RefPendidikanResponse])
 async def read_ref_pendidikan(db:AsyncSession = Depends(get_db)):
+
+    """
+    ## Mengambil semua List Ref Pendidikan
+    Membaca data Ref Pendidikan baru dari sistem.
+
+    **Parameter:**
+    - `search`   : String, Untuk mencari data value dari Ref Pendidikan.
+    - `page_start`: Int, Data page pertama akses page.
+    - `page_limit` : Int, Jumlah data yang ditarik.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     query = select(RefPendidikan)
     result = await db.execute(query)
     return result.scalars().all()
 
 @router.post("/create", response_model=RefPendidikanResponse)
 async def create_ref_pendidikan(payload:RefPendidikanCreate ,db:AsyncSession = Depends(get_db)):
+
+    """
+    ## Membuat Ref Pendidikan
+    Menambahkan data Ref Pendidikan baru ke dalam sistem.
+
+    **Parameter:**
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Nama Ref Pendidikan.
+    - `ref_tk_pendidikan_id`: **String**, Di ambil dari kode pada tabel ref_tk_pendidikan (Referensi Tk Pendidikan).
+    - `status`: **Bool**, 1 = Aktif, 0 = Tidak Aktif.
+   
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     new_data = RefPendidikan(
         ref_tk_pendidikan_id = payload.ref_tk_pendidikan_id,
         kode = payload.kode,
@@ -33,6 +62,25 @@ async def create_ref_pendidikan(payload:RefPendidikanCreate ,db:AsyncSession = D
 
 @router.put("/update/{id}", response_model = RefPendidikanResponse)
 async def update_ref_pendidikan(id:str, payload:RefPendidikanUpdate, db:AsyncSession = Depends(get_db)):
+    
+    """
+    ## Mengubah Ref Pendidikan
+    Mengubah data item Ref Pendidikan di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Parameter:**
+    *(Parameter dapat dihapus jika tidak diperlukan)*
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Nama Ref Pendidikan.
+    - `ref_tk_pendidikan_id`: **String**, Di ambil dari kode pada tabel ref_tk_pendidikan (Referensi Tk Pendidikan).
+    - `status`: **Bool**, 1 = Aktif, 0 = Tidak Aktif.
+   
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     query = select(RefPendidikan).where(RefPendidikan.id == id)
     result = await db.execute(query)
     db_data = result.scalar_one_or_none()
@@ -53,6 +101,18 @@ async def update_ref_pendidikan(id:str, payload:RefPendidikanUpdate, db:AsyncSes
 
 @router.delete("/delete/{id}")
 async def delete_ref_pendidikan(id:str, db:AsyncSession = Depends(get_db)):
+
+    """
+    ## Menghapus Ref Pendidikan
+    Menghapus data item Ref Pendidikan di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
+
     query = select(RefPendidikan).where(RefPendidikan.id == id)
     result = await db.execute(query)
     db_data = result.scalar_one_or_none()
