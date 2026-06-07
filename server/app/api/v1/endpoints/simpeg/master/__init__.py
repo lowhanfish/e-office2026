@@ -1,28 +1,33 @@
 from fastapi import APIRouter
 from . import (
-    esselon, 
     agama, 
-    ref_jabfung_umum, 
-    ref_jabfung, 
-    ref_kel_jabatan, 
-    ref_riwayat, 
-    ref_hukdis, 
-    ref_rumpun_jabatan_jf, 
-    ref_jns_jabatan, 
-    ref_rumpun_jabatan, 
+    esselon, 
+    ref_golongan,
     ref_instansi, 
     ref_satker, 
+
+    ref_jns_jabatan, 
+    ref_kel_jabatan, 
+    ref_rumpun_jabatan, 
+    ref_rumpun_jabatan_jf, 
+    ref_jabfung_umum, 
+    ref_jabfung, 
+    
+    ref_riwayat, 
+    ref_hukdis, 
+
     ref_rumpun_pendidikan, 
     ref_tk_pendidikan,
-    ref_pendidikan
+    ref_pendidikan,
 )
 
 master_router = APIRouter()
 
+master_router.include_router(agama.router, prefix="/agama")
+master_router.include_router(esselon.router, prefix='/esselon')
+master_router.include_router(ref_golongan.router, prefix="/ref_golongan")
 master_router.include_router(ref_instansi.router, prefix="/ref_instansi")
 master_router.include_router(ref_satker.router, prefix="/ref_satker")
-master_router.include_router(esselon.router, prefix='/esselon')
-master_router.include_router(agama.router, prefix="/agama")
 
 master_router.include_router(ref_jns_jabatan.router, prefix="/ref_jns_jabatan")
 master_router.include_router(ref_kel_jabatan.router, prefix="/ref_kel_jabatan")
