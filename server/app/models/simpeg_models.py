@@ -293,6 +293,25 @@ class RefPendidikan (Base):
     #relationship
     ref_tk_pendidikan_rel = relationship("RefTKPendidikan", back_populates="ref_pendidikan_rel")
 
+class RefJnsLokasi(Base):
+    __tablename__ = "ref_jns_lokasi"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(50), index=True, nullable=False, unique=True)
+    nama = Column(String(100), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class RefJnsLokasi(Base):
+    __tablename__ = "ref_lokasi"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(50), index=True, nullable=False, unique=True)
+    nama = Column(String(100), nullable=False)
+    kanreg_id = Column(String(100), nullable=False)
+    ref_lokasi_id = Column(String(100), nullable=False, comment="id dari kolom ini sendiri (Children-parents)")
+    kode_cepat = Column(CHAR(5), index=True, nullable=True)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
 
 
     
