@@ -11,6 +11,18 @@ router = APIRouter()
 
 @router.get("/read", response_model=List[RefStatusHidupResponse])
 async def read_ref_status_hidup(db:AsyncSession=Depends(get_db)):
+    """
+    ## Mengambil semua List Ref Status Hidup
+    Membaca data Ref Status Hidup baru dari sistem.
+
+    **Parameter:**
+    - `search`   : String, Untuk mencari data value dari Ref Status Hidup.
+    - `page_start`: Int, Data page pertama akses page.
+    - `page_limit` : Int, Jumlah data yang ditarik.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
     query = select(RefStatusHidup)
     result = await db.execute(query)
     return result.scalars().all()
@@ -18,6 +30,17 @@ async def read_ref_status_hidup(db:AsyncSession=Depends(get_db)):
 
 @router.post("/create", response_model=RefStatusHidupResponse)
 async def create_ref_status_hidup(payload:RefStatusHidupCreate, db:AsyncSession=Depends(get_db)):
+    """
+    ## Membuat Ref Status Hidup
+    Menambahkan data Ref Status Hidup baru ke dalam sistem.
+
+    **Parameter:**
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Nama Ref Status Hidup.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
     new_data = RefStatusHidup(
         kode = payload.kode,
         nama = payload.nama,
@@ -31,6 +54,22 @@ async def create_ref_status_hidup(payload:RefStatusHidupCreate, db:AsyncSession=
 
 @router.put("/update/{id}", response_model=RefStatusHidupResponse)
 async def update_ref_status_hidup(id:str, payload:RefStatusHidupUpdate, db:AsyncSession=Depends(get_db)):
+    """
+    ## Mengubah Ref Status Hidup
+    Mengubah data item Ref Status Hidup di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Parameter:**
+    *(Parameter dapat dihapus jika tidak diperlukan)*
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Nama Ref Status Hidup.
+   
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    - `404`: Jika Id dari data yang akan diupdate tidak ditemukan.
+    """
     query = select(RefStatusHidup).where(RefStatusHidup.id == id)
     result = await db.execute(query)
     db_data = result.scalar_one_or_none()
@@ -50,6 +89,17 @@ async def update_ref_status_hidup(id:str, payload:RefStatusHidupUpdate, db:Async
 
 @router.delete("/delete/{id}")
 async def delete_ref_status_hidup(id:str, db:AsyncSession = Depends(get_db)):
+    """
+    ## Menghapus Ref Status Hidup
+    Menghapus data item Ref Status Hidup di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.x
+    - `404`: Jika Id dari data yang akan dihapus tidak ditemukan.
+    """
     query = select(RefStatusHidup).where(RefStatusHidup.id == id)
     result = await db.execute(query)
     db_data = result.scalar_one_or_none()
