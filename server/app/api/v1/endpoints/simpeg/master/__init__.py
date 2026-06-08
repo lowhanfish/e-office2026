@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from . import (
     ref_jns_pegawai,
     ref_jns_kawin,
+    ref_status_hidup,
     agama, 
     esselon, 
     ref_golongan,
@@ -27,6 +28,7 @@ master_router = APIRouter()
 
 master_router.include_router(ref_jns_pegawai.router, prefix="/ref_jns_pegawai")
 master_router.include_router(ref_jns_kawin.router, prefix="/ref_jns_kawin")
+master_router.include_router(ref_status_hidup.router, prefix="/ref_status_hidup")
 master_router.include_router(agama.router, prefix="/agama")
 master_router.include_router(esselon.router, prefix='/esselon')
 master_router.include_router(ref_golongan.router, prefix="/ref_golongan")
