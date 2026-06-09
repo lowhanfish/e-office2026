@@ -1,6 +1,5 @@
 from app.schemas.simpeg.master.base_schemas import MasterCreate, MasterResponse, MasterUpdate
 
-
 class RefJnsLokasiResponse(MasterResponse):
     pass
 

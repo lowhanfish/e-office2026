@@ -300,6 +300,7 @@ class RefJnsLokasi(Base):
     nama = Column(String(100), nullable=False)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
     ref_lokasi_rel = relationship("RefLokasi", back_populates="ref_jns_lokasi_rel", cascade="all, delete-orphan")
 
 class RefLokasi(Base):
@@ -313,6 +314,7 @@ class RefLokasi(Base):
     ref_jns_lokasi_id = Column(String(50), ForeignKey("ref_jns_lokasi.kode", ondelete="CASCADE"), index=True, nullable=False, comment="dari kolom kode tabel ref_jns_lokasi")
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    
     ref_jns_lokasi_rel = relationship("RefJnsLokasi", back_populates="ref_lokasi_rel")
 
 
