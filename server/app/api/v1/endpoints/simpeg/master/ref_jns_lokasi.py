@@ -54,6 +54,22 @@ async def create_ref_jns_lokasi(payload:RefJnsLokasiCreate, db:AsyncSession = De
 
 @router.put("/update/{id}", response_model=RefJnsLokasiResponse)
 async def update_ref_jns_lokasi(id:str, payload:RefJnsLokasiUpdate, db:AsyncSession = Depends(get_db)):
+    """
+    ## Mengubah Ref Jenis Lokasi
+    Mengubah data item Ref Jenis Lokasi di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Parameter:**
+    *(Parameter dapat dihapus jika tidak diperlukan)*
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Nama Ref Jenis Lokasi.
+   
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    - `404`: Jika Id dari data yang akan diupdate tidak ditemukan.
+    """
     query = select(RefJnsLokasi).where(RefJnsLokasi.id == id)
     result = await db.execute(query)
     data_db = result.scalar_one_or_none()
@@ -74,6 +90,17 @@ async def update_ref_jns_lokasi(id:str, payload:RefJnsLokasiUpdate, db:AsyncSess
 
 @router.delete("/delete/{id}")
 async def delete_ref_jns_lokasi(id:str, db:AsyncSession = Depends(get_db)):
+    """
+    ## Menghapus Ref Jenis Lokasi
+    Menghapus data item Ref Jenis Lokasi di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.x
+    - `404`: Jika Id dari data yang akan dihapus tidak ditemukan.
+    """
     query = select(RefJnsLokasi).where(RefJnsLokasi.id == id)
     result = await db.execute(query)
     data_db = result.scalar_one_or_none()
