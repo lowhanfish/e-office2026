@@ -9,6 +9,7 @@ from . import (
     ref_instansi, 
     ref_satker, 
     ref_jns_lokasi,
+    ref_lokasi,
 
     ref_jns_jabatan, 
     ref_kel_jabatan, 
@@ -36,6 +37,7 @@ master_router.include_router(ref_golongan.router, prefix="/ref_golongan")
 master_router.include_router(ref_instansi.router, prefix="/ref_instansi")
 master_router.include_router(ref_satker.router, prefix="/ref_satker")
 master_router.include_router(ref_jns_lokasi.router, prefix="/ref_jns_lokasi")
+master_router.include_router(ref_lokasi.router, prefix="/ref_lokasi")
 
 master_router.include_router(ref_jns_jabatan.router, prefix="/ref_jns_jabatan")
 master_router.include_router(ref_kel_jabatan.router, prefix="/ref_kel_jabatan")

@@ -309,7 +309,7 @@ class RefLokasi(Base):
     kode = Column(String(50), index=True, nullable=False, unique=True)
     nama = Column(String(100), nullable=False)
     kanreg_id = Column(String(100), nullable=False)
-    ref_lokasi_id = Column(String(100), nullable=False, comment="id dari kolom ini sendiri (Children-parents)")
+    ref_lokasi_id = Column(String(100), index=True, comment="id dari kolom ini sendiri (Children-parents)")
     kode_cepat = Column(CHAR(5), index=True, nullable=True)
     ref_jns_lokasi_id = Column(String(50), ForeignKey("ref_jns_lokasi.kode", ondelete="CASCADE"), index=True, nullable=False, comment="dari kolom kode tabel ref_jns_lokasi")
     created_by = Column(String(50), index=True, nullable=False)
