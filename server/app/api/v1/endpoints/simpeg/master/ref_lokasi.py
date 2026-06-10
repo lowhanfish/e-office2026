@@ -12,12 +12,39 @@ router = APIRouter()
 
 @router.get("/read", response_model=List[RefLokasiResponse])
 async def read_ref_lokasi(db:AsyncSession = Depends(get_db)):
+    """
+    ## Mengambil semua List Ref Lokasi
+    Membaca data Ref Lokasi baru dari sistem.
+
+    **Parameter:**
+    - `search`   : String, Untuk mencari data value dari Ref Lokasi.
+    - `page_start`: Int, Data page pertama akses page.
+    - `page_limit` : Int, Jumlah data yang ditarik.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
     query = select(RefLokasi)
     result = await db.execute(query)
     return result.scalars().all()
 
 @router.post("/create", response_model=RefLokasiResponse)
 async def create_ref_lokasi(payload: RefLokasiCreate, db:AsyncSession = Depends(get_db)):
+    """
+    ## Membuat Ref Lokasi
+    Menambahkan data Ref Lokasi baru ke dalam sistem.
+
+    **Parameter:**
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Nama Ref Lokasi.
+    - `kanreg_id`: **String**, Id dari kanreg (Lihat di tabel referensi BKN).
+    - `ref_lokasi_id`: **String**, Merujuk ke id data lain pada tabel ref_lokasi ini sendiri (Pola Child-Parent).
+    - `kode_cepat`: **String**, Kode Cepat dari Ref Lokasi (sebaiknya di ambil dari `kode_cepat` tabel referensi BKN).
+    - `ref_jns_lokasi_id`: **String**, Merujuk ke id dari tabel ref_jns_lokasi.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    """
     new_data = RefLokasi(
         kode = payload.kode,
         nama = payload.nama,
@@ -35,6 +62,26 @@ async def create_ref_lokasi(payload: RefLokasiCreate, db:AsyncSession = Depends(
 
 @router.put("/update/{id}", response_model=RefLokasiResponse)
 async def update_ref_lokasi(id:str, payload: RefLokasiUpdate, db:AsyncSession = Depends(get_db)):
+    """
+    ## Mengubah Ref Lokasi
+    Mengubah data item Ref Lokasi di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Parameter:**
+    *(Parameter dapat dihapus jika tidak diperlukan)*
+    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
+    - `nama`: **String**, Nama Ref Lokasi.
+    - `kanreg_id`: **String**, Id dari kanreg (Lihat di tabel referensi BKN).
+    - `ref_lokasi_id`: **String**, Merujuk ke id data lain pada tabel ref_lokasi ini sendiri (Pola Child-Parent).
+    - `kode_cepat`: **String**, Kode Cepat dari Ref Lokasi (sebaiknya di ambil dari `kode_cepat` tabel referensi BKN).
+    - `ref_jns_lokasi_id`: **String**, Merujuk ke id dari tabel ref_jns_lokasi.
+   
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.
+    - `404`: Jika Id dari data yang akan diupdate tidak ditemukan.
+    """
     query = select(RefLokasi).where(RefLokasi.id == id)
     result = await db.execute(query)
     db_data = result.scalar_one_or_none()
@@ -54,6 +101,17 @@ async def update_ref_lokasi(id:str, payload: RefLokasiUpdate, db:AsyncSession = 
 
 @router.delete("/delete/{id}")
 async def delete_ref_lokasi(id:str, db:AsyncSession = Depends(get_db)):
+    """
+    ## Menghapus Ref Lokasi
+    Menghapus data item Ref Lokasi di dalam sistem.
+
+    **Key Path:**
+    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
+
+    **Error yang mungkin terjadi:**
+    - `422`: Jika format input tidak sesuai skema.x
+    - `404`: Jika Id dari data yang akan dihapus tidak ditemukan.
+    """
     query = select(RefLokasi).where(RefLokasi.id == id)
     result = await db.execute(query)
     db_data = result.scalar_one_or_none()
