@@ -7,11 +7,9 @@ from app.db.session import get_db
 from app.schemas.simpeg.master.ref_kppn import RefKPPNCreate, RefKPPNResponse, RefKPPNUpdate
 from app.models.simpeg_models import RefKPPN
 
-
 router = APIRouter()
 
-
-@router.get("/read", response_model=RefKPPNResponse)
+@router.get("/read", response_model=List[RefKPPNResponse])
 async def read_ref_kppn(db:AsyncSession=Depends(get_db)):
     """
     ## Mengambil semua List Ref KPPN
@@ -30,7 +28,7 @@ async def read_ref_kppn(db:AsyncSession=Depends(get_db)):
     return result.scalars().all()
 
 
-@router.get("/create", response_model=RefKPPNResponse)
+@router.post("/create", response_model=RefKPPNResponse)
 async def create_ref_kppn(payload:RefKPPNCreate,db:AsyncSession=Depends(get_db)):
     """
     ## Membuat Ref KPPN
@@ -54,8 +52,7 @@ async def create_ref_kppn(payload:RefKPPNCreate,db:AsyncSession=Depends(get_db))
     return new_data
 
 
-
-@router.get("/update/{id}", response_model=RefKPPNResponse)
+@router.put("/update/{id}", response_model=RefKPPNResponse)
 async def update_ref_kppn(id:str, payload:RefKPPNCreate, db:AsyncSession=Depends(get_db)):
     """
     ## Mengubah Ref KPPN
@@ -90,7 +87,7 @@ async def update_ref_kppn(id:str, payload:RefKPPNCreate, db:AsyncSession=Depends
     return db_data
 
 
-@router.get("/delete/{id}")
+@router.delete("/delete/{id}")
 async def delete_ref_kppn(id:str, db:AsyncSession=Depends(get_db)):
     """
     ## Menghapus Ref KPPN

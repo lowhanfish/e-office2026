@@ -7,7 +7,7 @@ import uuid
 from app.db.session import Base
 
 
-class Jenjang(enum.Enum):
+class Jenjang(enum.Enum): #jenjang untuk fungsional bukan struktural
     PM = "Pemula"
     TR = "Terampil"
     MH = "Mahir"
@@ -159,7 +159,6 @@ class RefHukdis(Base):
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     
-
 class RefRiwayat(Base):
     __tablename__ = "ref_riwayat"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
@@ -176,7 +175,6 @@ class RefPenugasan(Base):
     nama = Column(String(50), nullable=False)
     created_by = Column(String(50), index=True, nullable=False)
     create_at = Column(DateTime(timezone=True), server_default=func.now())
-
 
 class RefJabatanFungsional(Base):
     __tablename__ = "ref_jabatan_fungsional"
@@ -203,6 +201,15 @@ class RefJabatanFungsionalUmum(Base):
     kode_cepat = Column(String(10),nullable=False)
     status = Column(Boolean, default=False)
     created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class RefJenjangJabatan(Base): #Fungsional tertentu dan Struktural
+    __tablename__ = "ref_jenjang_jabatan_struktural"
+    id = Column(String(50), primary_key=True, index=True)
+    kode = Column(String(2), index=True, nullable=False)
+    nama = Column(String(100), nullable=False)
+    ref_jns_pegawai_id = Column(String(50), ForeignKey("ref_jns_pegawai.kode"), index=True)
+    created_bu = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class RefJabatanStruktural(Base):
