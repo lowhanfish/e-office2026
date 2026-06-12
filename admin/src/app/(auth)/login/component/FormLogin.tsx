@@ -79,14 +79,9 @@ const FormLogin = () => {
 
                     </div>
 
-
                     <div className='flex justify-center items-center gap-1 my-2'>
 
                     </div>
-
-
-
-
                 </div>
             </div>
         </div>
