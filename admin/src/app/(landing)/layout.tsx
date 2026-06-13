@@ -1,9 +1,13 @@
-import React from 'react'
+import { ReactNode } from 'react'
 
-const layout = () => {
+type childrenProps = {
+    children: ReactNode
+}
+
+const layout = ({ children }: childrenProps) => {
     return (
-        <div>
-
+        <div className='grid h-full w-full'>
+            {children}
         </div>
     )
 }

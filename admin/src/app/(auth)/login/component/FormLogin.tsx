@@ -63,7 +63,7 @@ const FormLogin = () => {
                     </div>
 
                     <div className='mt-5'>
-                        <Link href="/home">
+                        <Link href="/landing">
                             <BButton
                                 mode="3d"
                                 color='yellow'
