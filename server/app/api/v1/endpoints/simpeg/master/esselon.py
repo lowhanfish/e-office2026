@@ -65,7 +65,6 @@ async def create_esselon(
     db.add(new_Data)
     await db.commit()
     await db.refresh(new_Data)
-
     return new_Data
 
 
