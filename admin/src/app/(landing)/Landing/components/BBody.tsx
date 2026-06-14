@@ -8,27 +8,27 @@ const BBody = () => {
 
     const data = [
         {
-            image: "/images/bg1.jpg",
+            image: "/images/app_gali.png",
             title: "Gali Integral",
             url: "/"
         },
         {
-            image: "/images/bg1.jpg",
+            image: "/images/app_simpeg.png",
             title: "SimpegDa",
             url: "/"
         },
         {
-            image: "/images/bg1.jpg",
+            image: "/images/app_office.png",
             title: "e-Office",
             url: "/"
         },
         {
-            image: "/images/bg1.jpg",
+            image: "/images/app_absensi.png",
             title: "e-Absensi",
             url: "/"
         },
         {
-            image: "/images/bg1.jpg",
+            image: "/images/app_jdih.png",
             title: "JDIH",
             url: "/"
         },
