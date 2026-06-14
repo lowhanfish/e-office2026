@@ -3,7 +3,7 @@ from app.schemas.simpeg.master.ref_jns_jabatan import JenisJabatanCreate, JenisJ
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
-from app.models.simpeg_models import JenisJabatan
+from app.models.simpeg.master.models import JenisJabatan
 from sqlalchemy.future import select
 
 router = APIRouter()

@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.db.session import get_db
 from app.schemas.simpeg.master.ref_esselon import EsselonCreate, EsselonResponse, EsselonUpdate
-from app.models.simpeg_models import Esselon, User # <--- Tambah import User jika dibutuhkan type-hint
+from app.models.simpeg.master.models import Esselon, User # <--- Tambah import User jika dibutuhkan type-hint
 from app.api.deps import get_current_user # <--- IMPORT PAGAR GHAIB DI SINI
 from typing import List
 

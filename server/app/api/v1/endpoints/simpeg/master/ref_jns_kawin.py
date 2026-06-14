@@ -4,7 +4,7 @@ from sqlalchemy.future import select
 from typing import List
 from app.schemas.simpeg.master.ref_jns_kawin import RefJnsKawinCreate, RefJnsKawinResponse, RefJnsKawinUpdate
 from app.db.session import get_db
-from app.models.simpeg_models import RefJnsKawin
+from app.models.simpeg.master.models import RefJnsKawin
 
 router = APIRouter()
 

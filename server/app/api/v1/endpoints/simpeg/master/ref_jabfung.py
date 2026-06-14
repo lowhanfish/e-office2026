@@ -3,7 +3,7 @@ from app.schemas.simpeg.master.ref_jabfung import RefJabfungCreate, RefJabfungRe
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.db.session import get_db
-from app.models.simpeg_models import RefJabatanFungsional
+from app.models.simpeg.master.models import RefJabatanFungsional
 from typing import List
 
 router = APIRouter()

@@ -5,7 +5,7 @@ from typing import List
 
 from app.db.session import get_db
 from app.schemas.simpeg.master.ref_kppn import RefKPPNCreate, RefKPPNResponse, RefKPPNUpdate
-from app.models.simpeg_models import RefKPPN
+from app.models.simpeg.master.models import RefKPPN
 
 router = APIRouter()
 

@@ -7,7 +7,7 @@ from typing import Optional
 from datetime import datetime
 
 from app.db.session import get_db
-from app.models.simpeg_models import User
+from app.models.simpeg.master.models import User
 from app.core.security import (
     verify_password, 
     get_password_hash,  # <--- Tambahan untuk hash password saat register

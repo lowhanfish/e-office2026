@@ -4,7 +4,7 @@ from sqlalchemy.future import select
 from typing import List
 from app.schemas.simpeg.master.ref_golongan import RefGolonganCreate, RefGolonganResponse, RefGolonganUpdate
 from app.db.session import get_db
-from app.models.simpeg_models import RefGolongan
+from app.models.simpeg.master.models import RefGolongan
 
 router = APIRouter()
 

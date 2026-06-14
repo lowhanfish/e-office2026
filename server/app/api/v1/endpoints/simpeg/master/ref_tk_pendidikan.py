@@ -4,7 +4,7 @@ from app.schemas.simpeg.master.ref_tk_pendidikan import RefTKPendidikanCreate, R
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
 from sqlalchemy.future import select
-from app.models.simpeg_models import RefTKPendidikan
+from app.models.simpeg.master.models import RefTKPendidikan
 
 router = APIRouter()
 

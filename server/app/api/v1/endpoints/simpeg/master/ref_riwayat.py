@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.db.session import get_db
-from app.models.simpeg_models import RefRiwayat
+from app.models.simpeg.master.models import RefRiwayat
 from app.schemas.simpeg.master.ref_riwayat import RiwayatResponse, RiwayatCreate, RiwayatUpdate
 from typing import List
 

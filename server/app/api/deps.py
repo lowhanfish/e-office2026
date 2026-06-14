@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from app.db.session import get_db
-from app.models.simpeg_models import User
+from app.models.simpeg.master.models import User
 from app.core.security import JWT_SECRET_KEY, ALGORITHM
 
 # OAuth2PasswordBearer otomatis mencari Header 'Authorization: Bearer <TOKEN>'

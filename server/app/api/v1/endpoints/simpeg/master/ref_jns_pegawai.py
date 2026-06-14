@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from typing import List
 from app.db.session import get_db
-from app.models.simpeg_models import RefJnsPegawai
+from app.models.simpeg.master.models import RefJnsPegawai
 from app.schemas.simpeg.master.ref_jns_pegawai import RefJnsPegawaiCreate, RefJnsPegawaiResponse, RefJnsPegawaiUpdate
 
 

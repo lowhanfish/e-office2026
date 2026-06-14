@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.schemas.simpeg.master.ref_jabfung_umum import RefJabatanFungsionalUmumCreate, RefJabatanFungsionalUmumResponse, RefJabatanFungsionalUmumUpdate
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from app.models.simpeg_models import RefJabatanFungsionalUmum
+from app.models.simpeg.master.models import RefJabatanFungsionalUmum
 from app.db.session import get_db
 from typing import List
 

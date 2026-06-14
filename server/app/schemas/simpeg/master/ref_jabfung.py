@@ -1,7 +1,7 @@
 
 from typing import Optional
 from app.schemas.simpeg.master.base_schemas import MasterCreate, MasterResponse, MasterBase
-from app.models.simpeg_models import Jenjang, StatusJabfung
+from app.models.simpeg.master.models import Jenjang, StatusJabfung
 
 class RefJabfungResponse(MasterResponse):
     kode_cepat : str

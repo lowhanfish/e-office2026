@@ -21,14 +21,14 @@ from app.db.session import Base
 
 # Import semua model yang ada di metadata
 # Tujuannya agar target_metadata terisi penuh untuk autogenerate.
-from app.models import simpeg_models
+from app.models.simpeg.master import models
 
 # (opsional) ekspor nama class agar lebih jelas saat debugging
-Agama = simpeg_models.Agama
-Esselon = simpeg_models.Esselon
-JenisJabatan = simpeg_models.JenisJabatan
-RefHukdis = simpeg_models.RefHukdis
-RumpunJabatan = simpeg_models.RumpunJabatan
+Agama = models.Agama
+Esselon = models.Esselon
+JenisJabatan = models.JenisJabatan
+RefHukdis = models.RefHukdis
+RumpunJabatan = models.RumpunJabatan
 
 
 config = context.config

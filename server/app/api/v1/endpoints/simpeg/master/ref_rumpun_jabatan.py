@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
 from typing import List
 from sqlalchemy.future import select
-from app.models.simpeg_models import RumpunJabatan
+from app.models.simpeg.master.models import RumpunJabatan
 
 
 router = APIRouter()

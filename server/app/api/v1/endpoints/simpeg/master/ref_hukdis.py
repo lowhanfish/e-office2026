@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.db.session import get_db
 from app.schemas.simpeg.master.ref_hukdis import HukdisCreate, HukdisUpdate, HukdisResponse
-from app.models.simpeg_models import RefHukdis
+from app.models.simpeg.master.models import RefHukdis
 from typing import List
 
 router = APIRouter()

@@ -1,5 +1,5 @@
 from app.services.base import CRUDBase
-from app.models.simpeg_models import Agama, RefHukdis, Esselon, RefRiwayat
+from app.models.simpeg.master.models import Agama, RefHukdis, Esselon, RefRiwayat
 
 # Membuat instance CRUD untuk masing-masing tabel
 crud_agama = CRUDBase(Agama)

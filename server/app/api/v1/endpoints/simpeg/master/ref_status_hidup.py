@@ -5,7 +5,7 @@ from typing import List
 
 from app.db.session import get_db
 from app.schemas.simpeg.master.ref_status_hidup import RefStatusHidupCreate, RefStatusHidupResponse, RefStatusHidupUpdate
-from app.models.simpeg_models import RefStatusHidup
+from app.models.simpeg.master.models import RefStatusHidup
 
 router = APIRouter()
 

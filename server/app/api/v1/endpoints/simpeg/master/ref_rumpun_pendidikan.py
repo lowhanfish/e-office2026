@@ -4,7 +4,7 @@ from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
 from sqlalchemy.future import select
-from app.models.simpeg_models import RumpunPendidikan
+from app.models.simpeg.master.models import RumpunPendidikan
 
 router = APIRouter()
 
