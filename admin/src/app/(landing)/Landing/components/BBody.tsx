@@ -10,27 +10,27 @@ const BBody = () => {
         {
             image: "/images/app_gali.png",
             title: "Gali Integral",
-            url: "/"
+            url: "/home"
         },
         {
             image: "/images/app_simpeg.png",
             title: "SimpegDa",
-            url: "/"
+            url: "/home"
         },
         {
             image: "/images/app_office.png",
             title: "e-Office",
-            url: "/"
+            url: "/home"
         },
         {
             image: "/images/app_absensi.png",
             title: "e-Absensi",
-            url: "/"
+            url: "/home"
         },
         {
             image: "/images/app_jdih.png",
             title: "JDIH",
-            url: "/"
+            url: "/home"
         },
     ]
 

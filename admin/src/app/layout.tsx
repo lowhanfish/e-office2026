@@ -3,6 +3,8 @@ import { Geist, Geist_Mono, Poppins, Roboto } from "next/font/google";
 import "./globals.css";
 import "../assets/styles/table.css";
 import { ThemeProvider } from "@/components/theme-provider"
+import Providers from "@/components/providers";
+
 // import Header from "@/components/Header";
 
 const geistSans = Geist({
@@ -49,7 +51,9 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {/* <Header /> */}
-          {children}
+          <Providers>
+            {children}
+          </Providers>
         </ThemeProvider>
       </body>
     </html>
