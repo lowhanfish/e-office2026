@@ -16,7 +16,7 @@ interface Kontak {
 // GET (Read)
 const getKontak = async (): Promise<Kontak[]> => {
     const res = await fetch('https://jsonplaceholder.typicode.com/users?_limit=4');
-    if (!res.ok) throw new Error('Gagal mengambil data kontak.');
+    if (!res.ok) throw new Error('Gagal mengambil data kontak dari server.');
     return res.json();
 };
 
@@ -38,7 +38,7 @@ const updateKontakAPI = async (payload: { id: number; name: string }): Promise<K
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: payload.name }),
     });
-    if (!res.ok) throw new Error('Gagal memperbarui kontak.');
+    if (!res.ok) throw new Error('Gagal memperbarui data kontak.');
     return res.json();
 };
 
@@ -47,7 +47,7 @@ const deleteKontakAPI = async (id: number): Promise<number> => {
     const res = await fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
         method: 'DELETE',
     });
-    if (!res.ok) throw new Error('Gagal menghapus kontak.');
+    if (!res.ok) throw new Error('Gagal menghapus kontak ini.');
     return id;
 };
 
@@ -73,7 +73,6 @@ export default function KontakPage() {
     const createMutation = useMutation({
         mutationFn: createKontakAPI,
         onSuccess: () => {
-            // Beritahu query ['kontak'] bahwa datanya sudah basi, tolong fetch ulang!
             queryClient.invalidateQueries({ queryKey: ['kontak'] });
             setInputName('');
         },
@@ -101,28 +100,35 @@ export default function KontakPage() {
         },
     });
 
-    // Handler Submit untuk Tambah ATAU Edit
+    // Global loading state untuk mutasi agar UI aman dari double-click
+    const isMutating = createMutation.isPending || updateMutation.isPending || deleteMutation.isPending;
+
+    // Handler Submit Form
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!inputName.trim()) return;
+        if (!inputName.trim() || isMutating) return;
 
         if (editId) {
-            // Jika sedang dalam mode edit, jalankan PUT
             updateMutation.mutate({ id: editId, name: inputName });
         } else {
-            // Jika tidak, jalankan POST
             createMutation.mutate(inputName);
         }
     };
 
-    // Fungsi untuk memicu mode edit di form
+    // Memicu form masuk ke mode edit
     const pemicuEdit = (kontak: Kontak) => {
         setEditId(kontak.id);
         setInputName(kontak.name);
     };
 
-    if (isLoading) return <div className="p-8 text-center">Memuat data kontak...</div>;
-    if (isError) return <div className="p-8 text-center text-red-500">Error: {error.message}</div>;
+    // Membatalkan mode edit
+    const batalkanEdit = () => {
+        setEditId(null);
+        setInputName('');
+    };
+
+    if (isLoading) return <div className="p-8 text-center text-amber-900 font-semibold">Memuat data kontak...</div>;
+    if (isError) return <div className="p-8 text-center text-red-500 font-bold">Error: {error.message}</div>;
 
     return (
         <div className="p-8 max-w-md mx-auto bg-white rounded-2xl shadow-md mt-10 text-gray-800 border border-amber-200">
@@ -130,46 +136,67 @@ export default function KontakPage() {
                 📖 Buku Kontak
             </h1>
 
-            {/* FORM INPUT (Bisa untuk POST atau PUT) */}
-            <form onSubmit={handleSubmit} className="flex gap-2 mb-6">
-                <input
-                    type="text"
-                    value={inputName}
-                    onChange={(e) => setInputName(e.target.value)}
-                    placeholder={editId ? "Ubah nama kontak..." : "Nama kontak baru..."}
-                    className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-                />
-                <button
-                    type="submit"
-                    disabled={createMutation.isPending || updateMutation.isPending}
-                    className="bg-amber-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-amber-700 disabled:bg-gray-400 transition-colors"
-                >
-                    {createMutation.isPending || updateMutation.isPending ? '...' : editId ? 'Simpan' : 'Tambah'}
-                </button>
+            {/* FORM INPUT */}
+            <form onSubmit={handleSubmit} className="space-y-3 mb-6">
+                <div className="flex gap-2">
+                    <input
+                        type="text"
+                        value={inputName}
+                        onChange={(e) => setInputName(e.target.value)}
+                        placeholder={editId ? "Ubah nama kontak..." : "Nama kontak baru..."}
+                        className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-gray-900 bg-white"
+                        disabled={isMutating}
+                    />
+                    <button
+                        type="submit"
+                        disabled={isMutating || !inputName.trim()}
+                        className="bg-amber-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-amber-700 disabled:bg-gray-300 transition-colors"
+                    >
+                        {createMutation.isPending || updateMutation.isPending ? '...' : editId ? 'Simpan' : 'Tambah'}
+                    </button>
+                </div>
+
+                {/* Tombol tambahan untuk batal edit */}
+                {editId && (
+                    <button
+                        type="button"
+                        onClick={batalkanEdit}
+                        className="text-xs text-gray-500 hover:text-gray-700 underline"
+                        disabled={isMutating}
+                    >
+                        Batal Edit
+                    </button>
+                )}
             </form>
 
-            {/* DAFTAR TAMPILAN DATA (Hasil GET) */}
+            {/* TAMPILAN ERROR INDIVIDU JIKA MUTASI GAGAL */}
+            {createMutation.isError && <p className="text-sm text-red-500 mb-2">❌ Gagal menambah: {createMutation.error.message}</p>}
+            {updateMutation.isError && <p className="text-sm text-red-500 mb-2">❌ Gagal mengubah: {updateMutation.error.message}</p>}
+            {deleteMutation.isError && <p className="text-sm text-red-500 mb-2">❌ Gagal menghapus: {deleteMutation.error.message}</p>}
+
+            {/* DAFTAR TAMPILAN DATA */}
             <ul className="space-y-3">
                 {daftarKontak?.map((kontak) => (
                     <li
                         key={kontak.id}
                         className="flex justify-between items-center p-3 bg-amber-50 border border-amber-100 rounded-xl"
                     >
-                        <span className="font-roboto">{kontak.name}</span>
+                        <span className="font-roboto text-gray-900">{kontak.name}</span>
 
                         <div className="flex gap-3">
-                            {/* Tombol EDIT (Memicu Form PUT) */}
+                            {/* Tombol EDIT */}
                             <button
                                 onClick={() => pemicuEdit(kontak)}
-                                className="text-amber-600 hover:text-amber-800 text-sm font-semibold"
+                                className="text-amber-600 hover:text-amber-800 text-sm font-semibold disabled:text-gray-300"
+                                disabled={isMutating}
                             >
                                 Edit
                             </button>
 
-                            {/* Tombol HAPUS (Memicu DELETE) */}
+                            {/* Tombol HAPUS - SUDAH DIPERBAIKI MENGGUNAKAN deleteMutation.mutate */}
                             <button
-                                onClick={() => deleteKontakAPI(kontak.id)} // atau deleteMutation.mutate(kontak.id)
-                                disabled={deleteMutation.isPending}
+                                onClick={() => deleteMutation.mutate(kontak.id)}
+                                disabled={isMutating}
                                 className="text-red-500 hover:text-red-700 text-sm font-semibold disabled:text-gray-300"
                             >
                                 Hapus
