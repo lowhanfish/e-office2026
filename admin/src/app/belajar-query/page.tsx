@@ -12,7 +12,7 @@ interface Post {
 // 2. Buat Fungsi Fetcher Murni
 // Fungsi ini tugasnya hanya mengambil data dari server dan mengembalikan Promise.
 const getPosts = async (): Promise<Post[]> => {
-    const response = await fetch('https://jsonplaceholder.typicode.com/comments?_limit=10');
+    const response = await fetch('https://jsonplaceholder.typicode.com/comments?_limit=500');
 
     // TanStack Query mendeteksi error jika fungsi ini melempar (throw) Error
     if (!response.ok) {
