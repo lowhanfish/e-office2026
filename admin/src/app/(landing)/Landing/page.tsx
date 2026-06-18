@@ -10,7 +10,8 @@ const page = () => {
             <div>
                 <HeaderLanding />
             </div>
-            <div className=''>
+
+            <div className='border-be-yellow-600  border-t border-b-10 py-10 mx-75 mt-2'>
                 <BBody />
             </div>
         </div>

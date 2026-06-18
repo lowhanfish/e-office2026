@@ -50,7 +50,6 @@ async def auth_group_update(id:str, payload: AuthGroupUpdate,db: AsyncSession = 
     return data_db
 
 
-
 @router.delete("/delete/{id}", response_model=AuthGroupRespose)
 async def auth_group_delete(id:str, db: AsyncSession = Depends(get_db)):
     query = select(AuthGroup).where(AuthGroup.id == id)
@@ -61,7 +60,7 @@ async def auth_group_delete(id:str, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=404, detail="id dari data yang anda pilih tidak ditemukan")
     
     nama = data_db.nama
-    
+
     await db.delete(data_db)
     await db.commit()
     
