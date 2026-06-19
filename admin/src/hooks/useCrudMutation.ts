@@ -8,9 +8,7 @@ type CrudConfig<TPayload, TResult> = {
   invalidateKeys: (string | number)[][];
 };
 
-export function useCrudMutation<TPayload, TResult>(
-  config: CrudConfig<TPayload, TResult>
-) {
+export function useCrudMutation<TPayload, TResult>(config: CrudConfig<TPayload, TResult>) {
   const queryClient = useQueryClient();
 
   return useMutation({
