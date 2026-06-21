@@ -24,7 +24,9 @@ const InputData = () => {
     const [numberx, setNumberx] = useState<number | string>(0)
     const [textx, setTextx] = useState<string | number>("")
     const [open, setOpen] = useState(false);
+
     const [modalCreate, setModalCreate] = useState(false);
+    const [createType, setCreateType] = useState(false)
 
     const [pageSelect, setPageSelect] = useState<number>(1);
     const [pageLimit, setPageLimit] = useState<number>(4)
@@ -58,7 +60,7 @@ const InputData = () => {
                                 <BButton
                                     color='blue'
                                     size='md'
-                                    onClick={() => { setModalCreate(true) }}
+                                    onClick={() => { setModalCreate(true); setCreateType(false) }}
                                 >
                                     <p className='text-b-gray-6 text-[12px]'>+</p>
                                 </BButton>
@@ -139,7 +141,9 @@ const InputData = () => {
                         <button className='bg-b-blue-4 hover:bg-b-blue-5/70 cursor-pointer flex gap-2 justify-center items-center text-[12px] p-1.5 rounded-md shadow-md'>
                             Detail
                         </button>
-                        <button className='bg-b-yellow-4 hover:bg-b-yellow-5/70 cursor-pointer flex gap-2 justify-center items-center text-[12px] p-1.5 rounded-md shadow-md'>
+                        <button className='bg-b-yellow-4 hover:bg-b-yellow-5/70 cursor-pointer flex gap-2 justify-center items-center text-[12px] p-1.5 rounded-md shadow-md'
+                            onClick={() => { setModalCreate(true); setCreateType(true) }}
+                        >
                             Edit
                         </button>
                         <button className='bg-b-red-4 hover:bg-b-red-5/70 cursor-pointer flex gap-2 justify-center items-center text-[12px] p-1.5 rounded-md shadow-md'>
@@ -148,9 +152,9 @@ const InputData = () => {
                     </div>
                 </BModal>
 
-                {/* Add */}
-                <BModal title='Configuration' openModal={modalCreate} setOpenModal={setModalCreate} size='sm'>
-                    <FormCreate setClose={setModalCreate} />
+                {/* Create */}
+                <BModal title={`${createType ? 'Edit' : 'Add'} Data`} openModal={modalCreate} setOpenModal={setModalCreate} size='sm'>
+                    <FormCreate setClose={setModalCreate} isEdit={createType} />
                 </BModal>
 
             </div>

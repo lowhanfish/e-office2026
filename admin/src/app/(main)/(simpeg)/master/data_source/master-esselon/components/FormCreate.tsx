@@ -3,57 +3,93 @@ import BButton from '@/components/items/BButton'
 import BInput from '@/components/items/BInput'
 
 interface FormAddProps {
-    setClose: Dispatch<SetStateAction<any>>
+    setClose: Dispatch<SetStateAction<boolean>>,
+    isEdit: boolean
 }
 
-const FormAdd = ({ setClose }: FormAddProps) => {
+const FormAdd = ({ setClose, isEdit }: FormAddProps) => {
+
     const [textx, setTextx] = useState<string | number>("")
+    const [form, setForm] = useState({
+        id: null,
+        kode: '',
+        nama: '',
+        jabatan_asn: '',
+    })
+
+    const setItemForm = (key: string, value: any) => {
+        setForm({
+            ...form,
+            [key]: value
+        })
+    }
+
+    const submit = () => {
+        console.log(form)
+    }
+
 
     return (
         <div className='px-5 pb-2'>
-            <div>
+            <div className='pt-1'>
                 <BInput
                     title='Kode Esselon (Id pada SIASN)'
                     placeholder='Kode esselon'
                     type='text'
-                    value={textx}
+                    value={form.kode}
                     onChange={(value) => {
-                        setTextx(value)
+                        setItemForm('kode', value)
                     }}
                 />
             </div>
-            <div>
+            <div className='pt-1'>
                 <BInput
                     title='Nama Esselon'
                     placeholder='Nama Esselon'
                     type='text'
-                    value={textx}
+                    value={form.nama}
                     onChange={(value) => {
-                        setTextx(value)
+                        setItemForm('nama', value)
                     }}
                 />
             </div>
-            <div>
+            <div className='pt-1'>
                 <BInput
                     title='Jabatan ASN'
                     placeholder='Jabatan ASN'
                     type='text'
-                    value={textx}
+                    value={form.jabatan_asn}
                     onChange={(value) => {
-                        setTextx(value)
+                        setItemForm('jabatan_asn', value)
                     }}
                 />
             </div>
 
             <div className='flex gap-2 justify-end mt-3 py-2 border-y border-b-gray-2'>
                 <div className='w-30'>
-                    <BButton
-                        color='blue'
-                        size='sm'
-                        onClick={() => { }}
-                    >
-                        <p className='text-b-gray-6 text-[13px]'>Save</p>
-                    </BButton>
+                    {
+                        isEdit ? (
+                            <BButton
+                                color='yellow'
+                                size='sm'
+                                onClick={() => { }}
+                            >
+                                <p className='text-b-gray-6 text-[13px]'>Edit</p>
+                            </BButton>
+
+                        ) : (
+
+                            <BButton
+                                color='blue'
+                                size='sm'
+                                onClick={submit}
+                            >
+                                <p className='text-b-gray-6 text-[13px]'>Save</p>
+                            </BButton>
+                        )
+                    }
+
+
                 </div>
                 <div className='w-30'>
                     <BButton
