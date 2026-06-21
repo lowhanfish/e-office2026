@@ -10,7 +10,10 @@ import BButton from '@/components/items/BButton';
 import BPagination from '@/components/items/BPagination';
 import BInputSelect from '@/components/items/BInputSelect';
 
+
+
 import { useUrlStore } from "@/store/useUrlStore"
+import FormCreate from './components/FormCreate';
 
 
 const InputData = () => {
@@ -21,6 +24,7 @@ const InputData = () => {
     const [numberx, setNumberx] = useState<number | string>(0)
     const [textx, setTextx] = useState<string | number>("")
     const [open, setOpen] = useState(false);
+    const [modalCreate, setModalCreate] = useState(false);
 
     const [pageSelect, setPageSelect] = useState<number>(1);
     const [pageLimit, setPageLimit] = useState<number>(4)
@@ -54,8 +58,7 @@ const InputData = () => {
                                 <BButton
                                     color='blue'
                                     size='md'
-                                    onClick={() => { }}
-
+                                    onClick={() => { setModalCreate(true) }}
                                 >
                                     <p className='text-b-gray-6 text-[12px]'>+</p>
                                 </BButton>
@@ -101,25 +104,9 @@ const InputData = () => {
                         ))}
                     </tbody>
                 </table>
-
-                <BModal title='Configuration' openModal={open} setOpenModal={setOpen} size='xs'>
-                    <div className='flex flex-col gap-2 p-4'>
-                        <button className='bg-b-blue-4 hover:bg-b-blue-5/70 cursor-pointer flex gap-2 justify-center items-center text-[12px] p-1.5 rounded-md shadow-md'>
-                            Detail
-                        </button>
-                        <button className='bg-b-yellow-4 hover:bg-b-yellow-5/70 cursor-pointer flex gap-2 justify-center items-center text-[12px] p-1.5 rounded-md shadow-md'>
-                            Edit
-                        </button>
-                        <button className='bg-b-red-4 hover:bg-b-red-5/70 cursor-pointer flex gap-2 justify-center items-center text-[12px] p-1.5 rounded-md shadow-md'>
-                            Delete
-                        </button>
-                    </div>
-                </BModal>
-
             </div>
 
             <div>
-
                 <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
                     <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-10 w-full'>
 
@@ -143,6 +130,29 @@ const InputData = () => {
                         </div>
                     </div>
                 </div>
+            </div>
+
+
+            <div>
+                <BModal title='Configuration' openModal={open} setOpenModal={setOpen} size='xs'>
+                    <div className='flex flex-col gap-2 p-4'>
+                        <button className='bg-b-blue-4 hover:bg-b-blue-5/70 cursor-pointer flex gap-2 justify-center items-center text-[12px] p-1.5 rounded-md shadow-md'>
+                            Detail
+                        </button>
+                        <button className='bg-b-yellow-4 hover:bg-b-yellow-5/70 cursor-pointer flex gap-2 justify-center items-center text-[12px] p-1.5 rounded-md shadow-md'>
+                            Edit
+                        </button>
+                        <button className='bg-b-red-4 hover:bg-b-red-5/70 cursor-pointer flex gap-2 justify-center items-center text-[12px] p-1.5 rounded-md shadow-md'>
+                            Delete
+                        </button>
+                    </div>
+                </BModal>
+
+                {/* Add */}
+                <BModal title='Configuration' openModal={modalCreate} setOpenModal={setModalCreate} size='sm'>
+                    <FormCreate setClose={setModalCreate} />
+                </BModal>
+
             </div>
 
 
