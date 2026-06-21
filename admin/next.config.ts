@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'cdn.dummyjson.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'png.pngtree.com',
+      },
     ],
   },
   reactCompiler: true,
