@@ -1,6 +1,13 @@
 import {create} from 'zustand'
 
-const url = 'http://localhost:3000'
+const url = 'http://localhost:8000'
+
+interface DataShowProps {
+    id : string | number;
+    value : string | number;
+    text : string;
+
+}
 
 interface URLProps {
     APP :string,
@@ -12,7 +19,8 @@ interface URLProps {
 interface useUrlStoreProps {
     TOKEN : string,
     setTOKEN : (newToken : string)=>void,
-    URL : URLProps
+    URL : URLProps,
+    DataShow : DataShowProps[]
 }
 
 export const useUrlStore = create<useUrlStoreProps>((set)=>({
@@ -24,4 +32,27 @@ export const useUrlStore = create<useUrlStoreProps>((set)=>({
         LOGIN    : url+'/login',
         REGISTER : url+'/register',
     },
+    DataShow : [
+        {
+            id: 8,
+            value: 8,
+            text: "8 - Data tampil ",
+        },
+        {
+            id: 25,
+            value: 25,
+            text: "25 - Data tampil ",
+        },
+        {
+            id: 50,
+            value: 50,
+            text: "50 - Data tampil ",
+        },
+        {
+            id: 100,
+            value: 100,
+            text: "100 - Data tampil ",
+        },
+
+    ]
 }))

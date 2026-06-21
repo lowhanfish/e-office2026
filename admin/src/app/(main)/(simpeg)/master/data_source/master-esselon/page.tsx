@@ -8,10 +8,15 @@ import { BsGear } from "react-icons/bs";
 import BModal from '@/components/items/BModal';
 import BButton from '@/components/items/BButton';
 import BPagination from '@/components/items/BPagination';
+import BInputSelect from '@/components/items/BInputSelect';
 
+import { useUrlStore } from "@/store/useUrlStore"
 
 
 const InputData = () => {
+
+    const URL = useUrlStore(state => state.URL.APP)
+    const DataShow = useUrlStore(state => state.DataShow)
 
     const [numberx, setNumberx] = useState<number | string>(0)
     const [textx, setTextx] = useState<string | number>("")
@@ -25,33 +30,6 @@ const InputData = () => {
         console.log("hy")
     }
 
-
-    const Data = [
-        {
-            name: "Kiken S batara, S.Si.,MT",
-            role: "Fullstack AI Engineer",
-            address: "Jl. Beringin No. 31",
-            status: "reject"
-        },
-        {
-            name: "Riswan M Rizal. ST",
-            role: "Fullstack AI Engineer",
-            address: "Jl. Beringin No. 31",
-            status: "pending"
-        },
-        {
-            name: "Muh. Hidayat Dermawan. ST",
-            role: "Fullstack AI Engineer",
-            address: "Jl. Beringin No. 31",
-            status: "approve"
-        },
-        {
-            name: "Asrif Fajar Hidayat",
-            role: "Fullstack AI Engineer",
-            address: "Jl. Beringin No. 31",
-            status: "pending"
-        },
-    ]
 
     return (
 
@@ -104,8 +82,8 @@ const InputData = () => {
                     </thead>
 
                     <tbody>
-                        {Data.map((item, index) => (
-                            <tr key={item.name} className='poppins'>
+                        {[...Array(8)].map((item, index) => (
+                            <tr key={index} className='poppins'>
                                 <td className=''>
                                     <p className='text-center'>{index + 1}</p>
                                 </td>
@@ -117,8 +95,8 @@ const InputData = () => {
                                     </div>
                                 </td>
                                 <td className=''><p className='text-center'>01</p></td>
-                                <td className=''><p>{item.address}</p></td>
-                                <td className=''><p>{item.address}</p></td>
+                                <td className=''><p>xxx</p></td>
+                                <td className=''><p>yyy</p></td>
                             </tr>
                         ))}
                     </tbody>
@@ -138,20 +116,29 @@ const InputData = () => {
                     </div>
                 </BModal>
 
-
             </div>
 
             <div>
+
                 <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
                     <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-10 w-full'>
 
-                        <div className='col-span-12 flex flex-col md:flex-row  gap-2'>
+                        <div className='col-span-6 flex flex-col md:flex-row  gap-2'>
                             <BPagination
                                 pageSelect={pageSelect}
                                 setPageSelect={setPageSelect}
                                 pageLimit={pageLimit}
                                 dataLength={dataLength}
                                 onClick={testClick}
+                            />
+                        </div>
+
+                        <div className='col-span-6 flex justify-center md:justify-end'>
+                            <BInputSelect
+                                onChange={(value) => {
+                                    console.log(value)
+                                }}
+                                data={DataShow}
                             />
                         </div>
                     </div>
