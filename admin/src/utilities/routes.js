@@ -181,15 +181,16 @@ const routex = [
                 path:"/",
                 children : [
                     {
-                        title : "Master Cluster Age",
-                        path:"/master/data_source/master_cluster_age",
+                        title : "Master Agama",
+                        path:"/master/data_source/master-agama",
                         children : []
                     },
                     {
-                        title : "Master Gender",
-                        path:"/master/data_source/master_gender",
+                        title : "Master Esselon",
+                        path:"/master/data_source/master-esselon",
                         children : []
                     },
+                   
                 ]
             },
         ]

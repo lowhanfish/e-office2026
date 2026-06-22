@@ -10,15 +10,15 @@ interface FormAddProps {
     isEdit: boolean
 }
 
-interface FormProps {
-    id?: string,
+interface FormResponse {
+    id: string,
     kode: string,
     nama: string,
-    jabatan_asn: string,
+    created_by: string,
+    created_at: string
 }
 
-
-const createData = async (url: string, data: FormProps): Promise<FormProps> => {
+const createData = async (url: string, data: FormResponse): Promise<FormResponse> => {
     const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -31,13 +31,11 @@ const createData = async (url: string, data: FormProps): Promise<FormProps> => {
 const FormAdd = ({ setClose, isEdit }: FormAddProps) => {
 
     const url = useUrlStore(state => state.URL)
-
     const [textx, setTextx] = useState<string | number>("")
     const [form, setForm] = useState({
         id: null,
         kode: '',
         nama: '',
-        jabatan_asn: '',
     })
 
     const setItemForm = (key: string, value: any) => {
@@ -55,8 +53,8 @@ const FormAdd = ({ setClose, isEdit }: FormAddProps) => {
         <div className='px-5 pb-2'>
             <div className='pt-1'>
                 <BInput
-                    title='Kode Esselon (Id pada SIASN)'
-                    placeholder='Kode esselon'
+                    title='Kode Agama (Id pada SIASN)'
+                    placeholder='Kode Agama'
                     type='text'
                     value={form.kode}
                     onChange={(value) => {
@@ -66,8 +64,8 @@ const FormAdd = ({ setClose, isEdit }: FormAddProps) => {
             </div>
             <div className='pt-1'>
                 <BInput
-                    title='Nama Esselon'
-                    placeholder='Nama Esselon'
+                    title='Nama Agama'
+                    placeholder='Nama Agama'
                     type='text'
                     value={form.nama}
                     onChange={(value) => {
@@ -75,17 +73,7 @@ const FormAdd = ({ setClose, isEdit }: FormAddProps) => {
                     }}
                 />
             </div>
-            <div className='pt-1'>
-                <BInput
-                    title='Jabatan ASN'
-                    placeholder='Jabatan ASN'
-                    type='text'
-                    value={form.jabatan_asn}
-                    onChange={(value) => {
-                        setItemForm('jabatan_asn', value)
-                    }}
-                />
-            </div>
+
 
             <div className='flex gap-2 justify-end mt-3 py-2 border-y border-b-gray-2'>
                 <div className='w-30'>

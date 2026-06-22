@@ -33,20 +33,17 @@ const InputData = () => {
         console.log("hy")
     }
 
-
     return (
 
-
-
         <div>
-            <TextSeparate title='Master Esselon' />
+            <TextSeparate title='Master Agama' />
             <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
                 <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-1 w-full'>
                     <div className='col-span-6 '>
                         <div className='text-[12px] text-b-gray-3 pl-2'>Cari Data</div>
                         <div className='flex gap-1 relative'>
                             <BInput
-                                placeholder='Data Esselon'
+                                placeholder='Data Agama'
                                 type='text'
                                 value={textx}
                                 onChange={(value) => {

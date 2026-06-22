@@ -11,8 +11,21 @@ const FormLogin = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [typePassword, setTypePassword] = useState<string>('password');
 
-    const LoginBtn = () => {
+    const [form, setForm] = useState({
+        username: "",
+        password: ""
+    })
 
+    const setItemForm = (key: string, e: any) => {
+        const value = e.target.value
+        setForm({
+            ...form,
+            [key]: value
+        })
+    }
+
+    const LoginBtn = () => {
+        console.log(form)
     }
 
 
@@ -34,6 +47,7 @@ const FormLogin = () => {
                     <div className='pt-5 md:pt-5'>
                         <p className='text-white text-[12px]'>Username</p>
                         <input type="text"
+                            onChange={(e) => { setItemForm("username", e) }}
                             className='bg-white/2 backdrop-blur-sm h-10 w-full rounded-[20] px-3 border-2 border-b-blue-3 text-[12px] text-white'
                         />
                     </div>
@@ -42,6 +56,7 @@ const FormLogin = () => {
 
                         <div className='flex justify-center items-center relative'>
                             <input type={typePassword}
+                                onChange={(e) => { setItemForm("password", e) }}
                                 className='bg-white/2 backdrop-blur-sm h-10 w-full rounded-[20] px-3 border-2 border-b-blue-3 text-[12px] text-white'
                             />
 
