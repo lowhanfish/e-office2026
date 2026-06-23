@@ -9,25 +9,44 @@ import BModal from '@/components/items/BModal';
 import BButton from '@/components/items/BButton';
 import BPagination from '@/components/items/BPagination';
 import BInputSelect from '@/components/items/BInputSelect';
-
 import { useUrlStore } from "@/store/useUrlStore"
 import FormCreate from './components/FormCreate';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+
+interface FormResponse {
+    id: string,
+    kode: string,
+    nama: string,
+    created_by: string,
+    created_at: string
+}
+
+const readData = async (url: string): Promise<FormResponse[]> => {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Gagal mengambil data dari server")
+    return res.json()
+}
+
 
 const InputData = () => {
 
-    const URL = useUrlStore(state => state.URL.APP)
+    const queryClient = useQueryClient()
+    const url = useUrlStore(state => state.URL.APP)
     const DataShow = useUrlStore(state => state.DataShow)
 
     const [numberx, setNumberx] = useState<number | string>(0)
     const [textx, setTextx] = useState<string | number>("")
     const [open, setOpen] = useState(false);
-
     const [modalCreate, setModalCreate] = useState(false);
     const [createType, setCreateType] = useState(false)
-
     const [pageSelect, setPageSelect] = useState<number>(1);
     const [pageLimit, setPageLimit] = useState<number>(4)
     const [dataLength, setDataLength] = useState<number>(99999)
+
+    const { data: List, isLoading, isError, error } = useQuery({
+        queryFn: () => readData(`${url}/api/v1/simpeg/master/agama/?skip=0&limit=100`),
+        queryKey: ['master_agama']
+    })
 
     const testClick = () => {
         console.log("hy")
@@ -74,14 +93,13 @@ const InputData = () => {
                         <tr className="text-left">
                             <th className='w-[5%] text-center'>No</th>
                             <th className='w-[5%] text-center'>Act</th>
-                            <th className='w-[10%]'>Kode</th>
-                            <th className='w-[35%]'>Nama</th>
-                            <th className='w-[45%]'>Jabatan Asn</th>
+                            <th className='w-[10%] text-center'>Kode</th>
+                            <th className='w-[80%]'>Nama</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        {[...Array(8)].map((item, index) => (
+                        {List?.map((item, index) => (
                             <tr key={index} className='poppins'>
                                 <td className=''>
                                     <p className='text-center'>{index + 1}</p>
@@ -93,9 +111,8 @@ const InputData = () => {
                                         </button>
                                     </div>
                                 </td>
-                                <td className=''><p className='text-center'>01</p></td>
-                                <td className=''><p>xxx</p></td>
-                                <td className=''><p>yyy</p></td>
+                                <td className=''><p className='text-center'>{item.kode}</p></td>
+                                <td className=''><p>{item.nama}</p></td>
                             </tr>
                         ))}
                     </tbody>

@@ -2,7 +2,7 @@ import { useState, Dispatch, SetStateAction } from 'react'
 import BButton from '@/components/items/BButton'
 import BInput from '@/components/items/BInput'
 import { useUrlStore } from '@/store/useUrlStore'
-import { useQuery, useMutation, useQueryClient, QueryClient } from "@tanstack/react-query"
+import { useMutation, useQueryClient, QueryClient } from "@tanstack/react-query"
 
 interface FormAddProps {
     setClose: Dispatch<SetStateAction<boolean>>,
@@ -62,7 +62,6 @@ const FormAdd = ({ setClose, isEdit }: FormAddProps) => {
             setClose(false)
         },
         onError: (err: any) => {
-
             alert(`${url.APP}/api/v1/simpeg/master/agama/create = ` + ` ${err}`)
         }
     })
