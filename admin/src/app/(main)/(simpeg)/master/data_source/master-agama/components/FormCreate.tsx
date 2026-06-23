@@ -2,12 +2,18 @@ import { useState, Dispatch, SetStateAction } from 'react'
 import BButton from '@/components/items/BButton'
 import BInput from '@/components/items/BInput'
 import { useUrlStore } from '@/store/useUrlStore'
-
-
+import { useQuery, useMutation, useQueryClient, QueryClient } from "@tanstack/react-query"
 
 interface FormAddProps {
     setClose: Dispatch<SetStateAction<boolean>>,
     isEdit: boolean
+}
+
+interface FormData {
+    id: string,
+    kode: string,
+    nama: string,
+    created_by: string
 }
 
 interface FormResponse {
@@ -18,7 +24,7 @@ interface FormResponse {
     created_at: string
 }
 
-const createData = async (url: string, data: FormResponse): Promise<FormResponse> => {
+const createData = async (url: string, data: FormData): Promise<FormResponse> => {
     const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -30,12 +36,35 @@ const createData = async (url: string, data: FormResponse): Promise<FormResponse
 
 const FormAdd = ({ setClose, isEdit }: FormAddProps) => {
 
+    const queryClient = useQueryClient()
     const url = useUrlStore(state => state.URL)
     const [textx, setTextx] = useState<string | number>("")
-    const [form, setForm] = useState({
-        id: null,
+    const [form, setForm] = useState<FormData>({
+        id: '',
         kode: '',
         nama: '',
+        created_by: "user.id"
+    })
+
+    const createDataMutation = useMutation({
+        mutationFn: (newFormData: FormData) => createData(
+            `${url.APP}/api/v1/simpeg/master/agama/create`,
+            newFormData
+        ),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['master_agama'] });
+            setForm({
+                id: '',
+                kode: '',
+                nama: '',
+                created_by: "user.id"
+            })
+            setClose(false)
+        },
+        onError: (err: any) => {
+
+            alert(`${url.APP}/api/v1/simpeg/master/agama/create = ` + ` ${err}`)
+        }
     })
 
     const setItemForm = (key: string, value: any) => {
@@ -47,6 +76,7 @@ const FormAdd = ({ setClose, isEdit }: FormAddProps) => {
 
     const submit = () => {
         console.log(form)
+        createDataMutation.mutate(form)
     }
 
     return (
@@ -74,7 +104,6 @@ const FormAdd = ({ setClose, isEdit }: FormAddProps) => {
                 />
             </div>
 
-
             <div className='flex gap-2 justify-end mt-3 py-2 border-y border-b-gray-2'>
                 <div className='w-30'>
                     {
@@ -86,9 +115,7 @@ const FormAdd = ({ setClose, isEdit }: FormAddProps) => {
                             >
                                 <p className='text-b-gray-6 text-[13px]'>Edit</p>
                             </BButton>
-
                         ) : (
-
                             <BButton
                                 color='blue'
                                 size='sm'
@@ -98,7 +125,6 @@ const FormAdd = ({ setClose, isEdit }: FormAddProps) => {
                             </BButton>
                         )
                     }
-
 
                 </div>
                 <div className='w-30'>
