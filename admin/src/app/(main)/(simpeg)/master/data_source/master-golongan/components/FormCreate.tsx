@@ -2,23 +2,29 @@ import { useState, Dispatch, SetStateAction } from 'react'
 import BButton from '@/components/items/BButton'
 import BInput from '@/components/items/BInput'
 import { useUrlStore } from '@/store/useUrlStore'
+import { useMutation, useQueryClient, QueryClient } from "@tanstack/react-query"
 
+interface FormData {
+    id: string,
+    kode: string,
+    nama: string,
+    created_by: string
+}
 
+interface FormResponse {
+    id: string,
+    kode: string,
+    nama: string,
+    created_by: string,
+    created_at: string
+}
 
 interface FormAddProps {
     setClose: Dispatch<SetStateAction<boolean>>,
     isEdit: boolean
 }
 
-interface FormProps {
-    id?: string,
-    kode: string,
-    nama: string,
-    jabatan_asn: string,
-}
-
-
-const createData = async (url: string, data: FormProps): Promise<FormProps> => {
+const createData = async (url: string, data: FormData): Promise<FormResponse> => {
     const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -30,14 +36,34 @@ const createData = async (url: string, data: FormProps): Promise<FormProps> => {
 
 const FormAdd = ({ setClose, isEdit }: FormAddProps) => {
 
+    const queryClient = useQueryClient()
     const url = useUrlStore(state => state.URL)
-
     const [textx, setTextx] = useState<string | number>("")
-    const [form, setForm] = useState({
-        id: null,
+    const [form, setForm] = useState<FormData>({
+        id: '',
         kode: '',
         nama: '',
-        jabatan_asn: '',
+        created_by: "user.id"
+    })
+
+    const createDataMutation = useMutation({
+        mutationFn: (newFormData: FormData) => createData(
+            `${url.APP}/api/v1/simpeg/master/ref_golongan/create`,
+            newFormData
+        ),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['ref_golongan'] });
+            setForm({
+                id: '',
+                kode: '',
+                nama: '',
+                created_by: "user.id"
+            })
+            setClose(false)
+        },
+        onError: (err: any) => {
+            alert(`Error : ${err}`)
+        }
     })
 
     const setItemForm = (key: string, value: any) => {
@@ -49,14 +75,15 @@ const FormAdd = ({ setClose, isEdit }: FormAddProps) => {
 
     const submit = () => {
         console.log(form)
+        createDataMutation.mutate(form)
     }
 
     return (
         <div className='px-5 pb-2'>
             <div className='pt-1'>
                 <BInput
-                    title='Kode Esselon (Id pada SIASN)'
-                    placeholder='Kode esselon'
+                    title='Kode Golongan (Id pada SIASN)'
+                    placeholder='Kode Golongan'
                     type='text'
                     value={form.kode}
                     onChange={(value) => {
@@ -66,23 +93,12 @@ const FormAdd = ({ setClose, isEdit }: FormAddProps) => {
             </div>
             <div className='pt-1'>
                 <BInput
-                    title='Nama Esselon'
-                    placeholder='Nama Esselon'
+                    title='Nama Golongan'
+                    placeholder='Nama Golongan'
                     type='text'
                     value={form.nama}
                     onChange={(value) => {
                         setItemForm('nama', value)
-                    }}
-                />
-            </div>
-            <div className='pt-1'>
-                <BInput
-                    title='Jabatan ASN'
-                    placeholder='Jabatan ASN'
-                    type='text'
-                    value={form.jabatan_asn}
-                    onChange={(value) => {
-                        setItemForm('jabatan_asn', value)
                     }}
                 />
             </div>
@@ -98,9 +114,7 @@ const FormAdd = ({ setClose, isEdit }: FormAddProps) => {
                             >
                                 <p className='text-b-gray-6 text-[13px]'>Edit</p>
                             </BButton>
-
                         ) : (
-
                             <BButton
                                 color='blue'
                                 size='sm'
@@ -110,7 +124,6 @@ const FormAdd = ({ setClose, isEdit }: FormAddProps) => {
                             </BButton>
                         )
                     }
-
 
                 </div>
                 <div className='w-30'>

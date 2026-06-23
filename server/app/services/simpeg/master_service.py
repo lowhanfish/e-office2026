@@ -1,4 +1,4 @@
-from app.services.base import CRUDBase
+from app.services.base_standard import CRUDBase
 from app.models.simpeg.master.models import Agama, RefHukdis, Esselon, RefRiwayat
 
 # Membuat instance CRUD untuk masing-masing tabel

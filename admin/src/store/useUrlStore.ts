@@ -34,6 +34,11 @@ export const useUrlStore = create<useUrlStoreProps>((set)=>({
     },
     DataShow : [
         {
+            id: 2,
+            value: 2,
+            text: "2 - Data tampil ",
+        },
+        {
             id: 8,
             value: 8,
             text: "8 - Data tampil ",

@@ -81,7 +81,7 @@ const BPagination = ({ pageSelect, setPageSelect, pageLimit, dataLength, onClick
                 </button>
             </div>
 
-            <div className='flex gap-0.5'>
+            <div className='flex gap-1'>
 
                 {
                     (!listPage.includes(1)) &&
@@ -103,7 +103,6 @@ const BPagination = ({ pageSelect, setPageSelect, pageLimit, dataLength, onClick
                                 <p className='text-[12px]'>1</p>
                             </button>
                             <p>...</p>
-
                         </>
                     )
                 }
@@ -128,7 +127,6 @@ const BPagination = ({ pageSelect, setPageSelect, pageLimit, dataLength, onClick
                             <p className='text-[12px]'>{data}</p>
                         </button>
                     ))
-
                 }
                 {
                     (dataLength > pageLimit && !listPage.includes(dataLength)) &&
@@ -150,11 +148,9 @@ const BPagination = ({ pageSelect, setPageSelect, pageLimit, dataLength, onClick
                             `}>
                                 <p className='text-[12px]'>{dataLength}</p>
                             </button>
-
                         </>
                     )
                 }
-
             </div>
 
 
@@ -167,9 +163,6 @@ const BPagination = ({ pageSelect, setPageSelect, pageLimit, dataLength, onClick
                     <BsChevronDoubleRight />
                 </button>
             </div>
-
-
-            {/* <p>{pageSelect}</p> */}
 
 
         </div>

@@ -4,11 +4,6 @@ import BInput from '@/components/items/BInput'
 import { useUrlStore } from '@/store/useUrlStore'
 import { useMutation, useQueryClient, QueryClient } from "@tanstack/react-query"
 
-interface FormAddProps {
-    setClose: Dispatch<SetStateAction<boolean>>,
-    isEdit: boolean
-}
-
 interface FormData {
     id: string,
     kode: string,
@@ -22,6 +17,11 @@ interface FormResponse {
     nama: string,
     created_by: string,
     created_at: string
+}
+
+interface FormAddProps {
+    setClose: Dispatch<SetStateAction<boolean>>,
+    isEdit: boolean
 }
 
 const createData = async (url: string, data: FormData): Promise<FormResponse> => {

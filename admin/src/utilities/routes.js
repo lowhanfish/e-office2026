@@ -21,16 +21,6 @@ const routex = [
                         path:"/core/asset_management/asset_depreciation",
                         children : []
                     },
-                    {
-                        title : "Company Asset Tracking",
-                        path:"/core/asset_management/company_asset_tracking",
-                        children : []
-                    },
-                    {
-                        title : "Maintenance Scheduling",
-                        path:"/core/asset_management/maintenance_scheduling",
-                        children : []
-                    },
                 ]
             },
             {
@@ -39,26 +29,6 @@ const routex = [
                 children : [
                     {
                         title : "AI-Lead SCorring",
-                        path:"/",
-                        children : []
-                    },
-                    {
-                        title : "Customer Database",
-                        path:"/",
-                        children : []
-                    },
-                    {
-                        title : "Follow-Up Management",
-                        path:"/",
-                        children : []
-                    },
-                    {
-                        title : "Interaction History",
-                        path:"/",
-                        children : []
-                    },
-                    {
-                        title : "Lead Pipeline",
                         path:"/",
                         children : []
                     },
@@ -75,31 +45,6 @@ const routex = [
                 children : [
                     {
                         title : "AI-Anomaly Detection",
-                        path:"/",
-                        children : []
-                    },
-                    {
-                        title : "Budget Planning",
-                        path:"/",
-                        children : []
-                    },
-                    {
-                        title : "Cashflow Tracking",
-                        path:"/",
-                        children : []
-                    },
-                    {
-                        title : "Expense Management",
-                        path:"/",
-                        children : []
-                    },
-                    {
-                        title : "Financial Reporting",
-                        path:"/",
-                        children : []
-                    },
-                    {
-                        title : "Invoice",
                         path:"/",
                         children : []
                     },
@@ -186,8 +131,8 @@ const routex = [
                         children : []
                     },
                     {
-                        title : "Master Esselon",
-                        path:"/master/data_source/master-esselon",
+                        title : "Master Golongan",
+                        path:"/master/data_source/master-golongan",
                         children : []
                     },
                    

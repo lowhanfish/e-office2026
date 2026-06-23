@@ -27,7 +27,6 @@ const readData = async (url: string): Promise<FormResponse[]> => {
     return res.json()
 }
 
-
 const InputData = () => {
 
     const queryClient = useQueryClient()
@@ -40,19 +39,17 @@ const InputData = () => {
     const [modalCreate, setModalCreate] = useState(false);
     const [createType, setCreateType] = useState(false)
     const [pageSelect, setPageSelect] = useState<number>(1);
-    const [pageLimit, setPageLimit] = useState<number>(4)
+    const [pageLimit, setPageLimit] = useState<number>(2)
     const [dataLength, setDataLength] = useState<number>(99999)
 
     const { data: List, isLoading, isError, error } = useQuery({
-        queryFn: () => readData(`${url}/api/v1/simpeg/master/agama/?skip=0&limit=100`),
-        queryKey: ['master_agama']
+        queryFn: () => readData(`${url}/api/v1/simpeg/master/agama/?skip=${((pageSelect - 1) * pageLimit)}&limit=${pageLimit}`),
+        queryKey: ['master_agama', pageSelect, pageLimit]
     })
 
-    const testClick = (page: number) => {
+    const searchData = (page: number) => {
         console.log(page)
     }
-
-
 
     return (
 
@@ -125,23 +122,21 @@ const InputData = () => {
                 <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
                     <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-10 w-full'>
 
-                        {pageSelect}
+                        {/* {pageSelect} */}
                         <div className='col-span-6 flex flex-col md:flex-row  gap-2'>
                             <BPagination
                                 pageSelect={pageSelect}
                                 setPageSelect={setPageSelect}
                                 pageLimit={pageLimit}
                                 dataLength={dataLength}
-                                onClick={(page) => {
-                                    testClick(page)
-                                }}
+                                onClick={(page) => { }}
                             />
                         </div>
 
                         <div className='col-span-6 flex justify-center md:justify-end'>
                             <BInputSelect
                                 onChange={(value) => {
-                                    console.log(value)
+                                    setPageLimit(Number(value))
                                 }}
                                 data={DataShow}
                             />
