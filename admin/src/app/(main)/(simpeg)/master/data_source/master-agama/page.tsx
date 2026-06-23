@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import BInput from '@/components/items/BInput'
 import TextSeparate from '@/components/items/TextSeparate';
 import { BsGear } from "react-icons/bs";
@@ -48,9 +48,11 @@ const InputData = () => {
         queryKey: ['master_agama']
     })
 
-    const testClick = () => {
-        console.log("hy")
+    const testClick = (page: number) => {
+        console.log(page)
     }
+
+
 
     return (
 
@@ -123,13 +125,16 @@ const InputData = () => {
                 <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
                     <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-10 w-full'>
 
+                        {pageSelect}
                         <div className='col-span-6 flex flex-col md:flex-row  gap-2'>
                             <BPagination
                                 pageSelect={pageSelect}
                                 setPageSelect={setPageSelect}
                                 pageLimit={pageLimit}
                                 dataLength={dataLength}
-                                onClick={testClick}
+                                onClick={(page) => {
+                                    testClick(page)
+                                }}
                             />
                         </div>
 
@@ -177,5 +182,4 @@ const InputData = () => {
 }
 
 export default InputData
-
 

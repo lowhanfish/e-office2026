@@ -8,7 +8,7 @@ interface BPaginationProps {
     setPageSelect: Dispatch<SetStateAction<number>>,
     pageLimit: number,
     dataLength: number,
-    onClick?: () => void
+    onClick?: (page: number) => void
 }
 
 
@@ -26,13 +26,21 @@ const BPagination = ({ pageSelect, setPageSelect, pageLimit, dataLength, onClick
 
     const next = () => {
         if (pageSelect < dataLength) {
-            setPageSelect(pageSelect + 1)
+            const nextPage = pageSelect + 1
+            setPageSelect(nextPage)
+            if (onClick) {
+                onClick(nextPage)
+            }
         }
     }
 
     const back = () => {
         if (pageSelect > 1) {
-            setPageSelect(pageSelect - 1)
+            const prevPage = pageSelect - 1
+            setPageSelect(prevPage)
+            if (onClick) {
+                onClick(prevPage)
+            }
         }
     }
 
@@ -67,11 +75,8 @@ const BPagination = ({ pageSelect, setPageSelect, pageLimit, dataLength, onClick
                 <button
                     onClick={() => {
                         back();
-                        if (onClick) {
-                            onClick()
-                        }
                     }}
-                    className='rounded-full border-1 border-b-gray-4 hover:bg-b-gray-2 active:bg-b-gray-5 active:text-b-gray-3 h-7 w-7 flex justify-center items-center cursor-pointer'>
+                    className='rounded-full border border-b-gray-4 hover:bg-b-gray-2 active:bg-b-gray-5 active:text-b-gray-3 h-7 w-7 flex justify-center items-center cursor-pointer'>
                     <BsChevronDoubleLeft />
                 </button>
             </div>
@@ -86,7 +91,7 @@ const BPagination = ({ pageSelect, setPageSelect, pageLimit, dataLength, onClick
                                 onClick={() => {
                                     setPageSelect(1);
                                     if (onClick) {
-                                        onClick()
+                                        onClick(1)
                                     }
                                 }}
                                 className={`
@@ -111,7 +116,7 @@ const BPagination = ({ pageSelect, setPageSelect, pageLimit, dataLength, onClick
                             onClick={() => {
                                 setPageSelect(data);
                                 if (onClick) {
-                                    onClick()
+                                    onClick(data)
                                 }
                             }}
                             className={`
@@ -134,7 +139,7 @@ const BPagination = ({ pageSelect, setPageSelect, pageLimit, dataLength, onClick
                                 onClick={() => {
                                     setPageSelect(dataLength);
                                     if (onClick) {
-                                        onClick()
+                                        onClick(dataLength)
                                     }
                                 }}
                                 className={`
@@ -157,11 +162,8 @@ const BPagination = ({ pageSelect, setPageSelect, pageLimit, dataLength, onClick
                 <button
                     onClick={() => {
                         next()
-                        if (onClick) {
-                            onClick()
-                        }
                     }}
-                    className='rounded-full border-1 border-b-gray-4 hover:bg-b-gray-2 active:bg-b-gray-5 active:text-b-gray-3 h-7 w-7 flex justify-center items-center cursor-pointer'>
+                    className='rounded-full border border-b-gray-4 hover:bg-b-gray-2 active:bg-b-gray-5 active:text-b-gray-3 h-7 w-7 flex justify-center items-center cursor-pointer'>
                     <BsChevronDoubleRight />
                 </button>
             </div>
