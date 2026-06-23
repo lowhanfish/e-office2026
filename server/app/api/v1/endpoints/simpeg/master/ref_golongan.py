@@ -9,7 +9,12 @@ from app.models.simpeg.master.models import RefGolongan
 router = APIRouter()
 
 @router.get("/read", response_model=List[RefGolonganResponse])
-async def read_ref_golongan(db:AsyncSession = Depends(get_db)):
+async def read_ref_golongan(
+    db:AsyncSession = Depends(get_db),
+    skip : int = 0,
+    limit : int = 100,
+    search: str | None = None,
+):
     """
     ## Mengambil semua List Ref Golongan
     Membaca data Ref Golongan baru dari sistem.
@@ -23,6 +28,11 @@ async def read_ref_golongan(db:AsyncSession = Depends(get_db)):
     - `422`: Jika format input tidak sesuai skema.
     """
     query = select(RefGolongan)
+    if search:
+        query = query.where(RefGolongan.nama.ilike(f"%{search}%"))
+
+    query = query.offset(skip).limit(limit).order_by(RefGolongan.created_at.asc())
+
     result = await db.execute(query)
     return result.scalars().all()
 

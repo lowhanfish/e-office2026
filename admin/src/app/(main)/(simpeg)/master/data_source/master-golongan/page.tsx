@@ -17,6 +17,8 @@ interface FormResponse {
     id: string,
     kode: string,
     nama: string,
+    nama_pangkat: string,
+    gol_pppk: string,
     created_by: string,
     created_at: string
 }
@@ -39,11 +41,11 @@ const InputData = () => {
     const [modalCreate, setModalCreate] = useState(false);
     const [createType, setCreateType] = useState(false)
     const [pageSelect, setPageSelect] = useState<number>(1);
-    const [pageLimit, setPageLimit] = useState<number>(2)
+    const [pageLimit, setPageLimit] = useState<number>(8)
     const [dataLength, setDataLength] = useState<number>(99999)
 
     const { data: List, isLoading, isError, error } = useQuery({
-        queryFn: () => readData(`${url}/api/v1/simpeg/master/ref_golongan/?skip=${((pageSelect - 1) * pageLimit)}&limit=${pageLimit}`),
+        queryFn: () => readData(`${url}/api/v1/simpeg/master/ref_golongan/read?skip=${((pageSelect - 1) * pageLimit)}&limit=${pageLimit}`),
         queryKey: ['ref_golongan', pageSelect, pageLimit]
     })
 

@@ -8,6 +8,8 @@ interface FormData {
     id: string,
     kode: string,
     nama: string,
+    nama_pangkat: string,
+    gol_pppk: string,
     created_by: string
 }
 
@@ -15,6 +17,8 @@ interface FormResponse {
     id: string,
     kode: string,
     nama: string,
+    nama_pangkat: string,
+    gol_pppk: string,
     created_by: string,
     created_at: string
 }
@@ -43,6 +47,8 @@ const FormAdd = ({ setClose, isEdit }: FormAddProps) => {
         id: '',
         kode: '',
         nama: '',
+        nama_pangkat: '',
+        gol_pppk: '',
         created_by: "user.id"
     })
 
@@ -53,13 +59,15 @@ const FormAdd = ({ setClose, isEdit }: FormAddProps) => {
         ),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['ref_golongan'] });
-            setForm({
-                id: '',
-                kode: '',
-                nama: '',
-                created_by: "user.id"
-            })
-            setClose(false)
+            // setForm({
+            //     id: '',
+            //     kode: '',
+            //     nama: '',
+            //     nama_pangkat: '',
+            //     gol_pppk: '',
+            //     created_by: "user.id"
+            // })
+            // setClose(false)
         },
         onError: (err: any) => {
             alert(`Error : ${err}`)
@@ -99,6 +107,28 @@ const FormAdd = ({ setClose, isEdit }: FormAddProps) => {
                     value={form.nama}
                     onChange={(value) => {
                         setItemForm('nama', value)
+                    }}
+                />
+            </div>
+            <div className='pt-1'>
+                <BInput
+                    title='Nama Pangkat'
+                    placeholder='Nama Pangkat'
+                    type='text'
+                    value={form.nama_pangkat}
+                    onChange={(value) => {
+                        setItemForm('nama_pangkat', value)
+                    }}
+                />
+            </div>
+            <div className='pt-1'>
+                <BInput
+                    title='Gol-PPPK'
+                    placeholder='Gol-PPPK'
+                    type='text'
+                    value={form.gol_pppk}
+                    onChange={(value) => {
+                        setItemForm('gol_pppk', value)
                     }}
                 />
             </div>
