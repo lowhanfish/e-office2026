@@ -30,8 +30,11 @@ async def read_ref_golongan(
     query = select(RefGolongan)
     if search:
         query = query.where(RefGolongan.nama.ilike(f"%{search}%"))
-
-    query = query.offset(skip).limit(limit).order_by(RefGolongan.created_at.asc())
+    query = (
+        query.order_by(RefGolongan.created_at.asc())
+        .offset(skip)
+        .limit(limit)
+    )
 
     result = await db.execute(query)
     return result.scalars().all()

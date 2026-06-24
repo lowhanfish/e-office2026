@@ -59,15 +59,7 @@ const FormAdd = ({ setClose, isEdit }: FormAddProps) => {
         ),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['ref_golongan'] });
-            // setForm({
-            //     id: '',
-            //     kode: '',
-            //     nama: '',
-            //     nama_pangkat: '',
-            //     gol_pppk: '',
-            //     created_by: "user.id"
-            // })
-            // setClose(false)
+            emptyForm()
         },
         onError: (err: any) => {
             alert(`Error : ${err}`)
@@ -79,6 +71,18 @@ const FormAdd = ({ setClose, isEdit }: FormAddProps) => {
             ...form,
             [key]: value
         })
+    }
+
+    const emptyForm = () => {
+        setForm({
+            id: '',
+            kode: '',
+            nama: '',
+            nama_pangkat: '',
+            gol_pppk: '',
+            created_by: "user.id"
+        })
+        setClose(false)
     }
 
     const submit = () => {

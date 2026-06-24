@@ -12,6 +12,9 @@ import BInputSelect from '@/components/items/BInputSelect';
 import { useUrlStore } from "@/store/useUrlStore"
 import FormCreate from './components/FormCreate';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { listindex } from "@/utilities/pagination"
+import { BSkeletonTable } from '@/components/items/BSkeleton';
+
 
 interface FormResponse {
     id: string,
@@ -53,6 +56,7 @@ const InputData = () => {
         console.log(page)
     }
 
+
     return (
 
         <div>
@@ -89,43 +93,50 @@ const InputData = () => {
 
             <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
 
-                <table className='Btable w-full'>
-                    <thead>
-                        <tr className="text-left">
-                            <th className='w-[5%] text-center'>No</th>
-                            <th className='w-[5%] text-center'>Act</th>
-                            <th className='w-[10%] text-center'>Kode</th>
-                            <th className='w-[80%]'>Nama</th>
-                        </tr>
-                    </thead>
+                {
+                    isLoading ? (
+                        <BSkeletonTable limit={pageLimit} />
+                    ) : (
+                        <table className='Btable w-full'>
+                            <thead>
+                                <tr className="text-left">
+                                    <th className='w-[5%] text-center'>No</th>
+                                    <th className='w-[5%] text-center'>Act</th>
+                                    <th className='w-[10%] text-center'>Kode</th>
+                                    <th className='w-[80%]'>Nama</th>
+                                </tr>
+                            </thead>
 
-                    <tbody>
-                        {List?.map((item, index) => (
-                            <tr key={index} className='poppins'>
-                                <td className=''>
-                                    <p className='text-center'>{index + 1}</p>
-                                </td>
-                                <td className=''>
-                                    <div className='flex justify-center'>
-                                        <button onClick={() => setOpen(!open)} className='bg-b-gray-2/80 hover:bg-b-gray-2/50 flex justify-center items-center rounded-full w-6 h-6 cursor-pointer'>
-                                            <BsGear className='text-b-gray-6' />
-                                        </button>
-                                    </div>
-                                </td>
-                                <td className=''><p className='text-center'>{item.kode}</p></td>
-                                <td className=''><p>{item.nama}</p></td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                            <tbody>
+                                {List?.map((item, index) => (
+                                    <tr key={index} className='poppins'>
+                                        <td className=''>
+                                            <p className='text-center'>{listindex(pageLimit, pageSelect, index)}</p>
+                                        </td>
+                                        <td className=''>
+                                            <div className='flex justify-center'>
+                                                <button onClick={() => setOpen(!open)} className='bg-b-gray-2/80 hover:bg-b-gray-2/50 flex justify-center items-center rounded-full w-6 h-6 cursor-pointer'>
+                                                    <BsGear className='text-b-gray-6' />
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td className=''><p className='text-center'>{item.kode}</p></td>
+                                        <td className=''><p>{item.nama}</p></td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )
+                }
+
             </div>
 
             <div>
                 <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
-                    <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-10 w-full'>
+                    <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-2 md:gap-y-10 w-full'>
 
                         {/* {pageSelect} */}
-                        <div className='col-span-6 flex flex-col md:flex-row  gap-2'>
+                        <div className='col-span-12 md:col-span-9 flex flex-col md:flex-row  gap-2'>
                             <BPagination
                                 pageSelect={pageSelect}
                                 setPageSelect={setPageSelect}
@@ -135,12 +146,13 @@ const InputData = () => {
                             />
                         </div>
 
-                        <div className='col-span-6 flex justify-center md:justify-end'>
+                        <div className='col-span-12 md:col-span-3 flex justify-center md:justify-end'>
                             <BInputSelect
                                 onChange={(value) => {
                                     setPageLimit(Number(value))
                                 }}
-                                data={DataShow}
+                                options={DataShow}
+                                datavalue={pageLimit}
                             />
                         </div>
                     </div>
