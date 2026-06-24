@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useEffect } from 'react'
@@ -8,11 +7,10 @@ import { BsGear } from "react-icons/bs";
 import BModal from '@/components/items/BModal';
 import BButton from '@/components/items/BButton';
 import BPagination from '@/components/items/BPagination';
-// import BPagination from '@/components/items/BPagination_backup';
 import BInputSelect from '@/components/items/BInputSelect';
 import { useUrlStore } from "@/store/useUrlStore"
 import FormCreate from './components/FormCreate';
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { listindex } from "@/utilities/pagination"
 import { BSkeletonTable } from '@/components/items/BSkeleton';
 
@@ -49,18 +47,19 @@ const readData = async (url: string): Promise<FormResponseList> => {
 }
 
 const InputData = () => {
-
     const queryClient = useQueryClient()
     const url = useUrlStore(state => state.URL.APP)
     const DataShow = useUrlStore(state => state.DataShow)
 
-    const [numberx, setNumberx] = useState<number | string>(0)
-    const [textx, setTextx] = useState<string | number>("")
     const [open, setOpen] = useState(false);
     const [modalCreate, setModalCreate] = useState(false);
     const [createType, setCreateType] = useState(false)
     const [pageSelect, setPageSelect] = useState<number>(1);
     const [pageLimit, setPageLimit] = useState<number>(8)
+
+    // PERBAIKAN DEBOUNCE STATE
+    const [search, setSearch] = useState<string>("") // State instan untuk input
+    const [debouncedSearch, setDebouncedSearch] = useState<string>("") // State tunda untuk fetch API
 
     const [form, setForm] = useState<FormData>({
         id: '',
@@ -71,18 +70,26 @@ const InputData = () => {
         created_by: "user.id"
     })
 
+    // PERBAIKAN LOGIKA DEBOUNCE MANUAL
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedSearch(search);
+            setPageSelect(1); // Reset halaman ke 1 sewaktu user mencari kata kunci baru
+        }, 500); // Toleransi waktu tunggu: 500ms
+
+        return () => {
+            clearTimeout(handler); // Hancurkan timer jika user mengetik lagi sebelum 500ms selesai
+        };
+    }, [search]);
+
+    // PERBAIKAN USEQUERY: Menggunakan debouncedSearch
     const { data: List, isLoading, isError, error } = useQuery({
-        queryFn: () => readData(`${url}/api/v1/simpeg/master/ref_golongan/read?skip=${((pageSelect - 1) * pageLimit)}&limit=${pageLimit}`),
-        queryKey: ['ref_golongan', pageSelect, pageLimit]
+        queryFn: () => readData(`${url}/api/v1/simpeg/master/ref_golongan/read?skip=${((pageSelect - 1) * pageLimit)}&limit=${pageLimit}&search=${debouncedSearch}`),
+        // Menambahkan debouncedSearch ke queryKey agar mentriger pemanggilan fetch ulang otomatis
+        queryKey: ['ref_golongan', pageSelect, pageLimit, debouncedSearch]
     })
 
-    const searchData = (page: number) => {
-        console.log(page)
-    }
-
-
     return (
-
         <div>
             <TextSeparate title='Master Golongan' />
             <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
@@ -90,12 +97,13 @@ const InputData = () => {
                     <div className='col-span-6 '>
                         <div className='text-[12px] text-b-gray-3 pl-2'>Cari Data</div>
                         <div className='flex gap-1 relative'>
+                            {/* PERBAIKAN INPUT: Mengikat value dan onChange langsung ke state 'search' */}
                             <BInput
-                                placeholder='Data Agama'
+                                placeholder='Cari Data Golongan...'
                                 type='text'
-                                value={textx}
+                                value={search}
                                 onChange={(value) => {
-                                    setTextx(value)
+                                    setSearch(value as string)
                                 }}
                             />
                             <div className='w-12'>
@@ -111,12 +119,10 @@ const InputData = () => {
                     </div>
                     <div className='col-span-6 '>
                     </div>
-
                 </div>
             </div>
 
             <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
-
                 {
                     isLoading ? (
                         <BSkeletonTable limit={pageLimit} />
@@ -152,14 +158,11 @@ const InputData = () => {
                         </table>
                     )
                 }
-
             </div>
 
             <div>
                 <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
                     <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-2 md:gap-y-10 w-full'>
-
-                        {/* {pageSelect} */}
                         <div className='col-span-12 md:col-span-9 flex flex-col md:flex-row  gap-2'>
                             <BPagination
                                 pageSelect={pageSelect}
@@ -167,7 +170,7 @@ const InputData = () => {
                                 pageLimit={pageLimit}
                                 pageShow={4}
                                 dataLength={List?.total ?? 0}
-                                onClick={(page) => { console.log("") }}
+                                onClick={(page) => { console.log(page) }}
                             />
                         </div>
 
@@ -183,7 +186,6 @@ const InputData = () => {
                     </div>
                 </div>
             </div>
-
 
             <div>
                 <BModal title='Configuration' openModal={open} setOpenModal={setOpen} size='xs'>
@@ -202,16 +204,11 @@ const InputData = () => {
                     </div>
                 </BModal>
 
-                {/* Create */}
                 <BModal title={`${createType ? 'Edit' : 'Add'} Data`} openModal={modalCreate} setOpenModal={setModalCreate} size='sm'>
                     <FormCreate setClose={setModalCreate} isEdit={createType} form={form} setForm={setForm} />
                 </BModal>
-
             </div>
-
-
         </div>
-
     )
 }
 
