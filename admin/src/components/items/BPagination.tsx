@@ -1,31 +1,45 @@
 'use client'
-import { useEffect, useState, Dispatch, SetStateAction } from 'react'
-import { BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronBarLeft, BsChevronBarRight } from "react-icons/bs";
+
+import { useMemo, Dispatch, SetStateAction } from 'react'
+import { BsChevronDoubleLeft, BsChevronDoubleRight } from 'react-icons/bs';
 
 
 interface BPaginationProps {
     pageSelect: number,
     setPageSelect: Dispatch<SetStateAction<number>>,
     pageLimit: number,
-    dataLength: number,
+    dataLength?: number,
     onClick?: (page: number) => void
 }
 
 
 
 const BPagination = ({ pageSelect, setPageSelect, pageLimit, dataLength, onClick }: BPaginationProps) => {
+    const pageLength = useMemo(() => {
+        if (!dataLength || !pageLimit) {
+            return 1;
+        }
 
-    // const [pageSelect, setPageSelect] = useState<number>(1);
-    // const [pageLimit, setPageLimit] = useState<number>(4)
-    // const [dataLength, setDataLength] = useState<number>(99999)
+        return Math.max(1, Math.ceil(dataLength / pageLimit));
+    }, [dataLength, pageLimit]);
 
-    const [listPage, setListPage] = useState<number[]>([])
+    const listPage = useMemo(() => {
+        const safePageSelect = Math.min(Math.max(pageSelect, 1), pageLength);
+        const startGroup = Math.floor((safePageSelect - 1) / pageLimit) * pageLimit + 1;
+        const pages: number[] = [];
 
-    // const total_page = Math.ceil(dataLength/pageLimit);
-    // const start_number = pageLimit*pageSelect-(pageLimit-1) // page dimulai dari
+        for (let index = 0; index < pageLimit; index++) {
+            const targetPage = startGroup + index;
+            if (targetPage <= pageLength) {
+                pages.push(targetPage);
+            }
+        }
+
+        return pages;
+    }, [pageSelect, pageLimit, pageLength]);
 
     const next = () => {
-        if (pageSelect < dataLength) {
+        if (pageSelect < pageLength) {
             const nextPage = pageSelect + 1
             setPageSelect(nextPage)
             if (onClick) {
@@ -44,29 +58,9 @@ const BPagination = ({ pageSelect, setPageSelect, pageLimit, dataLength, onClick
         }
     }
 
-    const pushArray = () => {
-        // Tentukan angka awal grup (Start Group)
-        // Jika pageSelect 1-4, startGroup = 1
-        // Jika pageSelect 5-8, startGroup = 5
-        // Jika pageSelect 9, startGroup = 9
-        const startGroup = Math.floor((pageSelect - 1) / pageLimit) * pageLimit + 1;
-
-        let arr = [];
-        for (let i = 0; i < pageLimit; i++) {
-            const targetPage = startGroup + i;
-            if (targetPage <= dataLength) {
-                arr.push(targetPage);
-            }
-        }
-
-        setListPage(arr);
-    };
-
-    useEffect(() => {
-        pushArray()
-    }, [pageSelect])
-
-
+    if (pageLength <= 1) {
+        return null;
+    }
 
     return (
         <div className='flex flex-wrap gap-2 justify-center items-center'>
@@ -129,24 +123,24 @@ const BPagination = ({ pageSelect, setPageSelect, pageLimit, dataLength, onClick
                     ))
                 }
                 {
-                    (dataLength > pageLimit && !listPage.includes(dataLength)) &&
+                    (pageLength > pageLimit && !listPage.includes(pageLength)) &&
                     (
                         <>
                             <p>...</p>
                             <button
                                 onClick={() => {
-                                    setPageSelect(dataLength);
+                                    setPageSelect(pageLength);
                                     if (onClick) {
-                                        onClick(dataLength)
+                                        onClick(pageLength)
                                     }
                                 }}
                                 className={`
                                 rounded-full min-h-7 min-w-7 
                                  p-1 
-                                ${pageSelect === dataLength ? 'text-b-gray-1 hover:text-b-gray-2 active:text-b-gray-5 bg-b-gray-6/80 active:bg-b-gray-1' : 'text-b-gray-5 active:bg-b-gray-6/80 active:text-b-gray-1 hover:bg-b-gray-2'}
+                                ${pageSelect === pageLength ? 'text-b-gray-1 hover:text-b-gray-2 active:text-b-gray-5 bg-b-gray-6/80 active:bg-b-gray-1' : 'text-b-gray-5 active:bg-b-gray-6/80 active:text-b-gray-1 hover:bg-b-gray-2'}
                                 cursor-pointer
                             `}>
-                                <p className='text-[12px]'>{dataLength}</p>
+                                <p className='text-[12px]'>{pageLength}</p>
                             </button>
                         </>
                     )

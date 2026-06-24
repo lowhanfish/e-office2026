@@ -8,67 +8,67 @@ const routex = [
         children : []
     },
     {
-        title : "Core",
-        path:"/",
-        icon : <BsGrid />,
-        children : [
-            {
-                title : "Asset Management",
-                path:"/",
-                children : [
-                    {
-                        title : "Asset Depreciation",
-                        path:"/core/asset_management/asset_depreciation",
-                        children : []
-                    },
-                ]
-            },
-            {
-                title : "Customer Management",
-                path:"/",
-                children : [
-                    {
-                        title : "AI-Lead SCorring",
-                        path:"/",
-                        children : []
-                    },
-                ]
-            },
-            {
-                title : "Employee Management",
-                path:"/",
-                children : []
-            },
-            {
-                title : "Financial Management",
-                path:"/",
-                children : [
-                    {
-                        title : "AI-Anomaly Detection",
-                        path:"/",
-                        children : []
-                    },
-                ]
-            },
-            {
-                title : "Sales Management",
-                path:"/",
-                children : []
-            },
-        ]
-    },
-    {
-        title : "Property",
+        title : "Profile",
         path:"/",
         icon : <BsBuildings />,
         children : []
     },
     {
-        title : "AI Assistant",
+        title : "Riwayat Pegawai",
         path:"/",
-        icon : <BsRobot />,
-        children : []
+        icon : <BsGrid />,
+        children : [
+            {
+                title : "Biodata Pegawai",
+                path:"/",
+                children : []
+            },
+            {
+                title : "Kartu Pegawai",
+                path:"/",
+                children : []
+            },
+            {
+                title : "Riwayat Kinerja Periodik",
+                path:"/",
+                children : []
+            },
+            {
+                title : "Data Keluarga",
+                path:"/",
+                children : [
+                    {
+                        title : "Data Anak",
+                        path:"/",
+                        children : []
+                    },
+                    {
+                        title : "Data Pasangan",
+                        path:"/",
+                        children : []
+                    },
+                ]
+            },
+        ]
     },
+    {
+        title : "Monitoring",
+        path:"/",
+        icon : <BsBuildings />,
+        children : [
+            {
+                title : "Daftar Urut Kepangkatan",
+                path:"/",
+                children : []
+            },
+            {
+                title : "Struktur Organisasi",
+                path:"/",
+                children : []
+            },
+        ]
+    },
+    
     {
         title : "Data Mastering",
         path:"/",

@@ -1,14 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy.sql import func
 from typing import List
-from app.schemas.simpeg.master.ref_golongan import RefGolonganCreate, RefGolonganResponse, RefGolonganUpdate
+from app.schemas.simpeg.master.ref_golongan import RefGolonganCreate, RefGolonganResponse, RefGolonganUpdate, RefGolonganResponseList
 from app.db.session import get_db
 from app.models.simpeg.master.models import RefGolongan
 
 router = APIRouter()
 
-@router.get("/read", response_model=List[RefGolonganResponse])
+@router.get("/read", response_model=RefGolonganResponseList)
 async def read_ref_golongan(
     db:AsyncSession = Depends(get_db),
     skip : int = 0,
@@ -21,15 +22,21 @@ async def read_ref_golongan(
 
     **Parameter:**
     - `search`   : String, Untuk mencari data value dari Ref Golongan.
-    - `page_start`: Int, Data page pertama akses page.
-    - `page_limit` : Int, Jumlah data yang ditarik.
+    - `skip`: Int, Data page pertama akses page.
+    - `limit` : Int, Jumlah data yang ditarik.
 
     **Error yang mungkin terjadi:**
     - `422`: Jika format input tidak sesuai skema.
     """
     query = select(RefGolongan)
+
     if search:
         query = query.where(RefGolongan.nama.ilike(f"%{search}%"))
+
+    total_query = select(func.count()).select_from(query.subquery())
+    total_result = await db.execute(total_query)
+    total = total_result.scalar_one_or_none()
+
     query = (
         query.order_by(RefGolongan.created_at.asc())
         .offset(skip)
@@ -37,7 +44,14 @@ async def read_ref_golongan(
     )
 
     result = await db.execute(query)
-    return result.scalars().all()
+    data =  result.scalars().all()
+
+    return {
+        "total": total,
+        "skip": skip,
+        "limit": limit,
+        "data": data,
+    }
 
 
 @router.post("/create", response_model=RefGolonganResponse)

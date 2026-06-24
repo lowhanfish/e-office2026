@@ -15,7 +15,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { listindex } from "@/utilities/pagination"
 import { BSkeletonTable } from '@/components/items/BSkeleton';
 
-
 interface FormResponse {
     id: string,
     kode: string,
@@ -26,7 +25,14 @@ interface FormResponse {
     created_at: string
 }
 
-const readData = async (url: string): Promise<FormResponse[]> => {
+interface FormResponseList {
+    total: number,
+    skip: number,
+    limit: number,
+    data: FormResponse[]
+}
+
+const readData = async (url: string): Promise<FormResponseList> => {
     const res = await fetch(url);
     if (!res.ok) throw new Error("Gagal mengambil data dari server")
     return res.json()
@@ -108,7 +114,7 @@ const InputData = () => {
                             </thead>
 
                             <tbody>
-                                {List?.map((item, index) => (
+                                {List?.data.map((item, index) => (
                                     <tr key={index} className='poppins'>
                                         <td className=''>
                                             <p className='text-center'>{listindex(pageLimit, pageSelect, index)}</p>
@@ -141,8 +147,8 @@ const InputData = () => {
                                 pageSelect={pageSelect}
                                 setPageSelect={setPageSelect}
                                 pageLimit={pageLimit}
-                                dataLength={dataLength}
-                                onClick={(page) => { }}
+                                dataLength={List?.total ?? 0}
+                                onClick={(page) => { console.log("") }}
                             />
                         </div>
 
@@ -191,4 +197,3 @@ const InputData = () => {
 }
 
 export default InputData
-
