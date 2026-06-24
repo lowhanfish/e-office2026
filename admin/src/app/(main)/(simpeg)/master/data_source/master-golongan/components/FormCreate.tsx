@@ -23,9 +23,11 @@ interface FormResponse {
     created_at: string
 }
 
-interface FormAddProps {
+interface FormCreateProps {
     setClose: Dispatch<SetStateAction<boolean>>,
-    isEdit: boolean
+    isEdit: boolean,
+    form: FormData,
+    setForm: Dispatch<SetStateAction<FormData>>
 }
 
 const createData = async (url: string, data: FormData): Promise<FormResponse> => {
@@ -38,19 +40,11 @@ const createData = async (url: string, data: FormData): Promise<FormResponse> =>
     return res.json();
 }
 
-const FormAdd = ({ setClose, isEdit }: FormAddProps) => {
+const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
 
     const queryClient = useQueryClient()
     const url = useUrlStore(state => state.URL)
     const [textx, setTextx] = useState<string | number>("")
-    const [form, setForm] = useState<FormData>({
-        id: '',
-        kode: '',
-        nama: '',
-        nama_pangkat: '',
-        gol_pppk: '',
-        created_by: "user.id"
-    })
 
     const createDataMutation = useMutation({
         mutationFn: (newFormData: FormData) => createData(

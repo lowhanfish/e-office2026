@@ -22,6 +22,7 @@ const ListPagination = () => {
                         pageSelect={pageSelect}
                         setPageSelect={setPageSelect}
                         pageLimit={pageLimit}
+                        pageShow={pageLimit}
                         dataLength={dataLength}
                         onClick={testClick}
                     />
@@ -62,6 +63,7 @@ const ListPagination = () => {
                         pageSelect={pageSelect}
                         setPageSelect={setPageSelect}
                         pageLimit={pageLimit}
+                        pageShow={pageLimit}
                         dataLength={dataLength}
                         onClick={testClick}
                     />

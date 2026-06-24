@@ -96,6 +96,7 @@ const page = () => {
                                 pageSelect={pageSelect}
                                 setPageSelect={setPageSelect}
                                 pageLimit={pageLimit}
+                                pageShow={pageLimit}
                                 dataLength={dataLength}
                                 onClick={selectPage}
                             />
@@ -130,5 +131,4 @@ const page = () => {
 }
 
 export default page
-
 

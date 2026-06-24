@@ -8,12 +8,22 @@ import { BsGear } from "react-icons/bs";
 import BModal from '@/components/items/BModal';
 import BButton from '@/components/items/BButton';
 import BPagination from '@/components/items/BPagination';
+// import BPagination from '@/components/items/BPagination_backup';
 import BInputSelect from '@/components/items/BInputSelect';
 import { useUrlStore } from "@/store/useUrlStore"
 import FormCreate from './components/FormCreate';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { listindex } from "@/utilities/pagination"
 import { BSkeletonTable } from '@/components/items/BSkeleton';
+
+interface FormData {
+    id: string,
+    kode: string,
+    nama: string,
+    nama_pangkat: string,
+    gol_pppk: string,
+    created_by: string
+}
 
 interface FormResponse {
     id: string,
@@ -51,7 +61,15 @@ const InputData = () => {
     const [createType, setCreateType] = useState(false)
     const [pageSelect, setPageSelect] = useState<number>(1);
     const [pageLimit, setPageLimit] = useState<number>(8)
-    const [dataLength, setDataLength] = useState<number>(99999)
+
+    const [form, setForm] = useState<FormData>({
+        id: '',
+        kode: '',
+        nama: '',
+        nama_pangkat: '',
+        gol_pppk: '',
+        created_by: "user.id"
+    })
 
     const { data: List, isLoading, isError, error } = useQuery({
         queryFn: () => readData(`${url}/api/v1/simpeg/master/ref_golongan/read?skip=${((pageSelect - 1) * pageLimit)}&limit=${pageLimit}`),
@@ -147,6 +165,7 @@ const InputData = () => {
                                 pageSelect={pageSelect}
                                 setPageSelect={setPageSelect}
                                 pageLimit={pageLimit}
+                                pageShow={4}
                                 dataLength={List?.total ?? 0}
                                 onClick={(page) => { console.log("") }}
                             />
@@ -185,7 +204,7 @@ const InputData = () => {
 
                 {/* Create */}
                 <BModal title={`${createType ? 'Edit' : 'Add'} Data`} openModal={modalCreate} setOpenModal={setModalCreate} size='sm'>
-                    <FormCreate setClose={setModalCreate} isEdit={createType} />
+                    <FormCreate setClose={setModalCreate} isEdit={createType} form={form} setForm={setForm} />
                 </BModal>
 
             </div>
