@@ -70,6 +70,17 @@ const InputData = () => {
         created_by: "user.id"
     })
 
+    const selectItem = (item: FormResponse) => {
+        setForm({
+            id: item.id,
+            kode: item.kode,
+            nama: item.nama,
+            nama_pangkat: item.nama_pangkat,
+            gol_pppk: item.gol_pppk,
+            created_by: item.created_by
+        })
+    }
+
     // PERBAIKAN LOGIKA DEBOUNCE MANUAL
     useEffect(() => {
         const handler = setTimeout(() => {
@@ -145,7 +156,7 @@ const InputData = () => {
                                         </td>
                                         <td className=''>
                                             <div className='flex justify-center'>
-                                                <button onClick={() => setOpen(!open)} className='bg-b-gray-2/80 hover:bg-b-gray-2/50 flex justify-center items-center rounded-full w-6 h-6 cursor-pointer'>
+                                                <button onClick={() => { selectItem(item); setOpen(!open) }} className='bg-b-gray-2/80 hover:bg-b-gray-2/50 flex justify-center items-center rounded-full w-6 h-6 cursor-pointer'>
                                                     <BsGear className='text-b-gray-6' />
                                                 </button>
                                             </div>
@@ -190,15 +201,19 @@ const InputData = () => {
             <div>
                 <BModal title='Configuration' openModal={open} setOpenModal={setOpen} size='xs'>
                     <div className='flex flex-col gap-2 p-4'>
-                        <button className='bg-b-blue-4 hover:bg-b-blue-5/70 cursor-pointer flex gap-2 justify-center items-center text-[12px] p-1.5 rounded-md shadow-md'>
+                        <button className='bg-b-blue-4 hover:bg-b-blue-5/70 cursor-pointer flex gap-2 justify-center items-center text-[12px] p-1.5 rounded-md shadow-md'
+                            onClick={() => { }}
+                        >
                             Detail
                         </button>
                         <button className='bg-b-yellow-4 hover:bg-b-yellow-5/70 cursor-pointer flex gap-2 justify-center items-center text-[12px] p-1.5 rounded-md shadow-md'
-                            onClick={() => { setModalCreate(true); setCreateType(true) }}
+                            onClick={() => { setOpen(!open); setModalCreate(true); setCreateType(true) }}
                         >
                             Edit
                         </button>
-                        <button className='bg-b-red-4 hover:bg-b-red-5/70 cursor-pointer flex gap-2 justify-center items-center text-[12px] p-1.5 rounded-md shadow-md'>
+                        <button className='bg-b-red-4 hover:bg-b-red-5/70 cursor-pointer flex gap-2 justify-center items-center text-[12px] p-1.5 rounded-md shadow-md'
+                            onClick={() => { }}
+                        >
                             Delete
                         </button>
                     </div>

@@ -40,6 +40,16 @@ const createData = async (url: string, data: FormData): Promise<FormResponse> =>
     return res.json();
 }
 
+const updateData = async (url: string, data: FormData) => {
+    const res = await fetch(url, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error(`Gagal Mengubah data`)
+    return res.json();
+}
+
 const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
 
     const queryClient = useQueryClient()
@@ -49,6 +59,20 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
     const createDataMutation = useMutation({
         mutationFn: (newFormData: FormData) => createData(
             `${url.APP}/api/v1/simpeg/master/ref_golongan/create`,
+            newFormData
+        ),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['ref_golongan'] });
+            emptyForm()
+        },
+        onError: (err: any) => {
+            alert(`Error : ${err}`)
+        }
+    })
+
+    const updateDataMutation = useMutation({
+        mutationFn: (newFormData: FormData) => updateData(
+            `${url.APP}/api/v1/simpeg/master/ref_golongan/update/${form.id}`,
             newFormData
         ),
         onSuccess: () => {
@@ -80,8 +104,12 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
     }
 
     const submit = () => {
-        console.log(form)
-        createDataMutation.mutate(form)
+        // console.log(form)
+        if (isEdit) {
+            updateDataMutation.mutate(form, form.id)
+        } else {
+            createDataMutation.mutate(form)
+        }
     }
 
     return (
@@ -138,7 +166,7 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
                             <BButton
                                 color='yellow'
                                 size='sm'
-                                onClick={() => { }}
+                                onClick={submit}
                             >
                                 <p className='text-b-gray-6 text-[13px]'>Edit</p>
                             </BButton>
@@ -158,7 +186,7 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
                     <BButton
                         color='red'
                         size='sm'
-                        onClick={() => { setClose(false) }}
+                        onClick={() => { setClose(false); emptyForm() }}
                     >
                         <p className='text-b-gray-6 text-[13px]'>Cancel</p>
                     </BButton>
