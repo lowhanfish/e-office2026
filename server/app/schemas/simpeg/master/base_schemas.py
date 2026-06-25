@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 class MasterBase(BaseModel):
     kode : str
@@ -20,4 +20,10 @@ class MasterResponse(MasterBase):
     created_by : Optional[str] = None
     created_at : datetime
     model_config = ConfigDict(from_attributes=True)
+
+class MasterResponseList(BaseModel):
+    total : int
+    skip : int
+    limit : int
+    data : List[MasterResponse]
 

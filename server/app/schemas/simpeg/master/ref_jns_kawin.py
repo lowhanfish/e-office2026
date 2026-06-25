@@ -1,4 +1,4 @@
-from app.schemas.simpeg.master.base_schemas import MasterCreate, MasterResponse, MasterUpdate
+from app.schemas.simpeg.master.base_schemas import MasterCreate, MasterResponse, MasterUpdate, MasterResponseList
 
 
 
@@ -9,4 +9,7 @@ class RefJnsKawinCreate(MasterCreate):
     pass
 
 class RefJnsKawinUpdate(MasterUpdate):
+    pass
+
+class RefJnsKawinResponseList(MasterResponseList):
     pass

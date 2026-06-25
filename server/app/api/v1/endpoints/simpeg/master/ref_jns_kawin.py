@@ -2,14 +2,20 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from typing import List
-from app.schemas.simpeg.master.ref_jns_kawin import RefJnsKawinCreate, RefJnsKawinResponse, RefJnsKawinUpdate
+from app.schemas.simpeg.master.ref_jns_kawin import RefJnsKawinCreate, RefJnsKawinResponse, RefJnsKawinUpdate, RefJnsKawinResponseList
 from app.db.session import get_db
 from app.models.simpeg.master.models import RefJnsKawin
+from sqlalchemy.sql import func
 
 router = APIRouter()
 
-@router.get("/read", response_model=List[RefJnsKawinResponse])
-async def read_ref_jns_kawin(db:AsyncSession = Depends(get_db)):
+@router.get("/read", response_model=RefJnsKawinResponseList)
+async def read_ref_jns_kawin(
+    db:AsyncSession = Depends(get_db),
+    skip:int = 0,
+    limit:int = 100,
+    search:str | None = None
+):
     """
     ## Mengambil semua List Ref Jenis Kawin
     Membaca data Ref Jenis Kawin baru dari sistem.
@@ -23,11 +29,32 @@ async def read_ref_jns_kawin(db:AsyncSession = Depends(get_db)):
     - `422`: Jika format input tidak sesuai skema.
     """
     query = select(RefJnsKawin)
+
+    if search:
+        query = query.where(RefJnsKawin.nama.ilike(f"%{search}%"))
+
+    total_query = select(func.count()).select_from(query.subquery())
+    total_result = await db.execute(total_query)
+    total = total_result.scalar_one_or_none()
+
+    query = (
+        query.order_by(RefJnsKawin.created_at.asc())
+        .offset(skip)
+        .limit(limit)
+    )
+
     result = await db.execute(query)
-    return result.scalars().all()
+    data =  result.scalars().all()
+    return {
+        "total": total,
+        "skip": skip,
+        "limit": limit,
+        "data": data,
+    }
 
 
-@router.post("/creat", response_model=RefJnsKawinResponse)
+
+@router.post("/create", response_model=RefJnsKawinResponse)
 async def creat_ref_jns_kawin(payload: RefJnsKawinCreate, db:AsyncSession = Depends(get_db)):
     """
     ## Membuat Ref Jenis Kawin

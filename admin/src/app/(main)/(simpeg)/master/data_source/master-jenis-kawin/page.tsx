@@ -95,16 +95,16 @@ const InputData = () => {
     }, [search]);
 
     const { data: List, isLoading, isError, error } = useQuery({
-        queryFn: () => readData(`${url}/api/v1/simpeg/master/ref_jns_pegawai/read?skip=${((pageSelect - 1) * pageLimit)}&limit=${pageLimit}&search=${debouncedSearch}`),
-        queryKey: ['ref_jns_pegawai', pageSelect, pageLimit, debouncedSearch]
+        queryFn: () => readData(`${url}/api/v1/simpeg/master/ref_jns_kawin/read?skip=${((pageSelect - 1) * pageLimit)}&limit=${pageLimit}&search=${debouncedSearch}`),
+        queryKey: ['ref_jns_kawin', pageSelect, pageLimit, debouncedSearch]
     })
 
     const deleteDataMutation = useMutation({
         mutationFn: (idx: string) => deleteData(
-            `${url}/api/v1/simpeg/master/ref_jns_pegawai/delete/${idx}`
+            `${url}/api/v1/simpeg/master/ref_jns_kawin/delete/${idx}`
         ),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['ref_jns_pegawai'] });
+            queryClient.invalidateQueries({ queryKey: ['ref_jns_kawin'] });
         },
         onError: (err: any) => {
             alert(`Error : ${err}`)
@@ -117,7 +117,7 @@ const InputData = () => {
 
     return (
         <div>
-            <TextSeparate title='Master Jenis Pegawai' />
+            <TextSeparate title='Master Jenis Kawin' />
             <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
                 <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-1 w-full'>
                     <div className='col-span-6 '>
