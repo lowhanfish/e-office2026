@@ -4,14 +4,19 @@ from sqlalchemy.future import select
 from typing import List
 from app.db.session import get_db
 from app.models.simpeg.master.models import RefJnsPegawai
-from app.schemas.simpeg.master.ref_jns_pegawai import RefJnsPegawaiCreate, RefJnsPegawaiResponse, RefJnsPegawaiUpdate
-
+from app.schemas.simpeg.master.ref_jns_pegawai import RefJnsPegawaiCreate, RefJnsPegawaiResponse, RefJnsPegawaiUpdate, RefJnsPegawaiResponseList
+from sqlalchemy.sql import func
 
 
 router = APIRouter()
 
-@router.get("/read", response_model=List[RefJnsPegawaiResponse])
-async def read_ref_jns_pegawai(db:AsyncSession = Depends(get_db)):
+@router.get("/read", response_model=RefJnsPegawaiResponseList)
+async def read_ref_jns_pegawai(
+    db:AsyncSession = Depends(get_db),
+    skip:int = 0,
+    limit:int = 100,
+    search:str | None = None,
+):
     """
     ## Mengambil semua List Ref Jenis Pegawai
     Membaca data Ref Jenis Pegawai baru dari sistem.
@@ -25,8 +30,26 @@ async def read_ref_jns_pegawai(db:AsyncSession = Depends(get_db)):
     - `422`: Jika format input tidak sesuai skema.
     """
     query = select(RefJnsPegawai)
+
+    if search:
+        query = query.where(RefJnsPegawai.nama.ilike(f"%{search}%"))
+
+    total_query = select(func.count()).select_from(query.subquery())
+    total_result = await db.execute(total_query)
+    total = total_result.scalar_one_or_none()
+    query = (
+        query.order_by(RefJnsPegawai.created_at.asc())
+        .offset(skip)
+        .limit(limit)
+    )
     result = await db.execute(query)
-    return result.scalars().all()
+    data = result.scalars().all()
+    return {
+        "total": total,
+        "skip": skip,
+        "limit": limit,
+        "data": data,
+    }
 
 @router.post("/create", response_model=RefJnsPegawaiResponse)
 async def create_ref_jns_pegawai(payload: RefJnsPegawaiCreate, db:AsyncSession = Depends(get_db)):

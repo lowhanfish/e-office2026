@@ -8,8 +8,6 @@ interface FormData {
     id: string,
     kode: string,
     nama: string,
-    nama_pangkat: string,
-    gol_pppk: string,
     created_by: string
 }
 
@@ -17,8 +15,6 @@ interface FormResponse {
     id: string,
     kode: string,
     nama: string,
-    nama_pangkat: string,
-    gol_pppk: string,
     created_by: string,
     created_at: string
 }
@@ -58,11 +54,11 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
 
     const createDataMutation = useMutation({
         mutationFn: (newFormData: FormData) => createData(
-            `${url.APP}/api/v1/simpeg/master/ref_golongan/create`,
+            `${url.APP}/api/v1/simpeg/master/ref_jns_pegawai/create`,
             newFormData
         ),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['ref_golongan'] });
+            queryClient.invalidateQueries({ queryKey: ['ref_jns_pegawai'] });
             emptyForm()
         },
         onError: (err: any) => {
@@ -72,11 +68,11 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
 
     const updateDataMutation = useMutation({
         mutationFn: (newFormData: FormData) => updateData(
-            `${url.APP}/api/v1/simpeg/master/ref_golongan/update/${form.id}`,
+            `${url.APP}/api/v1/simpeg/master/ref_jns_pegawai/update/${form.id}`,
             newFormData
         ),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['ref_golongan'] });
+            queryClient.invalidateQueries({ queryKey: ['ref_jns_pegawai'] });
             emptyForm()
         },
         onError: (err: any) => {
@@ -96,8 +92,6 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
             id: '',
             kode: '',
             nama: '',
-            nama_pangkat: '',
-            gol_pppk: '',
             created_by: "user.id"
         })
         setClose(false)
@@ -136,28 +130,7 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
                     }}
                 />
             </div>
-            <div className='pt-1'>
-                <BInput
-                    title='Nama Pangkat'
-                    placeholder='Nama Pangkat'
-                    type='text'
-                    value={form.nama_pangkat}
-                    onChange={(value) => {
-                        setItemForm('nama_pangkat', value)
-                    }}
-                />
-            </div>
-            <div className='pt-1'>
-                <BInput
-                    title='Gol-PPPK'
-                    placeholder='Gol-PPPK'
-                    type='text'
-                    value={form.gol_pppk}
-                    onChange={(value) => {
-                        setItemForm('gol_pppk', value)
-                    }}
-                />
-            </div>
+
 
             <div className='flex gap-2 justify-end mt-3 py-2 border-y border-b-gray-2'>
                 <div className='w-30'>

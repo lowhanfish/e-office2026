@@ -18,8 +18,6 @@ interface FormData {
     id: string,
     kode: string,
     nama: string,
-    nama_pangkat: string,
-    gol_pppk: string,
     created_by: string
 }
 
@@ -27,8 +25,6 @@ interface FormResponse {
     id: string,
     kode: string,
     nama: string,
-    nama_pangkat: string,
-    gol_pppk: string,
     created_by: string,
     created_at: string
 }
@@ -74,8 +70,6 @@ const InputData = () => {
         id: '',
         kode: '',
         nama: '',
-        nama_pangkat: '',
-        gol_pppk: '',
         created_by: "user.id"
     })
 
@@ -84,8 +78,6 @@ const InputData = () => {
             id: item.id,
             kode: item.kode,
             nama: item.nama,
-            nama_pangkat: item.nama_pangkat,
-            gol_pppk: item.gol_pppk,
             created_by: item.created_by
         })
     }
@@ -103,16 +95,16 @@ const InputData = () => {
     }, [search]);
 
     const { data: List, isLoading, isError, error } = useQuery({
-        queryFn: () => readData(`${url}/api/v1/simpeg/master/ref_golongan/read?skip=${((pageSelect - 1) * pageLimit)}&limit=${pageLimit}&search=${debouncedSearch}`),
-        queryKey: ['ref_golongan', pageSelect, pageLimit, debouncedSearch]
+        queryFn: () => readData(`${url}/api/v1/simpeg/master/ref_jns_pegawai/read?skip=${((pageSelect - 1) * pageLimit)}&limit=${pageLimit}&search=${debouncedSearch}`),
+        queryKey: ['ref_jns_pegawai', pageSelect, pageLimit, debouncedSearch]
     })
 
     const deleteDataMutation = useMutation({
         mutationFn: (idx: string) => deleteData(
-            `${url}/api/v1/simpeg/master/ref_golongan/delete/${idx}`
+            `${url}/api/v1/simpeg/master/ref_jns_pegawai/delete/${idx}`
         ),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['ref_golongan'] });
+            queryClient.invalidateQueries({ queryKey: ['ref_jns_pegawai'] });
         },
         onError: (err: any) => {
             alert(`Error : ${err}`)
@@ -125,7 +117,7 @@ const InputData = () => {
 
     return (
         <div>
-            <TextSeparate title='Master Golongan' />
+            <TextSeparate title='Master Jenis Pegawai' />
             <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
                 <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-1 w-full'>
                     <div className='col-span-6 '>

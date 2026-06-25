@@ -126,6 +126,11 @@ const routex = [
                 path:"/",
                 children : [
                     {
+                        title : "Master Jenis Pegawai",
+                        path:"/master/data_source/master-jenis-pegawai",
+                        children : []
+                    },
+                    {
                         title : "Master Golongan",
                         path:"/master/data_source/master-golongan",
                         children : []
