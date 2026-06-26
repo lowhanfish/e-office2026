@@ -32,7 +32,7 @@ const createData = async (url: string, data: FormData): Promise<FormResponse> =>
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
     });
-    if (!res.ok) throw new Error("Gagal menambah data baru")
+    if (!res.ok) throw new Error(`Gagal menambah data baru, err : ${res.json()}`)
     return res.json();
 }
 
@@ -58,7 +58,9 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
             newFormData
         ),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['ref_jns_kawin'] });
+            queryClient.invalidateQueries(
+                { queryKey: ['ref_jns_kawin'] }
+            );
             emptyForm()
         },
         onError: (err: any) => {

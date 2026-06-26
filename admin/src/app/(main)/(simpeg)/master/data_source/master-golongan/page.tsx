@@ -167,7 +167,9 @@ const InputData = () => {
                                     <th className='w-[5%] text-center'>No</th>
                                     <th className='w-[5%] text-center'>Act</th>
                                     <th className='w-[10%] text-center'>Kode</th>
-                                    <th className='w-[80%]'>Nama</th>
+                                    <th className='w-[20%]'>Nama</th>
+                                    <th className='w-[40%]'>Nama Pangkat</th>
+                                    <th className='w-[20%]'>Gol-PPPK</th>
                                 </tr>
                             </thead>
 
@@ -186,6 +188,8 @@ const InputData = () => {
                                         </td>
                                         <td className=''><p className='text-center'>{item.kode}</p></td>
                                         <td className=''><p>{item.nama}</p></td>
+                                        <td className=''><p>{item.nama_pangkat}</p></td>
+                                        <td className=''><p>{item.gol_pppk}</p></td>
                                     </tr>
                                 ))}
                             </tbody>
