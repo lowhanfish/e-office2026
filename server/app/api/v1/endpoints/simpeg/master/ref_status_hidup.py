@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from typing import List
+from sqlalchemy.sql import func
 
 from app.db.session import get_db
 from app.schemas.simpeg.master.ref_status_hidup import RefStatusHidupCreate, RefStatusHidupResponse, RefStatusHidupUpdate
@@ -9,23 +10,50 @@ from app.models.simpeg.master.models import RefStatusHidup
 
 router = APIRouter()
 
-@router.get("/read", response_model=List[RefStatusHidupResponse])
-async def read_ref_status_hidup(db:AsyncSession=Depends(get_db)):
+
+@router.get("/read", response_model=RefStatusHidupResponse)
+async def read_ref_status_hidup(
+    db:AsyncSession=Depends(get_db),
+    skip:int = 0,
+    limit:int = 100,
+    search:str | None = None
+):
     """
     ## Mengambil semua List Ref Status Hidup
     Membaca data Ref Status Hidup baru dari sistem.
 
     **Parameter:**
     - `search`   : String, Untuk mencari data value dari Ref Status Hidup.
-    - `page_start`: Int, Data page pertama akses page.
-    - `page_limit` : Int, Jumlah data yang ditarik.
+    - `skip`: Int, Data page pertama akses page.
+    - `limit` : Int, Jumlah data yang ditarik.
 
     **Error yang mungkin terjadi:**
     - `422`: Jika format input tidak sesuai skema.
     """
+
     query = select(RefStatusHidup)
+
+    if search:
+        query = query.where(RefStatusHidup.nama.ilike(f"%{search}%"))
+
+    total_query = select(func.count()).select_from(query.subquery())
+    total_result = await db.execute(total_query)
+    total = total_result.scalar_one_or_none()
+
+    query = (
+        query.order_by(RefStatusHidup.created_at.asc()).offset(skip).limit(limit)
+    )
+
+
     result = await db.execute(query)
-    return result.scalars().all()
+    data =  result.scalars().all()
+
+    return {
+        "total": total,
+        "skip": skip,
+        "limit": limit,
+        "data": data,
+    }
 
 
 @router.post("/create", response_model=RefStatusHidupResponse)
@@ -113,7 +141,5 @@ async def delete_ref_status_hidup(id:str, db:AsyncSession = Depends(get_db)):
     return {
         "message" : f"Referensi Status Hidup : '{nama}', telah dihapus"
     }
-
-
 
 

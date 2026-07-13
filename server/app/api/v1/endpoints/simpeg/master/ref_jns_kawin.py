@@ -22,8 +22,8 @@ async def read_ref_jns_kawin(
 
     **Parameter:**
     - `search`   : String, Untuk mencari data value dari Ref Jenis Kawin.
-    - `page_start`: Int, Data page pertama akses page.
-    - `page_limit` : Int, Jumlah data yang ditarik.
+    - `skip`: Int, Data page pertama akses page.
+    - `limit` : Int, Jumlah data yang ditarik.
 
     **Error yang mungkin terjadi:**
     - `422`: Jika format input tidak sesuai skema.
