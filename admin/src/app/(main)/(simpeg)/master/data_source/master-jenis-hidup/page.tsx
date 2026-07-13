@@ -10,7 +10,7 @@ import BPagination from '@/components/items/BPagination';
 import BInputSelect from '@/components/items/BInputSelect';
 import { useUrlStore } from "@/store/useUrlStore"
 import FormCreate from './components/FormCreate';
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
 import { listindex } from "@/utilities/pagination"
 import { BSkeletonTable } from '@/components/items/BSkeleton';
 
@@ -37,7 +37,7 @@ interface FormResponseList {
 }
 
 const readData = async (url: string): Promise<FormResponseList> => {
-    const res = await fetch(url);
+    const res = await fetch(url)
     if (!res.ok) throw new Error("Gagal mengambil data dari server")
     return res.json()
 }
@@ -51,7 +51,11 @@ const deleteData = async (url: string) => {
     return res.json()
 }
 
-const InputData = () => {
+
+
+
+const Page = () => {
+
     const queryClient = useQueryClient()
     const url = useUrlStore(state => state.URL.APP)
     const DataShow = useUrlStore(state => state.DataShow)
@@ -82,6 +86,27 @@ const InputData = () => {
         })
     }
 
+    const { data: List, isLoading, isError, error } = useQuery({
+        queryFn: () => readData(
+            `${url}/api/v1/simpeg/master/ref_status_hidup/read?skip=${((pageSelect - 1) * pageLimit)}&limit=${pageLimit}&search=${debouncedSearch}`
+        ),
+        queryKey: ["ref_status_hidup", pageSelect, pageLimit, debouncedSearch]
+    })
+
+    const deleteDataMutation = useMutation({
+        mutationFn: (id: string) => deleteData(`${url}/api/v1/simpeg/master/ref_status_hidup/delete/${id}`),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['ref_status_hidup'] });
+        },
+        onError: (err) => {
+            alert(`Error : ${err}`)
+        }
+    })
+
+    const btnDelete = (id: string) => {
+        deleteDataMutation.mutate(id)
+    }
+
     // PERBAIKAN LOGIKA DEBOUNCE MANUAL
     useEffect(() => {
         const handler = setTimeout(() => {
@@ -94,26 +119,7 @@ const InputData = () => {
         };
     }, [search]);
 
-    const { data: List, isLoading, isError, error } = useQuery({
-        queryFn: () => readData(`${url}/api/v1/simpeg/master/ref_jns_kawin/read?skip=${((pageSelect - 1) * pageLimit)}&limit=${pageLimit}&search=${debouncedSearch}`),
-        queryKey: ['ref_jns_kawin', pageSelect, pageLimit, debouncedSearch]
-    })
 
-    const deleteDataMutation = useMutation({
-        mutationFn: (idx: string) => deleteData(
-            `${url}/api/v1/simpeg/master/ref_jns_kawin/delete/${idx}`
-        ),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['ref_jns_kawin'] });
-        },
-        onError: (err: any) => {
-            alert(`Error : ${err}`)
-        }
-    })
-
-    const btnDelete = (idx: string) => {
-        deleteDataMutation.mutate(idx)
-    }
 
     return (
         <div>
@@ -242,4 +248,4 @@ const InputData = () => {
     )
 }
 
-export default InputData
+export default Page

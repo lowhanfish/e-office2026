@@ -5,13 +5,13 @@ from typing import List
 from sqlalchemy.sql import func
 
 from app.db.session import get_db
-from app.schemas.simpeg.master.ref_status_hidup import RefStatusHidupCreate, RefStatusHidupResponse, RefStatusHidupUpdate
+from app.schemas.simpeg.master.ref_status_hidup import RefStatusHidupCreate, RefStatusHidupResponse, RefStatusHidupUpdate, RefStatusHidupResponseList
 from app.models.simpeg.master.models import RefStatusHidup
 
 router = APIRouter()
 
 
-@router.get("/read", response_model=RefStatusHidupResponse)
+@router.get("/read", response_model=RefStatusHidupResponseList)
 async def read_ref_status_hidup(
     db:AsyncSession=Depends(get_db),
     skip:int = 0,

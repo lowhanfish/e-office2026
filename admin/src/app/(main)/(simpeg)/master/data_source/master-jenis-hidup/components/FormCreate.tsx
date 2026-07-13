@@ -54,12 +54,12 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
 
     const createDataMutation = useMutation({
         mutationFn: (newFormData: FormData) => createData(
-            `${url.APP}/api/v1/simpeg/master/ref_jns_kawin/create`,
+            `${url.APP}/api/v1/simpeg/master/ref_status_hidup/create`,
             newFormData
         ),
         onSuccess: () => {
             queryClient.invalidateQueries(
-                { queryKey: ['ref_jns_kawin'] }
+                { queryKey: ['ref_status_hidup'] }
             );
             emptyForm()
         },
@@ -70,11 +70,11 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
 
     const updateDataMutation = useMutation({
         mutationFn: (newFormData: FormData) => updateData(
-            `${url.APP}/api/v1/simpeg/master/ref_jns_kawin/update/${form.id}`,
+            `${url.APP}/api/v1/simpeg/master/ref_status_hidup/update/${form.id}`,
             newFormData
         ),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['ref_jns_kawin'] });
+            queryClient.invalidateQueries({ queryKey: ['ref_status_hidup'] });
             emptyForm()
         },
         onError: (err: any) => {
