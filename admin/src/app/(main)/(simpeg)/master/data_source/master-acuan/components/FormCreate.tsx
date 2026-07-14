@@ -2,7 +2,6 @@ import { useState, Dispatch, SetStateAction } from 'react'
 import BButton from '@/components/items/BButton'
 import BInput from '@/components/items/BInput'
 import { useUrlStore } from '@/store/useUrlStore'
-import { useMutation, useQueryClient, QueryClient } from "@tanstack/react-query"
 
 interface FormData {
     id: string,
@@ -26,61 +25,13 @@ interface FormCreateProps {
     setForm: Dispatch<SetStateAction<FormData>>
 }
 
-const createData = async (url: string, data: FormData): Promise<FormResponse> => {
-    const res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error(`Gagal menambah data baru, err : ${res.json()}`)
-    return res.json();
-}
-
-const updateData = async (url: string, data: FormData) => {
-    const res = await fetch(url, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error(`Gagal Mengubah data`)
-    return res.json();
-}
 
 const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
 
-    const queryClient = useQueryClient()
     const url = useUrlStore(state => state.URL)
     const [textx, setTextx] = useState<string | number>("")
 
-    const createDataMutation = useMutation({
-        mutationFn: (newFormData: FormData) => createData(
-            `${url.APP}/api/v1/simpeg/master/ref_status_hidup/create`,
-            newFormData
-        ),
-        onSuccess: () => {
-            queryClient.invalidateQueries(
-                { queryKey: ['ref_status_hidup'] }
-            );
-            emptyForm()
-        },
-        onError: (err: any) => {
-            alert(`Error : ${err}`)
-        }
-    })
 
-    const updateDataMutation = useMutation({
-        mutationFn: (newFormData: FormData) => updateData(
-            `${url.APP}/api/v1/simpeg/master/ref_status_hidup/update/${form.id}`,
-            newFormData
-        ),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['ref_status_hidup'] });
-            emptyForm()
-        },
-        onError: (err: any) => {
-            alert(`Error : ${err}`)
-        }
-    })
 
     const setItemForm = (key: string, value: any) => {
         setForm({
@@ -100,12 +51,7 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
     }
 
     const submit = () => {
-        // console.log(form)
-        if (isEdit) {
-            updateDataMutation.mutate(form)
-        } else {
-            createDataMutation.mutate(form)
-        }
+
     }
 
     return (

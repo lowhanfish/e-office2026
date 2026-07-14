@@ -10,7 +10,6 @@ import BPagination from '@/components/items/BPagination';
 import BInputSelect from '@/components/items/BInputSelect';
 import { useUrlStore } from "@/store/useUrlStore"
 import FormCreate from './components/FormCreate';
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { listindex } from "@/utilities/pagination"
 import { BSkeletonTable } from '@/components/items/BSkeleton';
 
@@ -36,24 +35,11 @@ interface FormResponseList {
     data: FormResponse[]
 }
 
-const readData = async (url: string): Promise<FormResponseList> => {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error("Gagal mengambil data dari server")
-    return res.json()
-}
 
-const deleteData = async (url: string) => {
-    const res = await fetch(url, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" }
-    })
-    if (!res.ok) throw new Error("Gagal Menghapus Data")
-    return res.json()
-}
 
-const InputData = () => {
-    const queryClient = useQueryClient()
-    const url = useUrlStore(state => state.URL.APP)
+const Page = () => {
+
+
     const DataShow = useUrlStore(state => state.DataShow)
 
     const [open, setOpen] = useState(false);
@@ -64,7 +50,10 @@ const InputData = () => {
 
     // PERBAIKAN DEBOUNCE STATE
     const [search, setSearch] = useState<string>("") // State instan untuk input
-    const [debouncedSearch, setDebouncedSearch] = useState<string>("") // State tunda untuk fetch API
+
+    const [isLoading, setIsLoading] = useState<boolean>(true)
+    const [List, setList] = useState<FormResponseList>()
+
 
     const [form, setForm] = useState<FormData>({
         id: '',
@@ -82,42 +71,15 @@ const InputData = () => {
         })
     }
 
-    // PERBAIKAN LOGIKA DEBOUNCE MANUAL
-    useEffect(() => {
-        const handler = setTimeout(() => {
-            setDebouncedSearch(search);
-            setPageSelect(1); // Reset halaman ke 1 sewaktu user mencari kata kunci baru
-        }, 500); // Toleransi waktu tunggu: 500ms
 
-        return () => {
-            clearTimeout(handler); // Hancurkan timer jika user mengetik lagi sebelum 500ms selesai
-        };
-    }, [search]);
+    const btnDelete = (id: string) => {
 
-    const { data: List, isLoading, isError, error } = useQuery({
-        queryFn: () => readData(`${url}/api/v1/simpeg/master/ref_jns_pegawai/read?skip=${((pageSelect - 1) * pageLimit)}&limit=${pageLimit}&search=${debouncedSearch}`),
-        queryKey: ['ref_jns_pegawai', pageSelect, pageLimit, debouncedSearch]
-    })
-
-    const deleteDataMutation = useMutation({
-        mutationFn: (idx: string) => deleteData(
-            `${url}/api/v1/simpeg/master/ref_jns_pegawai/delete/${idx}`
-        ),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['ref_jns_pegawai'] });
-        },
-        onError: (err: any) => {
-            alert(`Error : ${err}`)
-        }
-    })
-
-    const btnDelete = (idx: string) => {
-        deleteDataMutation.mutate(idx)
     }
+
 
     return (
         <div>
-            <TextSeparate title='Master Status Hidup' />
+            <TextSeparate title='Master Acuan' />
             <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
                 <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-1 w-full'>
                     <div className='col-span-6 '>
@@ -242,4 +204,4 @@ const InputData = () => {
     )
 }
 
-export default InputData
+export default Page

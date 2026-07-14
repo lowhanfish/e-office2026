@@ -131,6 +131,11 @@ const routex = [
                         children : []
                     },
                     {
+                        title : "Master Status Hidup",
+                        path:"/master/data_source/master-status-hidup",
+                        children : []
+                    },
+                    {
                         title : "Master Jenis Kawin",
                         path:"/master/data_source/master-jenis-kawin",
                         children : []

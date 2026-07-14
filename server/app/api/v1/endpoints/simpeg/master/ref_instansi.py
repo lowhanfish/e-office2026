@@ -5,11 +5,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
 from sqlalchemy.future import select
 from app.models.simpeg.master.models import Instansi
+from sqlalchemy.sql import func
 
 router = APIRouter()
 
 @router.get("/read", response_model=List[InstansiResponse])
-async def read_Instansi(db:AsyncSession = Depends(get_db)):
+async def read_Instansi(
+    db:AsyncSession = Depends(get_db),
+    skip:int = 0,
+    limit:int = 100,
+    search:str |None = None
+):
 
     """
     ## Mengambil semua List Instansi
@@ -25,8 +31,22 @@ async def read_Instansi(db:AsyncSession = Depends(get_db)):
     """
 
     query = select(Instansi)
+    if search:
+        query = query.where(Instansi.nama.ilike(f"%{search}%"))
+
+    total_query = select(func.count()).select_from(query.subquery())
+    total_result = await db.execute(total_query)
+    total = total_result.scalar_one_or_none()
+
     result = await db.execute(query)
-    return result.scalars().all()
+    data = result.scalars().all()
+
+    return {
+        "total": total,
+        "skip": skip,
+        "limit": limit,
+        "data": data,
+    }
 
 @router.post("/create", response_model=InstansiResponse)
 async def create_Instansi(payload : InstansiCreate, db:AsyncSession = Depends(get_db)):
