@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
-from app.schemas.simpeg.master.ref_instansi import InstansiCreate, InstansiResponse, InstansiUpdate
+from app.schemas.simpeg.master.ref_instansi import InstansiCreate, InstansiResponse, InstansiUpdate, InstansiResponseList
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
 from sqlalchemy.future import select
@@ -9,7 +9,7 @@ from sqlalchemy.sql import func
 
 router = APIRouter()
 
-@router.get("/read", response_model=List[InstansiResponse])
+@router.get("/read", response_model=InstansiResponseList)
 async def read_Instansi(
     db:AsyncSession = Depends(get_db),
     skip:int = 0,

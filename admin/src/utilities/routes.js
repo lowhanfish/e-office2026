@@ -141,6 +141,26 @@ const routex = [
                         children : []
                     },
                     {
+                        title : "Master Instansi",
+                        path:"/master/data_source/master-instansi",
+                        children : []
+                    },
+                    {
+                        title : "Master Satker",
+                        path:"/master/data_source/master-satker",
+                        children : []
+                    },
+                    {
+                        title : "Master Jenis Lokasi",
+                        path:"/master/data_source/master-jns-lokasi",
+                        children : []
+                    },
+                    {
+                        title : "Master Referensi Lokasi",
+                        path:"/master/data_source/master-ref-lokasi",
+                        children : []
+                    },
+                    {
                         title : "Master Golongan",
                         path:"/master/data_source/master-golongan",
                         children : []

@@ -13,6 +13,8 @@ import FormCreate from './components/FormCreate';
 import { listindex } from "@/utilities/pagination"
 import { BSkeletonTable } from '@/components/items/BSkeleton';
 
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
+
 interface FormData {
     id: string,
     kode: string,
@@ -36,12 +38,42 @@ interface FormResponseList {
 }
 
 
+const readData = async (url: string): Promise<FormResponseList> => {
+    try {
+        const res = await fetch(url)
+        if (!res.ok) throw new Error(`Gagal mengambil data. HTTP status : ${res.status}`)
+        const data = await res.json();
+        return data
+    }
+    catch (error) {
+        console.error("Terjadi kesalahan saat fetch:", error);
+        throw error
+    }
+}
+const deleteData = async (url: string) => {
+    try {
+        const res = await fetch(url, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" }
+        })
+        if (!res.ok) throw new Error(`Gagal menghapus data. status : ${res.status}`)
+        const data = await res.json()
+        return data
+    } catch (error) {
+        console.log(`Terjadi kesalahan saat fetch. status : ${error}`)
+        return error
+    }
+}
+
+
 
 const Page = () => {
 
+    const queryClient = useQueryClient()
+
+    const url = useUrlStore(state => state.URL.APP)
 
     const DataShow = useUrlStore(state => state.DataShow)
-
     const [open, setOpen] = useState(false);
     const [modalCreate, setModalCreate] = useState(false);
     const [createType, setCreateType] = useState(false)
@@ -50,9 +82,6 @@ const Page = () => {
 
     // PERBAIKAN DEBOUNCE STATE
     const [search, setSearch] = useState<string>("") // State instan untuk input
-
-    const [isLoading, setIsLoading] = useState<boolean>(true)
-    const [List, setList] = useState<FormResponseList>()
 
 
     const [form, setForm] = useState<FormData>({
@@ -71,15 +100,34 @@ const Page = () => {
         })
     }
 
+    const { data: List, isLoading, isError, error } = useQuery({
+        queryFn: () => readData(
+            `${url}/api/v1/simpeg/master/ref_instansi/read`
+        ),
+        queryKey: ["ref_instansi", pageSelect, pageLimit]
+    })
+
+    const deleteDataMutation = useMutation({
+        mutationFn: (id: string) => deleteData(
+            `${url}/api/v1/simpeg/master/ref_instansi/delete/${id}`
+        ),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["ref_instansi"] })
+        },
+        onError: (err: any) => {
+            alert(`Error : ${err}`);
+        }
+    })
+
 
     const btnDelete = (id: string) => {
-
+        deleteDataMutation.mutate(id)
     }
 
 
     return (
         <div>
-            <TextSeparate title='Master Acuan' />
+            <TextSeparate title='Master Instansi' />
             <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
                 <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-1 w-full'>
                     <div className='col-span-6 '>

@@ -1,6 +1,6 @@
 from app.schemas.simpeg.master.base_schemas import MasterBase, MasterCreate, MasterResponse
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 class InstansiResponse(MasterResponse):
     kode_cepat : str
@@ -18,3 +18,10 @@ class InstansiUpdate(BaseModel):
     nama : Optional[str] = None
     jenis : Optional[str] = None
     jenis_instansi_id : Optional[str] = None
+
+class InstansiResponseList(BaseModel):
+    total : int
+    skip : int
+    limit : int
+    data : List[InstansiResponse]
+

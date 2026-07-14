@@ -38,7 +38,7 @@ interface FormResponseList {
 
 const readData = async (url: string): Promise<FormResponseList> => {
     const res = await fetch(url);
-    if (!res.ok) throw new Error("Gagal mengambil data dari server")
+    if (!res.ok) throw new Error(`Gagal mengambil data dari server : ${res.status}`)
     return res.json()
 }
 
@@ -47,7 +47,7 @@ const deleteData = async (url: string) => {
         method: "DELETE",
         headers: { "Content-Type": "application/json" }
     })
-    if (!res.ok) throw new Error("Gagal Menghapus Data")
+    if (!res.ok) throw new Error(`Gagal Menghapus Data : ${res.status}`)
     return res.json()
 }
 

@@ -79,7 +79,7 @@ const Page = () => {
 
     return (
         <div>
-            <TextSeparate title='Master Acuan' />
+            <TextSeparate title='Master Satker' />
             <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
                 <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-1 w-full'>
                     <div className='col-span-6 '>
