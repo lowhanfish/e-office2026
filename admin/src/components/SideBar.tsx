@@ -3,7 +3,7 @@
 import { ReactNode, useEffect, useState } from 'react'
 import { BsFillHouseFill, BsPlayFill, BsDot, BsFillLockFill } from "react-icons/bs";
 import BButton from '@/components/items/BButton'
-import routes from '@/utilities/routes';
+import routes from '@/constants/routes';
 import { useStorex } from '@/store/useStorex';
 import Link from 'next/link';
 import useCheckScreen from '@/hooks/useCheckScreen';

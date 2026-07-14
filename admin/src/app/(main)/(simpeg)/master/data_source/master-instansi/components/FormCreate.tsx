@@ -2,11 +2,15 @@ import { useState, Dispatch, SetStateAction } from 'react'
 import BButton from '@/components/items/BButton'
 import BInput from '@/components/items/BInput'
 import { useUrlStore } from '@/store/useUrlStore'
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
 
 interface FormData {
     id: string,
     kode: string,
     nama: string,
+    kode_cepat: string,
+    jenis: string,
+    jenis_instansi_id: string,
     created_by: string
 }
 
@@ -14,6 +18,9 @@ interface FormResponse {
     id: string,
     kode: string,
     nama: string,
+    kode_cepat: string,
+    jenis: string,
+    jenis_instansi_id: string,
     created_by: string,
     created_at: string
 }
@@ -25,13 +32,28 @@ interface FormCreateProps {
     setForm: Dispatch<SetStateAction<FormData>>
 }
 
+const createData = async (url: string, data: FormData, method: string) => {
+    try {
+        const res = await fetch(url, {
+            method: method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        })
+        if (!res.ok) throw new Error(``)
+        const result = await res.json()
+        return result
+
+    } catch (error) {
+        alert(`Error fetch saat menambah data. status : ${error}`)
+    }
+}
 
 const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
 
-    const url = useUrlStore(state => state.URL)
+    const queryclient = useQueryClient()
+
+    const url = useUrlStore(state => state.URL.APP)
     const [textx, setTextx] = useState<string | number>("")
-
-
 
     const setItemForm = (key: string, value: any) => {
         setForm({
@@ -45,13 +67,44 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
             id: '',
             kode: '',
             nama: '',
+            kode_cepat: '',
+            jenis: '',
+            jenis_instansi_id: '',
             created_by: "user.id"
         })
         setClose(false)
     }
 
-    const submit = () => {
+    const createDataMutation = useMutation({
+        mutationFn: ({ newUrl, newForm, newMethod }: { newUrl: string, newForm: FormData, newMethod: string }) => createData(
+            newUrl,
+            newForm,
+            newMethod
+        ),
+        onSuccess: () => {
+            queryclient.invalidateQueries({ queryKey: ["ref_instansi"] });
+            emptyForm()
+        },
+        onError: (err: any) => {
+            alert("err")
+        }
+    })
 
+
+    const submit = () => {
+        if (isEdit) {
+            createDataMutation.mutate({
+                newUrl: `${url}/api/v1/simpeg/master/ref_jns_pegawai/update/${form.id}`,
+                newForm: form,
+                newMethod: "PUT"
+            })
+        } else {
+            createDataMutation.mutate({
+                newUrl: `${url}/api/v1/simpeg/master/ref_jns_pegawai/create`,
+                newForm: form,
+                newMethod: "POST"
+            })
+        }
     }
 
     return (

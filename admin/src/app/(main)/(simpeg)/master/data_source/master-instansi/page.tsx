@@ -19,6 +19,9 @@ interface FormData {
     id: string,
     kode: string,
     nama: string,
+    kode_cepat: string,
+    jenis: string,
+    jenis_instansi_id: string,
     created_by: string
 }
 
@@ -26,6 +29,9 @@ interface FormResponse {
     id: string,
     kode: string,
     nama: string,
+    kode_cepat: string,
+    jenis: string,
+    jenis_instansi_id: string,
     created_by: string,
     created_at: string
 }
@@ -61,7 +67,7 @@ const deleteData = async (url: string) => {
         return data
     } catch (error) {
         console.log(`Terjadi kesalahan saat fetch. status : ${error}`)
-        return error
+        throw error
     }
 }
 
@@ -88,6 +94,9 @@ const Page = () => {
         id: '',
         kode: '',
         nama: '',
+        kode_cepat: "",
+        jenis: "",
+        jenis_instansi_id: "",
         created_by: "user.id"
     })
 
@@ -96,6 +105,9 @@ const Page = () => {
             id: item.id,
             kode: item.kode,
             nama: item.nama,
+            kode_cepat: item.kode_cepat,
+            jenis: item.jenis,
+            jenis_instansi_id: item.jenis_instansi_id,
             created_by: item.created_by
         })
     }
@@ -224,7 +236,7 @@ const Page = () => {
             </div>
 
             <div>
-                <BModal title='Configuration' openModal={open} setOpenModal={setOpen} size='xs'>
+                <BModal title='Configuration' openModal={open} setOpenModal={setOpen} size='md'>
                     <div className='flex flex-col gap-2 p-4'>
                         <button className='bg-b-blue-4 hover:bg-b-blue-5/70 cursor-pointer flex gap-2 justify-center items-center text-[12px] p-1.5 rounded-md shadow-md'
                             onClick={() => { }}

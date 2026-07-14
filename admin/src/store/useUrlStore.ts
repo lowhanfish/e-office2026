@@ -6,7 +6,6 @@ interface DataShowProps {
     id : string | number;
     value : string | number;
     text : string;
-
 }
 
 interface URLProps {
@@ -14,7 +13,6 @@ interface URLProps {
     LOGIN : string,
     REGISTER : string
 }
-
 
 interface useUrlStoreProps {
     TOKEN : string,
