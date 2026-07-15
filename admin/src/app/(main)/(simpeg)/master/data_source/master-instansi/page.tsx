@@ -131,7 +131,6 @@ const Page = () => {
         }
     })
 
-
     const btnDelete = (id: string) => {
         deleteDataMutation.mutate(id)
     }
