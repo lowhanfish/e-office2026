@@ -14,6 +14,8 @@ import { listindex } from "@/utilities/pagination"
 import { BSkeletonTable } from '@/components/items/BSkeleton';
 
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
+import useDebounced from '@/hooks/useDebounced';
+
 
 interface FormData {
     id: string,
@@ -72,7 +74,6 @@ const deleteData = async (url: string) => {
 }
 
 
-
 const Page = () => {
 
     const queryClient = useQueryClient()
@@ -88,6 +89,7 @@ const Page = () => {
 
     // PERBAIKAN DEBOUNCE STATE
     const [search, setSearch] = useState<string>("") // State instan untuk input
+    const debounced = useDebounced(search)
 
 
     const [form, setForm] = useState<FormData>({
@@ -114,9 +116,9 @@ const Page = () => {
 
     const { data: List, isLoading, isError, error } = useQuery({
         queryFn: () => readData(
-            `${url}/api/v1/simpeg/master/ref_instansi/read`
+            `${url}/api/v1/simpeg/master/ref_instansi/read?skip=${pageSelect - 1}&limit=${pageLimit}${search ? `&search=${debounced}` : ""}`
         ),
-        queryKey: ["ref_instansi", pageSelect, pageLimit]
+        queryKey: ["ref_instansi", pageSelect, pageLimit, debounced]
     })
 
     const deleteDataMutation = useMutation({
@@ -134,6 +136,10 @@ const Page = () => {
     const btnDelete = (id: string) => {
         deleteDataMutation.mutate(id)
     }
+
+    useEffect(() => {
+        setPageSelect(1)
+    }, [debounced])
 
 
     return (

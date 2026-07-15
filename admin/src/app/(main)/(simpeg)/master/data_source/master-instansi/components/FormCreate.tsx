@@ -55,6 +55,8 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
 
     const queryclient = useQueryClient()
 
+    console.log(form)
+
     const url = useUrlStore(state => state.URL.APP)
     const [textx, setTextx] = useState<string | number>("")
 
@@ -95,21 +97,21 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
 
 
     const submit = () => {
-        // console.log(form)
+        console.log(form)
 
-        if (isEdit) {
-            createDataMutation.mutate({
-                newUrl: `${url}/api/v1/simpeg/master/ref_instansi/update/${form.id}`,
-                newForm: form,
-                newMethod: "PUT"
-            })
-        } else {
-            createDataMutation.mutate({
-                newUrl: `${url}/api/v1/simpeg/master/ref_instansi/create`,
-                newForm: form,
-                newMethod: "POST"
-            })
-        }
+        // if (isEdit) {
+        //     createDataMutation.mutate({
+        //         newUrl: `${url}/api/v1/simpeg/master/ref_instansi/update/${form.id}`,
+        //         newForm: form,
+        //         newMethod: "PUT"
+        //     })
+        // } else {
+        //     createDataMutation.mutate({
+        //         newUrl: `${url}/api/v1/simpeg/master/ref_instansi/create`,
+        //         newForm: form,
+        //         newMethod: "POST"
+        //     })
+        // }
     }
 
     useEffect(() => {
@@ -123,18 +125,19 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
             <div className='grid grid-cols-1 lg:gap-3 lg:grid-cols-2'>
                 <div className='col-span-1 pt-1'>
                     <BInputSelect
-                        title='Jenis Instansi (Pada SIASN)'
+                        title='Id Jenis Instansi (Pada SIASN)'
                         options={JenisInstansiId}
+                        datavalue={form.jenis_instansi_id}
                         onChange={(value) => {
                             setItemForm('jenis_instansi_id', value)
                         }}
                     />
-
                 </div>
                 <div className='col-span-1 pt-1'>
                     <BInputSelect
-                        title='Id Jenis Instansi (Pada SIASN)'
+                        title='Jenis Instansi (Pada SIASN)'
                         options={JenisInstansi}
+                        datavalue={form.jenis}
                         onChange={(value) => {
                             setItemForm('jenis', value)
                         }}
