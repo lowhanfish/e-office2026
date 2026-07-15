@@ -22,10 +22,18 @@ class StatusJabfung(enum.Enum):
     O = "Jabatan yang tidak berlaku"
     X = "Jabatan yang terus berlaku"
 
-class JenisInstansi(enum.Enum):
-    P = "Pusat"
-    D = "Daerah"
-    
+# class JenisInstansi(enum.Enum):
+#     P = "Pusat"
+#     D = "Daerah"
+
+# class JenisInstansiId(enum.Enum):
+#     KO = "Kementerian Koordinator"
+#     KEMENT = "Kementerian" 
+#     LPNK = "Lembaga non Kementerian"
+#     LNS = "Lembaga non Struktural" 
+#     PROV = "Provinsi" 
+#     KAB = "Kabupaten"
+#     KOTA = "Kota"
 
 class User(Base):
     __tablename__ = "sys_user"
@@ -43,14 +51,6 @@ class User(Base):
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, onupdate=func.now())
 
-class JenisInstansiId(enum.Enum):
-    KO = "Kementerian Koordinator"
-    KEMENT = "Kementerian" 
-    LPNK = "Lembaga non Kementerian"
-    LNS = "Lembaga non Struktural" 
-    PROV = "Provinsi" 
-    KAB = "Kabupaten"
-    KOTA = "Kota"
 
 class RefJnsPegawai(Base):
     __tablename__ = "ref_jns_pegawai"
@@ -241,16 +241,41 @@ class RefDokumen(Base):
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
+class JenisInstansi(Base):
+    __tablename__ = "jenis_instansi"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(2), index=True, nullable=False, unique=True)
+    nama = Column(String(35), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    ref_instansi_rel = relationship("Instansi", back_populates="jenis_instansi_rel", cascade="all, delete-orphan")
+
+class JenisInstansiId(Base):
+    __tablename__ = "jenis_instansi_id"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(8), index=True, nullable=False, unique=True)
+    nama = Column(String(50), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    ref_instansi_rel = relationship("Instansi", back_populates="jenis_instansi_id_rel", cascade="all, delete-orphan")
+
 class Instansi(Base):
     __tablename__ = "ref_instansi"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
-    kode = Column(String(50), index=True, nullable=False)
+    kode = Column(String(50), index=True, nullable=False, unique=True)
     kode_cepat = Column(CHAR(5), index=True, nullable=True)
     nama = Column(String(150), nullable=False)
-    jenis = Column(Enum(JenisInstansi), nullable=False)
-    jenis_instansi_id = Column(Enum(JenisInstansiId), nullable=False)
+    # jenis = Column(Enum(JenisInstansi), nullable=False)
+    jenis = Column(String(2), ForeignKey("jenis_instansi.kode", ondelete="CASCADE"), index=True, nullable=False)
+    # jenis_instansi_id = Column(Enum(JenisInstansiId), nullable=False)
+    jenis_instansi_id = Column(String(8), ForeignKey("jenis_instansi_id.kode", ondelete="CASCADE"), index=True, nullable=False)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    jenis_instansi_rel = relationship("JenisInstansi", back_populates="ref_instansi_rel")
+    jenis_instansi_id_rel = relationship("JenisInstansiId", back_populates="ref_instansi_rel")
 
     ref_satker_rel = relationship("Satker", back_populates="ref_instansi_rel", cascade="all, delete-orphan")
 
