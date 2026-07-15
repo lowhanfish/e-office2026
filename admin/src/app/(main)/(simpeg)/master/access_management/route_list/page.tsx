@@ -11,9 +11,7 @@ import BFrameLinear from '@/components/items/BFrameLinear';
 import ModalAdd from './components/ModalAdd';
 import ModalConfig from './components/ModalConfig';
 import ModalDetail from './components/ModalDetail';
-import routex from '@/utilities/routes';
-
-
+import routex from '@/constants/routes';
 
 
 const page = () => {

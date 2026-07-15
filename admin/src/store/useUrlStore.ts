@@ -5,7 +5,6 @@ const url = 'http://localhost:8000'
 interface DataShowProps {
     id : string | number;
     value : string | number;
-    text : string;
 }
 
 interface URLProps {
@@ -33,28 +32,23 @@ export const useUrlStore = create<useUrlStoreProps>((set)=>({
     DataShow : [
         {
             id: 2,
-            value: 2,
-            text: "2 - Data tampil ",
+            value: "2 - Data tampil ",
         },
         {
             id: 8,
-            value: 8,
-            text: "8 - Data tampil ",
+            value: "8 - Data tampil ",
         },
         {
             id: 25,
-            value: 25,
-            text: "25 - Data tampil ",
+            value: "25 - Data tampil ",
         },
         {
             id: 50,
-            value: 50,
-            text: "50 - Data tampil ",
+            value: "50 - Data tampil ",
         },
         {
             id: 100,
-            value: 100,
-            text: "100 - Data tampil ",
+            value: "100 - Data tampil ",
         },
 
     ]

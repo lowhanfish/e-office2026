@@ -1,8 +1,11 @@
-import { useState, Dispatch, SetStateAction } from 'react'
+import { useState, useEffect, Dispatch, SetStateAction } from 'react'
 import BButton from '@/components/items/BButton'
 import BInput from '@/components/items/BInput'
 import { useUrlStore } from '@/store/useUrlStore'
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
+import { JenisInstansi, JenisInstansiId } from "@/constants/instansi"
+import BInputSelect from '@/components/items/BInputSelect'
+
 
 interface FormData {
     id: string,
@@ -92,38 +95,82 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
 
 
     const submit = () => {
+        // console.log(form)
+
         if (isEdit) {
             createDataMutation.mutate({
-                newUrl: `${url}/api/v1/simpeg/master/ref_jns_pegawai/update/${form.id}`,
+                newUrl: `${url}/api/v1/simpeg/master/ref_instansi/update/${form.id}`,
                 newForm: form,
                 newMethod: "PUT"
             })
         } else {
             createDataMutation.mutate({
-                newUrl: `${url}/api/v1/simpeg/master/ref_jns_pegawai/create`,
+                newUrl: `${url}/api/v1/simpeg/master/ref_instansi/create`,
                 newForm: form,
                 newMethod: "POST"
             })
         }
     }
 
+    useEffect(() => {
+        // setItemForm('jenis', JenisInstansi[0].id)
+        // setItemForm('jenis_instansi_id', JenisInstansiId[0].id)
+    }, [])
+
     return (
         <div className='px-5 pb-2'>
-            <div className='pt-1'>
-                <BInput
-                    title='Kode Golongan (Id pada SIASN)'
-                    placeholder='Kode Golongan'
-                    type='text'
-                    value={form.kode}
-                    onChange={(value) => {
-                        setItemForm('kode', value)
-                    }}
-                />
+
+            <div className='grid grid-cols-1 lg:gap-3 lg:grid-cols-2'>
+                <div className='col-span-1 pt-1'>
+                    <BInputSelect
+                        title='Jenis Instansi (Pada SIASN)'
+                        options={JenisInstansiId}
+                        onChange={(value) => {
+                            setItemForm('jenis_instansi_id', value)
+                        }}
+                    />
+
+                </div>
+                <div className='col-span-1 pt-1'>
+                    <BInputSelect
+                        title='Id Jenis Instansi (Pada SIASN)'
+                        options={JenisInstansi}
+                        onChange={(value) => {
+                            setItemForm('jenis', value)
+                        }}
+                    />
+                </div>
             </div>
+
+            <div className='grid grid-cols-1 lg:gap-3 lg:grid-cols-2 pt-1'>
+                <div className='col-span-1'>
+                    <BInput
+                        title='Kode'
+                        placeholder='Kode (Pada SIASN)'
+                        type='text'
+                        value={form.kode}
+                        onChange={(value) => {
+                            setItemForm('kode', value)
+                        }}
+                    />
+                </div>
+                <div className='col-span-1'>
+                    <BInput
+                        title='Kode Cepat'
+                        placeholder='Kode Cepat (Pada SIASN)'
+                        type='text'
+                        value={form.kode_cepat}
+                        onChange={(value) => {
+                            setItemForm('kode_cepat', value)
+                        }}
+                    />
+                </div>
+            </div>
+
             <div className='pt-1'>
                 <BInput
-                    title='Nama Golongan'
-                    placeholder='Nama Golongan'
+                    title='Nama Instansi'
+                    placeholder='Nama Instansi'
                     type='text'
                     value={form.nama}
                     onChange={(value) => {
@@ -133,7 +180,7 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
             </div>
 
 
-            <div className='flex gap-2 justify-end mt-3 py-2 border-y border-b-gray-2'>
+            <div className='flex gap-2 justify-end mt-5 py-2 border-y border-b-gray-2'>
                 <div className='w-30'>
                     {
                         isEdit ? (

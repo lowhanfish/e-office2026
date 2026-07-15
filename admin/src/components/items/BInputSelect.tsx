@@ -3,7 +3,6 @@ import React from 'react'
 interface DataValue {
     id?: string | number;
     value: string | number;
-    text: string
 }
 
 interface BInputSelectProps {
@@ -24,13 +23,13 @@ const BInputSelect = ({ title, datavalue, options, onChange }: BInputSelectProps
 
             {
                 options && options.length > 0 && options != null && (
-                    <select value={datavalue} onChange={(e) => onChange(e.target.value)} className='w-full border bg-b-gray-2/35 border-b-gray-3/40 px-2 py-1.5 text-[14px] rounded-[5]' name="" id="">
+                    <select value={datavalue} onChange={(e) => onChange(e.target.value)} className='w-full border bg-b-gray-2/35 border-b-gray-3/40 pl-1 py-1.5 text-[14px] rounded-[5]' name="" id="">
                         {
                             options.map((item, index) => (
                                 <option
                                     key={index}
-                                    value={item?.value}>
-                                    {item?.text}
+                                    value={item?.id}>
+                                    {item?.value}
                                 </option>
                             ))
                         }

@@ -236,7 +236,7 @@ const Page = () => {
             </div>
 
             <div>
-                <BModal title='Configuration' openModal={open} setOpenModal={setOpen} size='md'>
+                <BModal title='Configuration' openModal={open} setOpenModal={setOpen} size='xs'>
                     <div className='flex flex-col gap-2 p-4'>
                         <button className='bg-b-blue-4 hover:bg-b-blue-5/70 cursor-pointer flex gap-2 justify-center items-center text-[12px] p-1.5 rounded-md shadow-md'
                             onClick={() => { }}
@@ -256,7 +256,7 @@ const Page = () => {
                     </div>
                 </BModal>
 
-                <BModal title={`${createType ? 'Edit' : 'Add'} Data`} openModal={modalCreate} setOpenModal={setModalCreate} size='sm'>
+                <BModal title={`${createType ? 'Edit' : 'Add'} Data`} openModal={modalCreate} setOpenModal={setModalCreate} size='md'>
                     <FormCreate setClose={setModalCreate} isEdit={createType} form={form} setForm={setForm} />
                 </BModal>
             </div>
