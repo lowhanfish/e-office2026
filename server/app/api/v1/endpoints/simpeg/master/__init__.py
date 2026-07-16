@@ -6,6 +6,8 @@ from . import (
     agama, 
     esselon, 
     ref_golongan,
+    ref_jenis_instansi,
+    ref_jenis_instansi_id,
     ref_instansi, 
     ref_satker, 
     ref_jns_lokasi,
@@ -25,7 +27,6 @@ from . import (
     ref_rumpun_pendidikan, 
     ref_tk_pendidikan,
     ref_pendidikan,
-    ref_jenis_instansi,
 )
 
 master_router = APIRouter()
@@ -37,6 +38,7 @@ master_router.include_router(agama.router, prefix="/agama")
 master_router.include_router(esselon.router, prefix='/esselon')
 master_router.include_router(ref_golongan.router, prefix="/ref_golongan")
 master_router.include_router(ref_jenis_instansi.router, prefix="/ref_jenis_instansi")
+master_router.include_router(ref_jenis_instansi_id.router, prefix="/ref_jenis_instansi_id")
 master_router.include_router(ref_instansi.router, prefix="/ref_instansi")
 master_router.include_router(ref_satker.router, prefix="/ref_satker")
 master_router.include_router(ref_jns_lokasi.router, prefix="/ref_jns_lokasi")
