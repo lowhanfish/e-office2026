@@ -165,7 +165,7 @@ const Page = () => {
                         <div className='flex gap-1 relative'>
                             {/* PERBAIKAN INPUT: Mengikat value dan onChange langsung ke state 'search' */}
                             <BInput
-                                placeholder='Cari Data Golongan...'
+                                placeholder='Cari Data...'
                                 type='text'
                                 value={search}
                                 onChange={(value) => {

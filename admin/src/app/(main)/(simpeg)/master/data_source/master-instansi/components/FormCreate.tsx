@@ -90,6 +90,7 @@ const FormAdd = ({ setClose, isEdit, form, setForm, setItemForm, emptyForm }: Fo
         }
     }
 
+
     return (
         <div className='px-5 pb-2'>
 
@@ -152,6 +153,7 @@ const FormAdd = ({ setClose, isEdit, form, setForm, setItemForm, emptyForm }: Fo
                     }}
                 />
             </div>
+
 
             <div className='flex gap-2 justify-end mt-5 py-2 border-y border-b-gray-2'>
                 <div className='w-30'>

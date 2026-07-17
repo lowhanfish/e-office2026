@@ -13,10 +13,15 @@ import FormCreate from './components/FormCreate';
 import { listindex } from "@/utilities/pagination"
 import { BSkeletonTable } from '@/components/items/BSkeleton';
 
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
+import useDebounced from '@/hooks/useDebounced';
+import useForm from '@/hooks/useForm';
+
 interface FormData {
     id: string,
     kode: string,
     nama: string,
+    kode_cepat: string,
     created_by: string
 }
 
@@ -24,8 +29,9 @@ interface FormResponse {
     id: string,
     kode: string,
     nama: string,
+    kode_cepat: string,
     created_by: string,
-    created_at: string
+    created_at: string,
 }
 
 interface FormResponseList {
@@ -36,12 +42,40 @@ interface FormResponseList {
 }
 
 
+const readData = async (url: string): Promise<FormResponseList> => {
+    try {
+        const res = await fetch(url)
+        if (!res.ok) throw new Error(`Gagal mengambil data. HTTP status : ${res.status}`)
+        const data = await res.json();
+        return data
+    }
+    catch (error) {
+        console.error("Terjadi kesalahan saat fetch:", error);
+        throw error
+    }
+}
+const deleteData = async (url: string) => {
+    try {
+        const res = await fetch(url, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" }
+        })
+        if (!res.ok) throw new Error(`Gagal menghapus data. status : ${res.status}`)
+        const data = await res.json()
+        return data
+    } catch (error) {
+        console.log(`Terjadi kesalahan saat fetch. status : ${error}`)
+        throw error
+    }
+}
 
 const Page = () => {
 
+    const queryClient = useQueryClient()
+
+    const url = useUrlStore(state => state.URL.APP)
 
     const DataShow = useUrlStore(state => state.DataShow)
-
     const [open, setOpen] = useState(false);
     const [modalCreate, setModalCreate] = useState(false);
     const [createType, setCreateType] = useState(false)
@@ -50,32 +84,52 @@ const Page = () => {
 
     // PERBAIKAN DEBOUNCE STATE
     const [search, setSearch] = useState<string>("") // State instan untuk input
+    const debounced = useDebounced(search)
 
-    const [isLoading, setIsLoading] = useState<boolean>(true)
-    const [List, setList] = useState<FormResponseList>()
-
-
-    const [form, setForm] = useState<FormData>({
+    const { form, setForm, setItemForm, emptyForm } = useForm<FormData>({
         id: '',
         kode: '',
         nama: '',
+        kode_cepat: "",
         created_by: "user.id"
     })
 
-    const selectItem = (item: FormResponse) => {
+    const selectItem = (item: FormData) => {
         setForm({
             id: item.id,
             kode: item.kode,
             nama: item.nama,
+            kode_cepat: item.kode_cepat,
             created_by: item.created_by
         })
     }
 
+    const { data: List, isLoading, isError, error } = useQuery({
+        queryFn: () => readData(
+            `${url}/api/v1/simpeg/master/ref_instansi/read?skip=${pageSelect - 1}&limit=${pageLimit}${search ? `&search=${debounced}` : ""}`
+        ),
+        queryKey: ["ref_instansi", pageSelect, pageLimit, debounced]
+    })
+
+    const deleteDataMutation = useMutation({
+        mutationFn: (id: string) => deleteData(
+            `${url}/api/v1/simpeg/master/ref_instansi/delete/${id}`
+        ),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["ref_instansi"] })
+        },
+        onError: (err: any) => {
+            alert(`Error : ${err}`);
+        }
+    })
 
     const btnDelete = (id: string) => {
-
+        deleteDataMutation.mutate(id)
     }
 
+    useEffect(() => {
+        setPageSelect(1)
+    }, [debounced])
 
     return (
         <div>
@@ -87,7 +141,7 @@ const Page = () => {
                         <div className='flex gap-1 relative'>
                             {/* PERBAIKAN INPUT: Mengikat value dan onChange langsung ke state 'search' */}
                             <BInput
-                                placeholder='Cari Data Golongan...'
+                                placeholder='Cari Data...'
                                 type='text'
                                 value={search}
                                 onChange={(value) => {
@@ -121,7 +175,8 @@ const Page = () => {
                                     <th className='w-[5%] text-center'>No</th>
                                     <th className='w-[5%] text-center'>Act</th>
                                     <th className='w-[10%] text-center'>Kode</th>
-                                    <th className='w-[80%]'>Nama</th>
+                                    <th className='w-[30%]'>Instansi</th>
+                                    <th className='w-[50%]'>Nama Satker</th>
                                 </tr>
                             </thead>
 
@@ -138,8 +193,9 @@ const Page = () => {
                                                 </button>
                                             </div>
                                         </td>
-                                        <td className=''><p className='text-center'>{item.kode}</p></td>
-                                        <td className=''><p>{item.nama}</p></td>
+                                        <td><p className='text-center'>xx</p></td>
+                                        <td className=''><p>xxxx</p></td>
+                                        <td className=''><p className=''>yyyy</p></td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -196,8 +252,15 @@ const Page = () => {
                     </div>
                 </BModal>
 
-                <BModal title={`${createType ? 'Edit' : 'Add'} Data`} openModal={modalCreate} setOpenModal={setModalCreate} size='sm'>
-                    <FormCreate setClose={setModalCreate} isEdit={createType} form={form} setForm={setForm} />
+                <BModal title={`${createType ? 'Edit' : 'Add'} Data`} openModal={modalCreate} setOpenModal={setModalCreate} size='md'>
+                    <FormCreate
+                        setClose={setModalCreate}
+                        isEdit={createType}
+                        form={form}
+                        setForm={setForm}
+                        setItemForm={setItemForm}
+                        emptyForm={emptyForm}
+                    />
                 </BModal>
             </div>
         </div>

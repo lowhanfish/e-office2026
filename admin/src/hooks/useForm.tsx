@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 const useForm = <T,>(initialValue: T) => {
     const [form, setForm] = useState<T>(initialValue)
 
-
     const setItemForm = (key: keyof T, value: any) => {
         setForm((prevForm) => ({
             ...prevForm,
@@ -14,7 +13,6 @@ const useForm = <T,>(initialValue: T) => {
     const emptyForm = () => {
         setForm(initialValue)
     }
-
 
     return {
         form, setForm, setItemForm, emptyForm
