@@ -2,6 +2,7 @@ import { useState, Dispatch, SetStateAction } from 'react'
 import BButton from '@/components/items/BButton'
 import BInput from '@/components/items/BInput'
 import { useUrlStore } from '@/store/useUrlStore'
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
 
 interface FormData {
     id: string,
@@ -25,13 +26,28 @@ interface FormCreateProps {
     setForm: Dispatch<SetStateAction<FormData>>
 }
 
+const createData = async (url: string, form: FormData, method: string): Promise<FormResponse> => {
+    try {
+        const res = await fetch(url, {
+            method: method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(form)
+        })
+        if (!res.ok) throw new Error(`Error data : ${res.status}`)
+        const data = await res.json()
+        return data;
+    } catch (error: any) {
+        alert(`Terjadi kesalahan fetching : ${error}`)
+        return error
+    }
+}
+
 
 const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
 
-    const url = useUrlStore(state => state.URL)
+    const url = useUrlStore(state => state.URL.APP)
     const [textx, setTextx] = useState<string | number>("")
-
-
+    const queryclient = useQueryClient()
 
     const setItemForm = (key: string, value: any) => {
         setForm({
@@ -50,8 +66,34 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
         setClose(false)
     }
 
-    const submit = () => {
+    const createMutation = useMutation({
+        mutationFn: ({ newUrl, newForm, newMethod }: { newUrl: string, newForm: FormData, newMethod: string }) => createData(
+            newUrl, newForm, newMethod
+        ),
+        onSuccess: () => {
+            queryclient.invalidateQueries({ queryKey: ["ref_jenis_instansi_id"] })
+            emptyForm();
+        },
+        onError: (error: any) => {
+            console.log(error)
+            alert(error)
+        }
+    })
 
+    const submit = () => {
+        if (isEdit) {
+            createMutation.mutate({
+                newUrl: `${url}/api/v1/simpeg/master/ref_jenis_instansi_id/update/${form.id}`,
+                newForm: form,
+                newMethod: "PUT"
+            })
+        } else {
+            createMutation.mutate({
+                newUrl: `${url}/api/v1/simpeg/master/ref_jenis_instansi_id/create`,
+                newForm: form,
+                newMethod: "POST"
+            })
+        }
     }
 
     return (
