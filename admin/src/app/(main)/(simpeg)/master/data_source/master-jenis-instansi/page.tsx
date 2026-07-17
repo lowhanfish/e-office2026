@@ -12,6 +12,8 @@ import { useUrlStore } from "@/store/useUrlStore"
 import FormCreate from './components/FormCreate';
 import { listindex } from "@/utilities/pagination"
 import { BSkeletonTable } from '@/components/items/BSkeleton';
+import useDebounced from '@/hooks/useDebounced';
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
 
 interface FormData {
     id: string,
@@ -36,8 +38,39 @@ interface FormResponseList {
 }
 
 
+const readData = async (url: string): Promise<FormResponse[]> => {
+    try {
+        const res = await fetch(url)
+        if (!res.ok) throw new Error(`Gagal mengambil data. HTTP status : ${res.status}`)
+        const data = await res.json()
+        return data
+    } catch (error: any) {
+        console.error("Terjadi kesalahan saat fetch:", error);
+        return error
+    }
+
+}
+const deleteData = async (url: string) => {
+    try {
+        const res = await fetch(url, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" }
+        })
+        if (!res.ok) throw new Error(`Gagal menghapus data. HTTP status : ${res.status}`)
+        return res.json()
+
+    } catch (error) {
+        console.error("Terjadi kesalahan saat fetch:", error);
+        return error
+    }
+}
+
+
 
 const Page = () => {
+
+    const url = useUrlStore(state => state.URL.APP)
+    const queryclient = useQueryClient()
 
 
     const DataShow = useUrlStore(state => state.DataShow)
@@ -51,8 +84,8 @@ const Page = () => {
     // PERBAIKAN DEBOUNCE STATE
     const [search, setSearch] = useState<string>("") // State instan untuk input
 
-    const [isLoading, setIsLoading] = useState<boolean>(true)
-    const [List, setList] = useState<FormResponseList>()
+    // const [isLoading, setIsLoading] = useState<boolean>(true)
+    // const [List, setList] = useState<FormResponseList>()
 
 
     const [form, setForm] = useState<FormData>({
@@ -61,6 +94,7 @@ const Page = () => {
         nama: '',
         created_by: "user.id"
     })
+
 
     const selectItem = (item: FormResponse) => {
         setForm({
@@ -72,14 +106,34 @@ const Page = () => {
     }
 
 
-    const btnDelete = (id: string) => {
+    const { data: List, isLoading, isError, error } = useQuery({
+        queryFn: () => readData(
+            `${url}/api/v1/simpeg/master/ref_jenis_instansi/read`
+        ),
+        queryKey: ["ref_jenis_instansi"]
+    })
 
+    const deleteMutation = useMutation({
+        mutationFn: (id: string) => deleteData(
+            `${url}/api/v1/simpeg/master/ref_jenis_instansi/delete/${id}`
+        ),
+        onSuccess: () => {
+            queryclient.invalidateQueries({ queryKey: ["ref_jenis_instansi"] })
+        },
+        onError: (err: any) => {
+            alert(`Error : ${err}`)
+        }
+    })
+
+
+    const btnDelete = (id: string) => {
+        deleteMutation.mutate(id)
     }
 
 
     return (
         <div>
-            <TextSeparate title='Master Satker' />
+            <TextSeparate title='Master Jenis Instansi' />
             <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
                 <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-1 w-full'>
                     <div className='col-span-6 '>
@@ -87,7 +141,7 @@ const Page = () => {
                         <div className='flex gap-1 relative'>
                             {/* PERBAIKAN INPUT: Mengikat value dan onChange langsung ke state 'search' */}
                             <BInput
-                                placeholder='Cari Data Golongan...'
+                                placeholder='Cari Data...'
                                 type='text'
                                 value={search}
                                 onChange={(value) => {
@@ -126,7 +180,7 @@ const Page = () => {
                             </thead>
 
                             <tbody>
-                                {List?.data.map((item, index) => (
+                                {List?.map((item, index) => (
                                     <tr key={index} className='poppins'>
                                         <td className=''>
                                             <p className='text-center'>{listindex(pageLimit, pageSelect, index)}</p>

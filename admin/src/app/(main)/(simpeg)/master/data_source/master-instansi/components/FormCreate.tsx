@@ -97,21 +97,21 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
 
 
     const submit = () => {
-        console.log(form)
+        // console.log(form)
 
-        // if (isEdit) {
-        //     createDataMutation.mutate({
-        //         newUrl: `${url}/api/v1/simpeg/master/ref_instansi/update/${form.id}`,
-        //         newForm: form,
-        //         newMethod: "PUT"
-        //     })
-        // } else {
-        //     createDataMutation.mutate({
-        //         newUrl: `${url}/api/v1/simpeg/master/ref_instansi/create`,
-        //         newForm: form,
-        //         newMethod: "POST"
-        //     })
-        // }
+        if (isEdit) {
+            createDataMutation.mutate({
+                newUrl: `${url}/api/v1/simpeg/master/ref_instansi/update/${form.id}`,
+                newForm: form,
+                newMethod: "PUT"
+            })
+        } else {
+            createDataMutation.mutate({
+                newUrl: `${url}/api/v1/simpeg/master/ref_instansi/create`,
+                newForm: form,
+                newMethod: "POST"
+            })
+        }
     }
 
     useEffect(() => {
