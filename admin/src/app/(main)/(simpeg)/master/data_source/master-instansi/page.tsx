@@ -15,6 +15,7 @@ import { BSkeletonTable } from '@/components/items/BSkeleton';
 
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
 import useDebounced from '@/hooks/useDebounced';
+import useForm from '@/hooks/useForm';
 
 
 interface FormData {
@@ -94,7 +95,7 @@ const Page = () => {
     const debounced = useDebounced(search)
 
 
-    const [form, setForm] = useState<FormData>({
+    const { form, setForm, setItemForm, emptyForm } = useForm<FormData>({
         id: '',
         kode: '',
         nama: '',
@@ -104,7 +105,17 @@ const Page = () => {
         created_by: "user.id"
     })
 
-    const selectItem = (item: FormResponse) => {
+    // const [form, setForm] = useState<FormData>({
+    //     id: '',
+    //     kode: '',
+    //     nama: '',
+    //     kode_cepat: "",
+    //     jenis: "",
+    //     jenis_instansi_id: "",
+    //     created_by: "user.id"
+    // })
+
+    const selectItem = (item: FormData) => {
         setForm({
             id: item.id,
             kode: item.kode,
@@ -266,7 +277,14 @@ const Page = () => {
                 </BModal>
 
                 <BModal title={`${createType ? 'Edit' : 'Add'} Data`} openModal={modalCreate} setOpenModal={setModalCreate} size='md'>
-                    <FormCreate setClose={setModalCreate} isEdit={createType} form={form} setForm={setForm} />
+                    <FormCreate
+                        setClose={setModalCreate}
+                        isEdit={createType}
+                        form={form}
+                        setForm={setForm}
+                        setItemForm={setItemForm}
+                        emptyForm={emptyForm}
+                    />
                 </BModal>
             </div>
         </div>

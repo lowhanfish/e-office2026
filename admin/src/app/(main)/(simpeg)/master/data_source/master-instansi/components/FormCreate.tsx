@@ -1,11 +1,10 @@
-import { useState, useEffect, Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction } from 'react'
 import BButton from '@/components/items/BButton'
 import BInput from '@/components/items/BInput'
 import { useUrlStore } from '@/store/useUrlStore'
-import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
+import { useQueryClient, useMutation } from "@tanstack/react-query"
 import { JenisInstansi, JenisInstansiId } from "@/constants/instansi"
 import BInputSelect from '@/components/items/BInputSelect'
-
 
 interface FormData {
     id: string,
@@ -32,7 +31,9 @@ interface FormCreateProps {
     setClose: Dispatch<SetStateAction<boolean>>,
     isEdit: boolean,
     form: FormData,
-    setForm: Dispatch<SetStateAction<FormData>>
+    setForm: Dispatch<SetStateAction<FormData>>,
+    setItemForm: (key: keyof FormData, value: any) => void
+    emptyForm: () => void
 }
 
 const createData = async (url: string, data: FormData, method: string) => {
@@ -51,34 +52,10 @@ const createData = async (url: string, data: FormData, method: string) => {
     }
 }
 
-const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
+const FormAdd = ({ setClose, isEdit, form, setForm, setItemForm, emptyForm }: FormCreateProps) => {
 
     const queryclient = useQueryClient()
-
-    console.log(form)
-
     const url = useUrlStore(state => state.URL.APP)
-    const [textx, setTextx] = useState<string | number>("")
-
-    const setItemForm = (key: string, value: any) => {
-        setForm({
-            ...form,
-            [key]: value
-        })
-    }
-
-    const emptyForm = () => {
-        setForm({
-            id: '',
-            kode: '',
-            nama: '',
-            kode_cepat: '',
-            jenis: '',
-            jenis_instansi_id: '',
-            created_by: "user.id"
-        })
-        setClose(false)
-    }
 
     const createDataMutation = useMutation({
         mutationFn: ({ newUrl, newForm, newMethod }: { newUrl: string, newForm: FormData, newMethod: string }) => createData(
@@ -89,6 +66,7 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
         onSuccess: () => {
             queryclient.invalidateQueries({ queryKey: ["ref_instansi"] });
             emptyForm()
+            setClose(false)
         },
         onError: (err: any) => {
             alert("err")
@@ -97,8 +75,6 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
 
 
     const submit = () => {
-        // console.log(form)
-
         if (isEdit) {
             createDataMutation.mutate({
                 newUrl: `${url}/api/v1/simpeg/master/ref_instansi/update/${form.id}`,
@@ -113,11 +89,6 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
             })
         }
     }
-
-    useEffect(() => {
-        // setItemForm('jenis', JenisInstansi[0].id)
-        // setItemForm('jenis_instansi_id', JenisInstansiId[0].id)
-    }, [])
 
     return (
         <div className='px-5 pb-2'>
@@ -181,7 +152,6 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
                     }}
                 />
             </div>
-
 
             <div className='flex gap-2 justify-end mt-5 py-2 border-y border-b-gray-2'>
                 <div className='w-30'>
