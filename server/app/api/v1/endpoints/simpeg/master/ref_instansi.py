@@ -4,12 +4,12 @@ from app.schemas.simpeg.master.ref_instansi import InstansiCreate, InstansiRespo
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
 from sqlalchemy.future import select
-from app.models.simpeg.master.models import Instansi
+from app.models.simpeg.master.models import Instansi, JenisInstansi, JenisInstansiId
 from sqlalchemy.sql import func
 
 router = APIRouter()
 
-@router.get("/read", response_model=InstansiResponseList)
+@router.get("/read")
 async def read_Instansi(
     db:AsyncSession = Depends(get_db),
     skip:int = 0,
@@ -30,16 +30,24 @@ async def read_Instansi(
     - `422`: Jika format input tidak sesuai skema.
     """
 
-    query = select(Instansi)
+    query = select(
+        *Instansi.__table__.c,
+        JenisInstansi.nama.label("jenis_nama"),  # Ambil nama dari JenisInstansi
+        JenisInstansiId.nama.label("jenis_instansi_nama"),  # Ambil nama dari JenisInstansiId
+    )
     if search:
         query = query.where(Instansi.nama.ilike(f"%{search}%"))
+
+    query = query.join(JenisInstansi, Instansi.jenis == JenisInstansi.kode)
+    query = query.join(JenisInstansiId, Instansi.jenis_instansi_id == JenisInstansiId.kode)
 
     total_query = select(func.count()).select_from(query.subquery())
     total_result = await db.execute(total_query)
     total = total_result.scalar_one_or_none()
 
     result = await db.execute(query)
-    data = result.scalars().all()
+
+    data = result.mappings().all()
 
     return {
         "total": total,

@@ -35,7 +35,9 @@ interface FormResponse {
     jenis: string,
     jenis_instansi_id: string,
     created_by: string,
-    created_at: string
+    created_at: string,
+    jenis_nama: string,
+    jenis_instansi_nama: string
 }
 
 interface FormResponseList {
@@ -185,8 +187,9 @@ const Page = () => {
                                 <tr className="text-left">
                                     <th className='w-[5%] text-center'>No</th>
                                     <th className='w-[5%] text-center'>Act</th>
-                                    <th className='w-[10%] text-center'>Kode</th>
-                                    <th className='w-[80%]'>Nama</th>
+                                    <th className='w-[20%] text-center'>Jenis Instansi</th>
+                                    <th className='w-[20%] text-center'>Jenis Instansi Id</th>
+                                    <th className='w-[50%]'>Nama</th>
                                 </tr>
                             </thead>
 
@@ -203,8 +206,9 @@ const Page = () => {
                                                 </button>
                                             </div>
                                         </td>
-                                        <td className=''><p className='text-center'>{item.kode}</p></td>
-                                        <td className=''><p>{item.nama}</p></td>
+                                        <td className=''><p>[{item.jenis_instansi_id}] - {item.jenis_instansi_nama}</p></td>
+                                        <td className=''><p>[{item.jenis}] - {item.jenis_nama}</p></td>
+                                        <td className=''><p className=''>{item.nama}</p></td>
                                     </tr>
                                 ))}
                             </tbody>

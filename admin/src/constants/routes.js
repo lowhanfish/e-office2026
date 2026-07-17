@@ -141,11 +141,6 @@ const routex = [
                         children : []
                     },
                     {
-                        title : "Master Instansi",
-                        path:"/master/data_source/master-instansi",
-                        children : []
-                    },
-                    {
                         title : "Master Jenis Instansi",
                         path:"/master/data_source/master-jenis-instansi",
                         children : []
@@ -153,6 +148,11 @@ const routex = [
                     {
                         title : "Master Jenis Instansi Id",
                         path:"/master/data_source/master-jenis-instansi-id",
+                        children : []
+                    },
+                    {
+                        title : "Master Instansi",
+                        path:"/master/data_source/master-instansi",
                         children : []
                     },
                     {

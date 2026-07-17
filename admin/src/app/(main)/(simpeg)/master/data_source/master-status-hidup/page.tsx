@@ -95,16 +95,16 @@ const InputData = () => {
     }, [search]);
 
     const { data: List, isLoading, isError, error } = useQuery({
-        queryFn: () => readData(`${url}/api/v1/simpeg/master/ref_jns_pegawai/read?skip=${((pageSelect - 1) * pageLimit)}&limit=${pageLimit}&search=${debouncedSearch}`),
-        queryKey: ['ref_jns_pegawai', pageSelect, pageLimit, debouncedSearch]
+        queryFn: () => readData(`${url}/api/v1/simpeg/master/ref_status_hidup/read?skip=${((pageSelect - 1) * pageLimit)}&limit=${pageLimit}&search=${debouncedSearch}`),
+        queryKey: ['ref_status_hidup', pageSelect, pageLimit, debouncedSearch]
     })
 
     const deleteDataMutation = useMutation({
         mutationFn: (idx: string) => deleteData(
-            `${url}/api/v1/simpeg/master/ref_jns_pegawai/delete/${idx}`
+            `${url}/api/v1/simpeg/master/ref_status_hidup/delete/${idx}`
         ),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['ref_jns_pegawai'] });
+            queryClient.invalidateQueries({ queryKey: ['ref_status_hidup'] });
         },
         onError: (err: any) => {
             alert(`Error : ${err}`)
