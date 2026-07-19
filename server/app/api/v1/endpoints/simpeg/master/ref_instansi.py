@@ -1,52 +1,48 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
-from app.schemas.simpeg.master.ref_instansi import InstansiCreate, InstansiResponse, InstansiUpdate, InstansiResponseList
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
-from sqlalchemy.future import select
+# Menggunakan import modern, hilangkan sqlalchemy.future
+from sqlalchemy import select, insert, update, delete, func 
 from app.models.simpeg.master.models import Instansi, JenisInstansi, JenisInstansiId
-from sqlalchemy.sql import func
+from app.schemas.simpeg.master.ref_instansi import InstansiCreate, InstansiResponse, InstansiUpdate, InstansiResponseList
 
 router = APIRouter()
 
-@router.get("/read")
+@router.get("/read", response_model=InstansiResponseList)
 async def read_Instansi(
-    db:AsyncSession = Depends(get_db),
-    skip:int = 0,
-    limit:int = 100,
-    search:str |None = None
+    db: AsyncSession = Depends(get_db),
+    skip: int = 0,
+    limit: int = 100,
+    search: str | None = None
 ):
-
     """
     ## Mengambil semua List Instansi
     Membaca data Instansi baru dari sistem.
-
-    **Parameter:**
-    - `search`   : String, Untuk mencari data value dari Instansi.
-    - `page_start`: Int, Data page pertama akses page.
-    - `page_limit` : Int, Jumlah data yang ditarik.
-
-    **Error yang mungkin terjadi:**
-    - `422`: Jika format input tidak sesuai skema.
     """
-
+    # 1. Query Utama (Spesifik kolom & Join)
     query = select(
         *Instansi.__table__.c,
-        JenisInstansi.nama.label("jenis_nama"),  # Ambil nama dari JenisInstansi
-        JenisInstansiId.nama.label("jenis_instansi_nama"),  # Ambil nama dari JenisInstansiId
+        JenisInstansi.nama.label("jenis_nama"),
+        JenisInstansiId.nama.label("jenis_instansi_nama"),
     )
-    if search:
-        query = query.where(Instansi.nama.ilike(f"%{search}%"))
-
+    
     query = query.join(JenisInstansi, Instansi.jenis == JenisInstansi.kode)
     query = query.join(JenisInstansiId, Instansi.jenis_instansi_id == JenisInstansiId.kode)
 
+    if search:
+        query = query.where(Instansi.nama.ilike(f"%{search}%"))
+
+    # 2. Hitung Total Data (Count)
     total_query = select(func.count()).select_from(query.subquery())
     total_result = await db.execute(total_query)
-    total = total_result.scalar_one_or_none()
+    total = total_result.scalar_one_or_none() or 0
 
+    # 3. Eksekusi dengan Pagination (Skip & Limit)
+    query = query.offset(skip).limit(limit)
     result = await db.execute(query)
 
+    # 4. Hasil Flat
     data = result.mappings().all()
 
     return {
@@ -56,104 +52,87 @@ async def read_Instansi(
         "data": data,
     }
 
-@router.post("/create", response_model=InstansiResponse)
-async def create_Instansi(payload : InstansiCreate, db:AsyncSession = Depends(get_db)):
-    
+
+@router.post("/create")
+async def create_Instansi(payload: InstansiCreate, db: AsyncSession = Depends(get_db)):
     """
     ## Membuat Ref Instansi
-    Menambahkan data Instansi baru ke dalam sistem.
-
-    **Parameter:**
-    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
-    - `nama`: **String**, Nama Instansi.
-    - `kode_cepat`: **String**, harus unik (sebaiknya di ambil dari `kode_cepat` tabel referensi BKN).
-    - `jenis`: **String**, Jenis instansi (**P** : Pusat, **D** : Daerah).
-    - `jenis_instansi_id`: **String**, jenis instansi (**KO**: Kementerian Koordinator, **KEMENT**: Kementerian, **LPNK**: Lembaga non Kementerian, **LNS**: Lembaga non Struktural, **PROV**: Provinsi, **KAB**: Kabupaten, **KOTA**: Kota).
-
-    **Error yang mungkin terjadi:**
-    - `422`: Jika format input tidak sesuai skema.
+    Menambahkan data Instansi baru ke dalam sistem dengan 1x query.
     """
-    
-    query = Instansi(
-        kode = payload.kode,
-        kode_cepat = payload.kode_cepat,
-        nama = payload.nama,
-        jenis = payload.jenis,
-        jenis_instansi_id = payload.jenis_instansi_id,
-        created_by = payload.created_by,
+    query = (
+        insert(Instansi)
+        .values(
+            kode=payload.kode,
+            kode_cepat=payload.kode_cepat,
+            nama=payload.nama,
+            jenis=payload.jenis,
+            jenis_instansi_id=payload.jenis_instansi_id,
+            created_by=payload.created_by,
+        )
+        .returning(*Instansi.__table__.c)
     )
 
-    db.add(query)
+    result = await db.execute(query)
     await db.commit()
-    await db.refresh(query)
-    return query
-
-
-@router.put("/update/{id}", response_model=InstansiResponse)
-async def update_Instansi(id:str, payload: InstansiUpdate, db: AsyncSession = Depends(get_db)):
     
+    # Langsung return data baru tanpa perlu SELECT ulang (db.refresh)
+    return result.mappings().first()
+
+
+@router.put("/update/{id}")
+async def update_Instansi(id: str, payload: InstansiUpdate, db: AsyncSession = Depends(get_db)):
     """
     ## Mengubah Instansi
-    Mengubah data item Instansi di dalam sistem.
-
-    **Key Path:**
-    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
-
-    **Parameter:**
-    *(Parameter dapat dihapus jika tidak diperlukan)*
-    - `kode`: **String**, harus unik (sebaiknya di ambil dari `id` tabel referensi BKN).
-    - `nama`: **String**, Nama Instansi.
-    - `kode_cepat`: **String**, harus unik (sebaiknya di ambil dari `kode_cepat` tabel referensi BKN).
-    - `jenis`: **String**, Jenis instansi (**P** : Pusat, **D** : Daerah).
-    - `jenis_instansi_id`: **String**, jenis instansi (**KO**: Kementerian Koordinator, **KEMENT**: Kementerian, **LPNK**: Lembaga non Kementerian, **LNS**: Lembaga non Struktural, **PROV**: Provinsi, **KAB**: Kabupaten, **KOTA**: Kota).
-
-    
-    **Error yang mungkin terjadi:**
-    - `422`: Jika format input tidak sesuai skema.
+    Mengubah data item Instansi menggunakan pola Core yang hemat query.
     """
-    
-    query = select(Instansi).filter(Instansi.id == id)
-    result = await db.execute(query)
-    db_data = result.scalar_one_or_none()
-
-    if not db_data:
-        raise HTTPException(status_code=404, detail="id data yang anda pilih tidak di temukan")
-
+    # Ambil hanya field yang benar-benar dikirim oleh user
     update_data = payload.model_dump(exclude_unset=True)
 
-    for key, value in update_data.items():
-        if hasattr(db_data, key):
-            setattr(db_data, key, value)
+    query = (
+        update(Instansi)
+        .where(Instansi.id == id)
+        .values(
+            # update semua column
+            **update_data
+            # # Langsung tembak ke properti payload, tidak perlu di-unpack
+            # nama=payload.nama,
+            # kode_cepat=payload.kode_cepat
+        )
+        .returning(*Instansi.__table__.c)
+    )
 
+    result = await db.execute(query)
     await db.commit()
-    await db.refresh(db_data)
+    
+    db_data = result.mappings().first()
+    
+    # Jika db_data kosong, berarti ID tidak ditemukan di database
+    if not db_data:
+        raise HTTPException(status_code=404, detail="id data yang anda pilih tidak ditemukan")
+
     return db_data
 
 
 @router.delete("/delete/{id}")
-async def delete_Instansi(id:str, db: AsyncSession = Depends(get_db)):
-
+async def delete_Instansi(id: str, db: AsyncSession = Depends(get_db)):
     """
     ## Menghapus Instansi
-    Menghapus data item Instansi di dalam sistem.
-
-    **Key Path:**
-    - `id`: **String**, Di ambil dari `id` data item yang akan kita ubah.
-
-    **Error yang mungkin terjadi:**
-    - `422`: Jika format input tidak sesuai skema.
+    Menghapus data langsung berdasarkan ID.
     """
+    query = (
+        delete(Instansi)
+        .where(Instansi.id == id)
+        .returning(Instansi.nama) # Cukup ambil namanya saja untuk pesan response
+    )
 
-    query = select(Instansi).filter(Instansi.id == id)
     result = await db.execute(query)
-    db_data = result.scalar_one_or_none()
-
-    if not db_data:
-        raise HTTPException(status_code=404, detail="id data yang anda pilih tidak di temukan")
-    
-    await db.delete(db_data)
     await db.commit()
+    
+    deleted_nama = result.scalar_one_or_none()
+    
+    if not deleted_nama:
+        raise HTTPException(status_code=404, detail="id data yang anda pilih tidak ditemukan")
 
     return {
-        "message" : f"Referensi Instansi '{db_data.nama}' telah dihapus"
+        "message": f"Referensi Instansi '{deleted_nama}' telah dihapus"
     }

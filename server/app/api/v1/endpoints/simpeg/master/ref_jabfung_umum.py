@@ -1,15 +1,21 @@
 from fastapi import APIRouter, Depends, HTTPException
-from app.schemas.simpeg.master.ref_jabfung_umum import RefJabatanFungsionalUmumCreate, RefJabatanFungsionalUmumResponse, RefJabatanFungsionalUmumUpdate
+from app.schemas.simpeg.master.ref_jabfung_umum import RefJabatanFungsionalUmumCreate, RefJabatanFungsionalUmumResponse, RefJabatanFungsionalUmumUpdate, RefJabatanFungsionalUmumResponseList
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.models.simpeg.master.models import RefJabatanFungsionalUmum
 from app.db.session import get_db
 from typing import List
+from sqlalchemy.sql import func
 
 router = APIRouter()
 
-@router.get("/read",response_model=List[RefJabatanFungsionalUmumResponse])
-async def read_RefJabatanFungsionalUmum(db: AsyncSession = Depends(get_db)):
+@router.get("/read",response_model=RefJabatanFungsionalUmumResponseList)
+async def read_RefJabatanFungsionalUmum(
+    db: AsyncSession = Depends(get_db),
+    skip: int = 0,
+    limit: int = 100,
+    search: str | None = None
+):
 
     """
     ## Mengambil semua List Jabatan Fungsional Umum
@@ -17,16 +23,32 @@ async def read_RefJabatanFungsionalUmum(db: AsyncSession = Depends(get_db)):
 
     **Parameter:**
     - `search`   : String, Untuk mencari data value dari Jabatan Fungsional Umum.
-    - `page_start`: Int, Data page pertama akses page.
-    - `page_limit` : Int, Jumlah data yang ditarik.
+    - `skip`: Int, Data page pertama akses page.
+    - `limit` : Int, Jumlah data yang ditarik.
 
     **Error yang mungkin terjadi:**
     - `422`: Jika format input tidak sesuai skema.
     """
 
     query = select(RefJabatanFungsionalUmum)
+
+    if search:
+        query = query.where(RefJabatanFungsionalUmum.nama.ilike(f"%{search}%"))
+
+    total_query = select(func.count()).select_from(query.subquery())
+    total_result = await db.execute(total_query)
+    total = total_result.scalar_one_or_none() or 0
+
+    query = query.order_by(RefJabatanFungsionalUmum.created_at.asc())
+    query = query.offset(skip).limit(limit)
     result = await db.execute(query)
-    return result.scalars().all()
+    data = result.scalars().all()
+    return {
+        "total": total,
+        "skip": skip,
+        "limit": limit,
+        "data": data,
+    }
 
 @router.post("/create", response_model=RefJabatanFungsionalUmumResponse)
 async def read_RefJabatanFungsionalUmum(payload : RefJabatanFungsionalUmumCreate, db :AsyncSession = Depends(get_db)):
