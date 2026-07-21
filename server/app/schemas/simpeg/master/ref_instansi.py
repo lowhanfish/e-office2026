@@ -6,6 +6,8 @@ class InstansiResponse(MasterResponse):
     kode_cepat : str
     jenis : str
     jenis_instansi_id : str
+    jenis_nama : Optional[str]
+    jenis_instansi_nama : Optional[str]
 
 class InstansiCreate(MasterCreate):
     kode_cepat : str
