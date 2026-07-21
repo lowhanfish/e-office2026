@@ -1,16 +1,42 @@
 from fastapi import APIRouter, Depends, HTTPException
-from app.schemas.simpeg.master.ref_satker import SatkerCreat, SatkerResponse, SatkerUpdate
+from app.schemas.simpeg.master.ref_satker import SatkerCreat, SatkerResponse, SatkerUpdate, SatkerResponseList
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from app.models.simpeg.master.models import Satker
+from app.models.simpeg.master.models import Satker, Instansi
 from app.db.session import get_db
+from sqlalchemy.sql import func
 
 
 router = APIRouter()
 
-@router.get("/read", response_model=List[SatkerResponse])
-async def read_satker(db: AsyncSession = Depends(get_db)):
+@router.get("/option")
+async def option_satker(
+    db: AsyncSession = Depends(get_db),
+    search : str | None = None
+):
+    """
+    ## Mengambil semua List Satker
+    untuk keperluan select atau autocomplete.
+    """
+    query = select(Satker)
+    if search:
+        query = query.where(Satker.nama.ilike(f"%{search}%"))
+
+    
+
+    result = await db.execute(query)
+    return result.scalars().all()
+
+
+
+@router.get("/read", response_model=SatkerResponseList)
+async def read_satker(
+    db: AsyncSession = Depends(get_db),
+    limit: int = 100,
+    skip: int = 0,
+    search: str | None = None
+):
 
     """
     ## Mengambil semua List Satker
@@ -18,16 +44,38 @@ async def read_satker(db: AsyncSession = Depends(get_db)):
 
     **Parameter:**
     - `search`   : String, Untuk mencari data value dari Satker.
-    - `page_start`: Int, Data page pertama akses page.
-    - `page_limit` : Int, Jumlah data yang ditarik.
+    - `skip`: Int, Data page pertama akses page.
+    - `limit` : Int, Jumlah data yang ditarik.
 
     **Error yang mungkin terjadi:**
     - `422`: Jika format input tidak sesuai skema.
     """
 
-    query = select(Satker)
+    query = select(
+        *Satker.__table__.c,
+        Instansi.nama
+    )
+
+    query = query.join(Instansi, Satker.instansi_id == Instansi.kode)
+
+    if search:
+        query = query.where(Satker.nama.ilike(f"%{search}%"))
+
+
+
+    total_query = select(func.count()).select_from(query.subquery())
+    total_result = await db.execute(total_query)
+    total = total_result.scalar_one_or_none() or 0
+
     result = await db.execute(query)
-    return result.scalars().all()
+    data = result.mappings().all()
+
+    return {
+        "total": total,
+        "skip": skip,
+        "limit": limit,
+        "data": data,
+    }
 
 
 

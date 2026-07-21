@@ -23,4 +23,5 @@ export const useGetRefJenisInstansiIdAll = () => {
         isError : isError,
         error : error
     };
+    
 }

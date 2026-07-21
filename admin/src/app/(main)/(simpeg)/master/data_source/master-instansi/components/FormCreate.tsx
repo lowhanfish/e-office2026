@@ -5,8 +5,8 @@ import { useUrlStore } from '@/store/useUrlStore'
 import { useQueryClient, useMutation } from "@tanstack/react-query"
 // import { JenisInstansiId } from "@/constants/instansi"
 import BInputSelect from '@/components/items/BInputSelect'
-import { useGetAllJenisInstansi } from '@/features/master/data-source/ref-jenis-instansi/hooks'
-import { useGetRefJenisInstansiIdAll } from '@/features/master/data-source/ref-jenis-instansi-id/hooks'
+import { useGetAllJenisInstansi } from '@/features/simpeg/master/data-source/ref-jenis-instansi/hooks'
+import { useGetRefJenisInstansiIdAll } from '@/features/simpeg/master/data-source/ref-jenis-instansi-id/hooks'
 
 
 
