@@ -10,10 +10,11 @@ from sqlalchemy.sql import func
 
 router = APIRouter()
 
-@router.get("/option")
+@router.get("/option", response_model=List[SatkerResponse])
 async def option_satker(
     db: AsyncSession = Depends(get_db),
-    search : str | None = None
+    search : str | None = None,
+    limit : int | None = None
 ):
     """
     ## Mengambil semua List Satker
@@ -23,7 +24,8 @@ async def option_satker(
     if search:
         query = query.where(Satker.nama.ilike(f"%{search}%"))
 
-    
+    if limit : 
+        query = query.limit(limit)
 
     result = await db.execute(query)
     return result.scalars().all()

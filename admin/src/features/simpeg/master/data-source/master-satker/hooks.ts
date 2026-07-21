@@ -3,11 +3,14 @@ import {masterSatkerItem, masterSatkerListAll, masterSatkerList, masterSatkerCre
 import { callAPI } from "@/lib/api";
 
 
-export const useGetMasterSatkerAll = () => {
+export const useGetMasterSatkerOption = () => {
     
 }
-export const useGetMasterSatker = () => {
-
+export const useGetMasterSatker = (url:string) => {
+    const {} = useQuery({
+        queryFn : ()=> callAPI(url),
+        queryKey : [""]
+    })
 }
 export const useCreateMasterSatker = () => {
 
