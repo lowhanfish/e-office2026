@@ -3,9 +3,10 @@ import BButton from '@/components/items/BButton'
 import BInput from '@/components/items/BInput'
 import { useUrlStore } from '@/store/useUrlStore'
 import { useQueryClient, useMutation } from "@tanstack/react-query"
-import { JenisInstansiId } from "@/constants/instansi"
+// import { JenisInstansiId } from "@/constants/instansi"
 import BInputSelect from '@/components/items/BInputSelect'
 import { useGetAllJenisInstansi } from '@/features/master/data-source/ref-jenis-instansi/hooks'
+import { useGetRefJenisInstansiIdAll } from '@/features/master/data-source/ref-jenis-instansi-id/hooks'
 
 
 
@@ -58,6 +59,7 @@ const createData = async (url: string, data: FormData, method: string) => {
 const FormAdd = ({ setClose, isEdit, form, setForm, setItemForm, emptyForm }: FormCreateProps) => {
 
     const { List: JenisInstansi } = useGetAllJenisInstansi()
+    const { List: JenisInstansiId } = useGetRefJenisInstansiIdAll()
     const queryclient = useQueryClient()
     const url = useUrlStore(state => state.URL.APP)
 
