@@ -39,7 +39,7 @@ class RefreshPayload(BaseModel):
     refresh_token: Optional[str] = None
 
 class RefreshResponse(BaseModel):
-    access_token: str
+    message: str
     token_type: str = "bearer"
 
 # --- TAMBAHAN SCHEMAS UNTUK REGISTER ---
@@ -179,20 +179,15 @@ async def login(
 async def refresh_token(
     request: Request,
     response: Response,
-    payload: Optional[RefreshPayload] = None,
     db: AsyncSession = Depends(get_db)
 ):
     """
-    Endpoint otomatis untuk Next.js.
-    Menukar Refresh Token yang masih aktif menjadi Access Token baru 
-    tanpa memaksa user mengetik password ulang.
+    Endpoint ini menukar refresh token yang ada di cookie menjadi access token baru.
+    Dengan cara ini, frontend tidak perlu mengirim token secara manual lagi.
     """
-    # 1. Ambil refresh token dari body dulu, lalu fallback ke cookie.
-    #    Ini bikin endpoint masih fleksibel kalau frontend lama belum pindah.
-    incoming_refresh_token = payload.refresh_token if payload else None
-    if not incoming_refresh_token:
-        incoming_refresh_token = request.cookies.get(REFRESH_TOKEN_COOKIE_NAME)
-
+    # 1. Ambil refresh token langsung dari cookie browser.
+    #    Kalau tidak ada, berarti user memang belum punya sesi yang valid.
+    incoming_refresh_token = request.cookies.get(REFRESH_TOKEN_COOKIE_NAME)
     if not incoming_refresh_token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -206,7 +201,7 @@ async def refresh_token(
         user_id: str = token_data.get("sub")
         token_type: str = token_data.get("type")
         
-        # 3. Pastikan token yang dibawa memang berjenis 'refresh'.
+        # 3. Pastikan token yang dibawa memang berjenis refresh.
         if user_id is None or token_type != "refresh":
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED, 
@@ -230,10 +225,10 @@ async def refresh_token(
             detail="User tidak ditemukan"
         )
 
-    # 4. Buat access token baru yang segar.
+    # 5. Buat access token baru yang segar.
     new_access_token = create_access_token(subject=user.id)
 
-    # 5. Update cookie access token dengan token baru.
+    # 6. Update cookie access token dengan token baru.
     response.set_cookie(
         key=ACCESS_TOKEN_COOKIE_NAME,
         value=new_access_token,
@@ -244,8 +239,9 @@ async def refresh_token(
         path="/",
     )
     
+    # 7. Response cukup mengabarkan bahwa access token sudah diperbarui.
     return {
-        "access_token": new_access_token,
+        "message": "Access token diperbarui",
         "token_type": "bearer"
     }
 
