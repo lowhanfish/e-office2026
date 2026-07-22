@@ -1,6 +1,6 @@
 'use client'
 import Image from 'next/image'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 import BButton from '@/components/items/BButton'
 import Link from 'next/link'
@@ -65,21 +65,7 @@ const FormLogin = () => {
         }
     }
 
-    const checkAuth = async () => {
-        try {
-            const data: any = await fetchData(`${url}/api/v1/auth/check-auth`)
 
-            if (data.status === 200) {
-                router.push('/home')
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    useEffect(() => {
-        checkAuth()
-    }, [])
 
     return (
         <div>
