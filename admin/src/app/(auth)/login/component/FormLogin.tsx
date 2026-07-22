@@ -5,13 +5,22 @@ import { useState } from 'react'
 import BButton from '@/components/items/BButton'
 import Link from 'next/link'
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
+import { callAPI } from '@/lib/api'
+import { useUrlStore } from '@/store/useUrlStore'
+
+
+interface formProps {
+    username: string,
+    password: string
+}
 
 
 const FormLogin = () => {
+    const url = useUrlStore(state => state.URL.APP)
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [typePassword, setTypePassword] = useState<string>('password');
 
-    const [form, setForm] = useState({
+    const [form, setForm] = useState<formProps>({
         username: "",
         password: ""
     })
@@ -24,8 +33,25 @@ const FormLogin = () => {
         })
     }
 
-    const LoginBtn = () => {
-        console.log(form)
+    const LoginBtn = async () => {
+        try {
+            const res = await callAPI<{ message: string; token_type: string }>(
+                `${url}/api/v1/auth/login`,
+                {
+                    credentials: "include",
+                    method: "POST",
+                    body: JSON.stringify(form),
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            )
+            // Redirect ke page utama
+            console.log("login sukses:", res)
+        } catch (error) {
+            console.log(error)
+            // Tampilkan notifikasi kesalahan login
+        }
     }
 
 
@@ -78,19 +104,19 @@ const FormLogin = () => {
                     </div>
 
                     <div className='mt-5'>
-                        <Link href="/landing">
-                            <BButton
-                                mode="3d"
-                                color='yellow'
-                                size='lg'
-                                onClick={() => LoginBtn()}
-                            >
-                                <p className='text-white font-semibold text-[13px] text-shadow-xs text-shadow-zinc-500'>
-                                    LOGIN
-                                </p>
-                            </BButton>
+                        {/* <Link href="/landing"> */}
+                        <BButton
+                            mode="3d"
+                            color='yellow'
+                            size='lg'
+                            onClick={() => LoginBtn()}
+                        >
+                            <p className='text-white font-semibold text-[13px] text-shadow-xs text-shadow-zinc-500'>
+                                LOGIN
+                            </p>
+                        </BButton>
 
-                        </Link>
+                        {/* </Link> */}
 
                     </div>
 

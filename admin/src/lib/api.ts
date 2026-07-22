@@ -21,12 +21,16 @@ export const callAPI = async <T>(
     });
 
     if (!res.ok) {
-      throw new Error(`Kesalahan dalam HTTP request. status: ${res.status}`);
+      const err = await res.json()
+      throw {
+        message : err.detail,
+        status : res.status
+      }
     }
-
     return (await res.json()) as T;
+
   } catch (error) {
-    console.log(`Error: ${error}`);
-    throw new Error(`Kesalahan dalam fetch. Error: ${error}`);
+    // console.log(`Error: ${error}`);
+    throw error;
   }
 };
