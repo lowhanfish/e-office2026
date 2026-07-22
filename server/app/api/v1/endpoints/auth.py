@@ -1,5 +1,5 @@
 import jwt
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from pydantic import BaseModel, EmailStr
@@ -19,6 +19,10 @@ from app.core.security import (
 
 router = APIRouter()
 
+# Nama cookie dibuat jadi konstanta supaya konsisten dipakai di semua endpoint.
+ACCESS_TOKEN_COOKIE_NAME = "access_token"
+REFRESH_TOKEN_COOKIE_NAME = "refresh_token"
+
 # ==========================================
 # 1. PYDANTIC SCHEMAS (REQUEST & RESPONSE)
 # ==========================================
@@ -28,12 +32,11 @@ class LoginPayload(BaseModel):
     password: str
 
 class TokenResponse(BaseModel):
-    access_token: str
-    refresh_token: str
+    message: str
     token_type: str = "bearer"
 
 class RefreshPayload(BaseModel):
-    refresh_token: str
+    refresh_token: Optional[str] = None
 
 class RefreshResponse(BaseModel):
     access_token: str
@@ -108,56 +111,102 @@ async def register(payload: RegisterPayload, db: AsyncSession = Depends(get_db))
 
 
 @router.post("/login", response_model=TokenResponse)
-async def login(payload: LoginPayload, db: AsyncSession = Depends(get_db)):
+async def login(
+    payload: LoginPayload,
+    response: Response,
+    db: AsyncSession = Depends(get_db)
+):
     """
     Pintu masuk utama sistem (Login).
-    Memvalidasi username & password, lalu menghasilkan Access + Refresh Token.
+    Setelah username dan password valid, token disimpan ke HttpOnly cookie
+    supaya JavaScript di browser tidak bisa membacanya langsung.
     """
-    # 1. Cari user berdasarkan username di database
+    # 1. Cari user berdasarkan username di database.
     query = select(User).filter(User.username == payload.username)
     result = await db.execute(query)
     user = result.scalar_one_or_none()
     
-    # 2. Jika user tidak ditemukan
+    # 2. Jika user tidak ditemukan, kita hentikan proses login.
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Username atau password salah"
         )
         
-    # 3. Cek apakah passwordnya cocok dengan hash di DB
+    # 3. Cek apakah password yang diketik cocok dengan hash di database.
     if not verify_password(payload.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Username atau password salah"
         )
     
-    # 4. Jika sukses, cetak Access Token (15 mnt) and Refresh Token (7 hari)
+    # 4. Jika sukses, kita buat access token dan refresh token.
     access_token = create_access_token(subject=user.id)
     refresh_token = create_refresh_token(subject=user.id)
-    
+
+    # 5. Simpan access token ke cookie HttpOnly.
+    #    Cookie ini dipakai untuk request API yang butuh autentikasi.
+    response.set_cookie(
+        key=ACCESS_TOKEN_COOKIE_NAME,
+        value=access_token,
+        httponly=True,
+        secure=False,   # ubah ke True saat production HTTPS
+        samesite="lax",
+        max_age=15 * 60,
+        path="/",
+    )
+
+    # 6. Simpan refresh token ke cookie HttpOnly juga.
+    #    Cookie ini khusus dipakai saat access token sudah habis masa berlaku.
+    response.set_cookie(
+        key=REFRESH_TOKEN_COOKIE_NAME,
+        value=refresh_token,
+        httponly=True,
+        secure=False,   # ubah ke True saat production HTTPS
+        samesite="lax",
+        max_age=7 * 24 * 60 * 60,
+        path="/api/v1/auth/refresh",
+    )
+
+    # 7. Response cukup mengirim pesan sukses karena token sudah masuk ke cookie.
     return {
-        "access_token": access_token,
-        "refresh_token": refresh_token,
+        "message": "Login berhasil",
         "token_type": "bearer"
     }
 
 
 @router.post("/refresh", response_model=RefreshResponse)
-async def refresh_token(payload: RefreshPayload, db: AsyncSession = Depends(get_db)):
+async def refresh_token(
+    request: Request,
+    response: Response,
+    payload: Optional[RefreshPayload] = None,
+    db: AsyncSession = Depends(get_db)
+):
     """
     Endpoint otomatis untuk Next.js.
     Menukar Refresh Token yang masih aktif menjadi Access Token baru 
     tanpa memaksa user mengetik password ulang.
     """
+    # 1. Ambil refresh token dari body dulu, lalu fallback ke cookie.
+    #    Ini bikin endpoint masih fleksibel kalau frontend lama belum pindah.
+    incoming_refresh_token = payload.refresh_token if payload else None
+    if not incoming_refresh_token:
+        incoming_refresh_token = request.cookies.get(REFRESH_TOKEN_COOKIE_NAME)
+
+    if not incoming_refresh_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Refresh token tidak ditemukan"
+        )
+
     try:
-        # 1. Bongkar refresh token menggunakan secret key khusus refresh
-        token_data = jwt.decode(payload.refresh_token, JWT_REFRESH_SECRET_KEY, algorithms=[ALGORITHM])
+        # 2. Bongkar refresh token menggunakan secret key khusus refresh.
+        token_data = jwt.decode(incoming_refresh_token, JWT_REFRESH_SECRET_KEY, algorithms=[ALGORITHM])
         
         user_id: str = token_data.get("sub")
         token_type: str = token_data.get("type")
         
-        # 2. Pastikan token yang dibawa berjenis 'refresh'
+        # 3. Pastikan token yang dibawa memang berjenis 'refresh'.
         if user_id is None or token_type != "refresh":
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED, 
@@ -170,7 +219,7 @@ async def refresh_token(payload: RefreshPayload, db: AsyncSession = Depends(get_
             detail="Refresh token telah kedaluwarsa atau rusak"
         )
 
-    # 3. Validasi ke DB untuk memastikan akun user tersebut masih ada/aktif
+    # 4. Validasi ke DB untuk memastikan akun user tersebut masih ada/aktif.
     query = select(User).filter(User.id == user_id)
     result = await db.execute(query)
     user = result.scalar_one_or_none()
@@ -181,10 +230,31 @@ async def refresh_token(payload: RefreshPayload, db: AsyncSession = Depends(get_
             detail="User tidak ditemukan"
         )
 
-    # 4. Cetak Access Token BARU yang segar (berlaku 15 menit ke depan)
+    # 4. Buat access token baru yang segar.
     new_access_token = create_access_token(subject=user.id)
+
+    # 5. Update cookie access token dengan token baru.
+    response.set_cookie(
+        key=ACCESS_TOKEN_COOKIE_NAME,
+        value=new_access_token,
+        httponly=True,
+        secure=False,   # ubah ke True saat production HTTPS
+        samesite="lax",
+        max_age=15 * 60,
+        path="/",
+    )
     
     return {
         "access_token": new_access_token,
         "token_type": "bearer"
     }
+
+
+@router.post("/logout")
+async def logout(response: Response):
+    """
+    Logout membersihkan cookie agar browser tidak lagi mengirim token lama.
+    """
+    response.delete_cookie(ACCESS_TOKEN_COOKIE_NAME, path="/")
+    response.delete_cookie(REFRESH_TOKEN_COOKIE_NAME, path="/api/v1/auth/refresh")
+    return {"message": "Logout berhasil"}
