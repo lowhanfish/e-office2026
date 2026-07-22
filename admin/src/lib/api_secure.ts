@@ -1,6 +1,7 @@
 import { useUrlStore } from "@/store/useUrlStore"
+import { useRouter } from "next/navigation"
 
-export const fetchData = async <T>(url: string, option: RequestInit,shouldRetry = true): Promise<T> => {
+export const fetchData = async <T>(url: string, option: RequestInit = {},shouldRetry = true): Promise<T> => {
 
   const { method, headers, ...otherOption } = option
   
@@ -25,7 +26,7 @@ export const fetchData = async <T>(url: string, option: RequestInit,shouldRetry 
 
 const refreshData = async () => {
   const url_refresh = useUrlStore.getState().URL.APP
-
+    const router = useRouter()
   const res = await fetch(`${url_refresh}/api/v1/auth/refresh`, {
     method: "POST",
     credentials: "include",
@@ -36,6 +37,7 @@ const refreshData = async () => {
 
   if (!res.ok) {
     // redirect ke login
+    router.push("/login")
     throw new Error("Refresh token tidak valid")
   }
 }

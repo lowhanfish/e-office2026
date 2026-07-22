@@ -2,7 +2,15 @@
 import Image from 'next/image'
 import FormLogin from './component/FormLogin'
 
+
+
+
 const page = () => {
+
+
+
+
+
 
     return (
         <main className=" h-screen w-full p-2  bg-black">
@@ -19,7 +27,7 @@ const page = () => {
                 <div className="absolute inset-0 z-10 bg-linear-to-b from-yellow-300 via-transparent via-20% to-black" />
 
                 <div className='relative z-10 grid grid-cols-12 h-full'>
-                    <div className='col-span-6 hidden md:block p-2 '>
+                    <div className='col-span-12 md:col-span-6 hidden md:block p-2 '>
                         <div className='flex flex-col justify-center items-center h-full '>
                             <div className=' md:pl-20 pr-20 pt-5 pb-10 '>
                                 <p className='text-white/90 font-bold text-shadow-2xs text-shadow-black'>

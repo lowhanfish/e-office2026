@@ -58,4 +58,10 @@ async def get_current_user(
         raise credentials_exception
         
     # 9. Jika semua aman, kembalikan data user yang sedang login.
-    return user
+    return {
+        "id" : user.id,
+        "user" : user.username,
+        "email" : user.email,
+        "nama_lengkap" : user.nama_lengkap,
+        "nip" : user.nip
+    }

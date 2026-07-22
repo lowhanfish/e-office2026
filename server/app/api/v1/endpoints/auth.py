@@ -17,6 +17,8 @@ from app.core.security import (
     ALGORITHM
 )
 
+from app.api.deps import get_current_user
+
 router = APIRouter()
 
 # Nama cookie dibuat jadi konstanta supaya konsisten dipakai di semua endpoint.
@@ -254,3 +256,13 @@ async def logout(response: Response):
     response.delete_cookie(ACCESS_TOKEN_COOKIE_NAME, path="/")
     response.delete_cookie(REFRESH_TOKEN_COOKIE_NAME, path="/api/v1/auth/refresh")
     return {"message": "Logout berhasil"}
+
+
+@router.get("/check-auth")
+async def check_auth(
+    current_user: User = Depends(get_current_user) # <--- DIKUNCI
+):
+    return {
+        "status" : 200,
+        "message" : current_user
+    }

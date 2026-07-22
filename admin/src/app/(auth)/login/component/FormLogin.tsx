@@ -1,12 +1,17 @@
 'use client'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import BButton from '@/components/items/BButton'
 import Link from 'next/link'
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { callAPI } from '@/lib/api'
 import { useUrlStore } from '@/store/useUrlStore'
+import { useRouter } from 'next/navigation'
+import { fetchData } from '@/lib/api_secure'
+
+
+
 
 
 interface formProps {
@@ -14,11 +19,17 @@ interface formProps {
     password: string
 }
 
-
 const FormLogin = () => {
     const url = useUrlStore(state => state.URL.APP)
+    const router = useRouter()
+
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [typePassword, setTypePassword] = useState<string>('password');
+
+    const [loading, isLoading] = useState(false);
+    const [message, setMessage] = useState<string>()
+    const [isError, setIsError] = useState(false)
+
 
     const [form, setForm] = useState<formProps>({
         username: "",
@@ -46,18 +57,33 @@ const FormLogin = () => {
                     },
                 }
             )
-            // Redirect ke page utama
+            router.push('/home')
             console.log("login sukses:", res)
-        } catch (error) {
-            console.log(error)
-            // Tampilkan notifikasi kesalahan login
+        } catch (error: any) {
+            setIsError(true)
+            setMessage(error.message)
         }
     }
 
+    const checkAuth = async () => {
+        try {
+            const data: any = await fetchData(`${url}/api/v1/auth/check-auth`)
+
+            if (data.status === 200) {
+                router.push('/home')
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        checkAuth()
+    }, [])
 
     return (
         <div>
-            <div className='bg-black/40 px-5 py-5 md:px-12 md:py-10 backdrop-blur-sm border-l-8 border-gray-600/20 h-full flex flex-col gap-1 rounded-[10] shadow-lg'>
+            <div className='bg-black/40 px-5 md:px-12 py-7 md:py-10 mb-3 w-75 md:w-80 lg:w-100 backdrop-blur-sm border-l-8 border-gray-600/20 h-full flex flex-col gap-1 rounded-[10] shadow-lg'>
 
                 <div className='flex justify-center items-center'>
                     <Image
@@ -119,10 +145,14 @@ const FormLogin = () => {
                         {/* </Link> */}
 
                     </div>
+                    {
+                        isError && (
+                            <div className='mt-4 flex justify-center items-center gap-1 my-2 bg-red-500/50 px-2 py-1 rounded-md shadow-2xs'>
+                                <h1 className='text-[10px] font-bold text-gray-100 text-center'>{message} !!</h1>
+                            </div>
 
-                    <div className='flex justify-center items-center gap-1 my-2'>
-
-                    </div>
+                        )
+                    }
                 </div>
             </div>
         </div>
