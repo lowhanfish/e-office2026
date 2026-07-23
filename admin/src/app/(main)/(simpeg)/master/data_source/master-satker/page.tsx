@@ -20,22 +20,6 @@ import { useDeleteMasterSatker, useGetMasterSatker } from '@/features/simpeg/mas
 
 import { masterSatkerItem, masterSatkerList, masterSatkerCreate } from "@/features/simpeg/master/data-source/master-satker/types"
 
-
-const deleteData = async (url: string) => {
-    try {
-        const res = await fetch(url, {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" }
-        })
-        if (!res.ok) throw new Error(`Gagal menghapus data. status : ${res.status}`)
-        const data = await res.json()
-        return data
-    } catch (error) {
-        console.log(`Terjadi kesalahan saat fetch. status : ${error}`)
-        throw error
-    }
-}
-
 const Page = () => {
 
     const queryClient = useQueryClient()
@@ -79,18 +63,6 @@ const Page = () => {
         debounced
     );
 
-
-    const deleteDataMutation = useMutation({
-        mutationFn: (id: string) => deleteData(
-            `${url}/api/v1/simpeg/master/ref_instansi/delete/${id}`
-        ),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["ref_instansi"] })
-        },
-        onError: (err: any) => {
-            alert(`Error : ${err}`);
-        }
-    })
 
     const btnDelete = (id: string) => {
         // deleteDataMutation.mutate(id)
