@@ -16,23 +16,11 @@ import { BSkeletonTable } from '@/components/items/BSkeleton';
 import { useQueryClient, useMutation } from "@tanstack/react-query"
 import useDebounced from '@/hooks/useDebounced';
 import useForm from '@/hooks/useForm';
-import { useGetMasterSatker } from '@/features/simpeg/master/data-source/master-satker/hooks';
+import { useDeleteMasterSatker, useGetMasterSatker } from '@/features/simpeg/master/data-source/master-satker/hooks';
 
 import { masterSatkerItem, masterSatkerList, masterSatkerCreate } from "@/features/simpeg/master/data-source/master-satker/types"
 
 
-const readData = async (url: string): Promise<masterSatkerList> => {
-    try {
-        const res = await fetch(url)
-        if (!res.ok) throw new Error(`Gagal mengambil data. HTTP status : ${res.status}`)
-        const data = await res.json();
-        return data
-    }
-    catch (error) {
-        console.error("Terjadi kesalahan saat fetch:", error);
-        throw error
-    }
-}
 const deleteData = async (url: string) => {
     try {
         const res = await fetch(url, {
@@ -51,6 +39,7 @@ const deleteData = async (url: string) => {
 const Page = () => {
 
     const queryClient = useQueryClient()
+    const { mutate, isPending } = useDeleteMasterSatker()
 
     const url = useUrlStore(state => state.URL.APP)
 
@@ -104,7 +93,8 @@ const Page = () => {
     })
 
     const btnDelete = (id: string) => {
-        deleteDataMutation.mutate(id)
+        // deleteDataMutation.mutate(id)
+        mutate(id)
     }
 
     useEffect(() => {

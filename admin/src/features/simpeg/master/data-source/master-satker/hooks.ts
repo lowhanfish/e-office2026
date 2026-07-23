@@ -52,6 +52,31 @@ export const useCreateMasterSatker = () => {
 }
 
 export const useDeleteMasterSatker = () => {
+     const url = useUrlStore(state => state.URL.APP)
+    const queryClient = useQueryClient()
+
+    const mutationData = useMutation({
+        mutationFn : (id:string)=> fetchData(
+            `${url}/api/v1/simpeg/master/ref_satker/delete/${id}`,
+            {
+                headers : {
+                    "Content-Type" : "application/json",
+                },
+                method : "DELETE",
+            }
+        ),
+        onSuccess : ()=>{
+            queryClient.invalidateQueries({queryKey: ["ref_satker"]})
+        },
+        onError : (error)=> {
+            alert(error)
+        }
+
+    })
+
+    return mutationData
+
+
 
 }
 
