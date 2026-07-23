@@ -9,6 +9,22 @@ from app.schemas.simpeg.master.ref_instansi import InstansiCreate, InstansiRespo
 
 router = APIRouter()
 
+@router.get("/options", response_model=List[InstansiResponse])
+async def read_options(db : AsyncSession = Depends(get_db)):
+    query = select(
+        *Instansi.__table__.c,
+        JenisInstansi.nama.label("jenis_nama"),
+        JenisInstansiId.nama.label("jenis_instansi_nama"),
+    )
+
+    query = query.join(JenisInstansi, Instansi.jenis == JenisInstansi.kode)
+    query = query.join(JenisInstansiId, Instansi.jenis_instansi_id == JenisInstansiId.kode)
+    result = await db.execute(query)
+
+
+    return result.mappings().all()
+
+
 @router.get("/read", response_model=InstansiResponseList)
 async def read_Instansi(
     db: AsyncSession = Depends(get_db),
