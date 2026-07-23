@@ -16,6 +16,10 @@ import { BSkeletonTable } from '@/components/items/BSkeleton';
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
 import useDebounced from '@/hooks/useDebounced';
 import useForm from '@/hooks/useForm';
+import { useGetMasterSatker } from '@/features/simpeg/master/data-source/master-satker/hooks';
+
+
+
 
 interface FormData {
     id: string,
@@ -104,12 +108,8 @@ const Page = () => {
         })
     }
 
-    const { data: List, isLoading, isError, error } = useQuery({
-        queryFn: () => readData(
-            `${url}/api/v1/simpeg/master/ref_instansi/read?skip=${pageSelect - 1}&limit=${pageLimit}${search ? `&search=${debounced}` : ""}`
-        ),
-        queryKey: ["ref_instansi", pageSelect, pageLimit, debounced]
-    })
+    const { List, isLoading, isError, error } = useGetMasterSatker();
+
 
     const deleteDataMutation = useMutation({
         mutationFn: (id: string) => deleteData(
