@@ -13,40 +13,15 @@ import FormCreate from './components/FormCreate';
 import { listindex } from "@/utilities/pagination"
 import { BSkeletonTable } from '@/components/items/BSkeleton';
 
-import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
+import { useQueryClient, useMutation } from "@tanstack/react-query"
 import useDebounced from '@/hooks/useDebounced';
 import useForm from '@/hooks/useForm';
 import { useGetMasterSatker } from '@/features/simpeg/master/data-source/master-satker/hooks';
 
+import { masterSatkerItem, masterSatkerList, masterSatkerCreate } from "@/features/simpeg/master/data-source/master-satker/types"
 
 
-
-interface FormData {
-    id: string,
-    kode: string,
-    nama: string,
-    kode_cepat: string,
-    created_by: string
-}
-
-interface FormResponse {
-    id: string,
-    kode: string,
-    nama: string,
-    kode_cepat: string,
-    created_by: string,
-    created_at: string,
-}
-
-interface FormResponseList {
-    total: number,
-    skip: number,
-    limit: number,
-    data: FormResponse[]
-}
-
-
-const readData = async (url: string): Promise<FormResponseList> => {
+const readData = async (url: string): Promise<masterSatkerList> => {
     try {
         const res = await fetch(url)
         if (!res.ok) throw new Error(`Gagal mengambil data. HTTP status : ${res.status}`)
@@ -90,25 +65,30 @@ const Page = () => {
     const [search, setSearch] = useState<string>("") // State instan untuk input
     const debounced = useDebounced(search)
 
-    const { form, setForm, setItemForm, emptyForm } = useForm<FormData>({
+    const { form, setForm, setItemForm, emptyForm } = useForm<masterSatkerItem>({
         id: '',
         kode: '',
         nama: '',
-        kode_cepat: "",
+        instansi_id: "",
         created_by: "user.id"
     })
 
-    const selectItem = (item: FormData) => {
+    const selectItem = (item: masterSatkerItem) => {
         setForm({
             id: item.id,
             kode: item.kode,
             nama: item.nama,
-            kode_cepat: item.kode_cepat,
+            instansi_id: item.instansi_id,
             created_by: item.created_by
         })
     }
 
-    const { List, isLoading, isError, error } = useGetMasterSatker();
+    const { List, isLoading, isError, error } = useGetMasterSatker(
+        pageSelect,
+        pageLimit,
+        search,
+        debounced
+    );
 
 
     const deleteDataMutation = useMutation({
@@ -193,9 +173,9 @@ const Page = () => {
                                                 </button>
                                             </div>
                                         </td>
-                                        <td><p className='text-center'>xx</p></td>
-                                        <td className=''><p>xxxx</p></td>
-                                        <td className=''><p className=''>yyyy</p></td>
+                                        <td><p className='text-center'>{item.kode}</p></td>
+                                        <td className=''><p>{item.nama}</p></td>
+                                        <td className=''><p className=''>{item.instansi_nama}</p></td>
                                     </tr>
                                 ))}
                             </tbody>

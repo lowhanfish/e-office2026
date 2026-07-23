@@ -55,7 +55,7 @@ async def read_satker(
 
     query = select(
         *Satker.__table__.c,
-        Instansi.nama
+        Instansi.nama.label("instansi_nama")
     )
 
     query = query.join(Instansi, Satker.instansi_id == Instansi.kode)

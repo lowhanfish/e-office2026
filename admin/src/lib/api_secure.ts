@@ -26,8 +26,7 @@ export const fetchData = async <T>(url: string, option: RequestInit = {},shouldR
 
 const refreshData = async () => {
   const url_refresh = useUrlStore.getState().URL.APP
-    // const router = useRouter()
-  const res = await fetch(`${url_refresh}/api/v1/auth/refresh`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/refresh`, {
     method: "POST",
     credentials: "include",
     headers: {

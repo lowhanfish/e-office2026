@@ -3,30 +3,24 @@ import BButton from '@/components/items/BButton'
 import BInput from '@/components/items/BInput'
 import { useUrlStore } from '@/store/useUrlStore'
 import { useQueryClient, useMutation } from "@tanstack/react-query"
+import { useCreateMasterSatker } from '@/features/simpeg/master/data-source/master-satker/hooks'
+import { masterSatkerItem, masterSatkerListAll, masterSatkerList, masterSatkerCreate } from "@/features/simpeg/master/data-source/master-satker/types"
 
 interface FormData {
     id: string,
     kode: string,
     nama: string,
-    kode_cepat: string,
+    instansi_id: string,
     created_by: string
 }
 
-interface FormResponse {
-    id: string,
-    kode: string,
-    nama: string,
-    kode_cepat: string,
-    created_by: string,
-    created_at: string
-}
 
 interface FormCreateProps {
     setClose: Dispatch<SetStateAction<boolean>>,
     isEdit: boolean,
-    form: FormData,
-    setForm: Dispatch<SetStateAction<FormData>>,
-    setItemForm: (key: keyof FormData, value: any) => void
+    form: masterSatkerItem,
+    setForm: Dispatch<SetStateAction<masterSatkerItem>>,
+    setItemForm: (key: keyof masterSatkerItem, value: any) => void
     emptyForm: () => void
 }
 
@@ -50,6 +44,7 @@ const FormAdd = ({ setClose, isEdit, form, setForm, setItemForm, emptyForm }: Fo
 
     const queryclient = useQueryClient()
     const url = useUrlStore(state => state.URL.APP)
+    const { mutate, isPending } = useCreateMasterSatker();
 
     const createDataMutation = useMutation({
         mutationFn: ({ newUrl, newForm, newMethod }: { newUrl: string, newForm: FormData, newMethod: string }) => createData(
@@ -69,17 +64,21 @@ const FormAdd = ({ setClose, isEdit, form, setForm, setItemForm, emptyForm }: Fo
 
     const submit = () => {
         if (isEdit) {
-            createDataMutation.mutate({
-                newUrl: `${url}/api/v1/simpeg/master/ref_instansi/update/${form.id}`,
-                newForm: form,
-                newMethod: "PUT"
-            })
+            // createDataMutation.mutate({
+            //     newUrl: `${url}/api/v1/simpeg/master/ref_instansi/update/${form.id}`,
+            //     newForm: form,
+            //     newMethod: "PUT"
+            // })
         } else {
-            createDataMutation.mutate({
-                newUrl: `${url}/api/v1/simpeg/master/ref_instansi/create`,
-                newForm: form,
-                newMethod: "POST"
-            })
+            // createDataMutation.mutate({
+            //     newUrl: `${url}/api/v1/simpeg/master/ref_instansi/create`,
+            //     newForm: form,
+            //     newMethod: "POST"
+            // })
+
+
+            mutate(form)
+
         }
     }
 
@@ -100,12 +99,12 @@ const FormAdd = ({ setClose, isEdit, form, setForm, setItemForm, emptyForm }: Fo
                 </div>
                 <div className='col-span-1'>
                     <BInput
-                        title='Kode Cepat'
-                        placeholder='Kode Cepat (Pada SIASN)'
+                        title='Nama Satker'
+                        placeholder='Nama Satker'
                         type='text'
-                        value={form.kode_cepat}
+                        value={form.nama}
                         onChange={(value) => {
-                            setItemForm('kode_cepat', value)
+                            setItemForm('nama', value)
                         }}
                     />
                 </div>
@@ -116,9 +115,9 @@ const FormAdd = ({ setClose, isEdit, form, setForm, setItemForm, emptyForm }: Fo
                     title='Nama Instansi'
                     placeholder='Nama Instansi'
                     type='text'
-                    value={form.nama}
+                    value={form.instansi_id}
                     onChange={(value) => {
-                        setItemForm('nama', value)
+                        setItemForm('instansi_id', value)
                     }}
                 />
             </div>
