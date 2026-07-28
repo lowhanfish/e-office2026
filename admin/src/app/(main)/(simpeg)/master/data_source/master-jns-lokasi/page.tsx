@@ -13,35 +13,12 @@ import FormCreate from './components/FormCreate';
 import { listindex } from "@/utilities/pagination"
 import { BSkeletonTable } from '@/components/items/BSkeleton';
 import { useMasterJnsLokasiList, useMasterJnsLokasiDelete } from '@/features/simpeg/master/data-source/master-jns-lokasi/hooks';
+import { MasterJnsLokasiItem } from "@/features/simpeg/master/data-source/master-jns-lokasi/types"
 import useDebounced from '@/hooks/useDebounced';
-import { MasterJnsLokasiList, MasterJnsLokasiItem } from "@/features/simpeg/master/data-source/master-jns-lokasi/types"
-
-interface FormData {
-    id: string,
-    kode: string,
-    nama: string,
-    created_by: string
-}
-
-interface FormResponse {
-    id: string,
-    kode: string,
-    nama: string,
-    created_by: string,
-    created_at: string
-}
-
-interface FormResponseList {
-    total: number,
-    skip: number,
-    limit: number,
-    data: FormResponse[]
-}
-
+import useForm from '@/hooks/useForm';
 
 
 const Page = () => {
-
 
     const DataShow = useUrlStore(state => state.DataShow)
 
@@ -51,12 +28,9 @@ const Page = () => {
     const [pageSelect, setPageSelect] = useState<number>(1);
     const [pageLimit, setPageLimit] = useState<number>(8)
 
-    // PERBAIKAN DEBOUNCE STATE
-    const [search, setSearch] = useState<string>("") // State instan untuk input
+    const [search, setSearch] = useState<string>("")
     const debounced = useDebounced(search)
     const deletemutation = useMasterJnsLokasiDelete()
-    // const [isLoading, setIsLoading] = useState<boolean>(true)
-    // const [List, setList] = useState<FormResponseList>()
 
     const { List, isLoading, isError, error } = useMasterJnsLokasiList(
         debounced,
@@ -66,14 +40,14 @@ const Page = () => {
     )
 
 
-    const [form, setForm] = useState<FormData>({
+    const { form, setForm, setItemForm, emptyForm } = useForm<MasterJnsLokasiItem>({
         id: '',
         kode: '',
         nama: '',
-        created_by: "user.id"
+        created_by: ""
     })
 
-    const selectItem = (item: FormResponse) => {
+    const selectItem = (item: MasterJnsLokasiItem) => {
         setForm({
             id: item.id,
             kode: item.kode,

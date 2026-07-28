@@ -17,12 +17,6 @@ interface FormData {
     created_by: string
 }
 
-// const Instansi = [
-//     { id: "xx", value: "yyyy" },
-//     { id: "yyy", value: "yyyy" },
-// ]
-
-
 interface FormCreateProps {
     setClose: Dispatch<SetStateAction<boolean>>,
     isEdit: boolean,
@@ -32,22 +26,6 @@ interface FormCreateProps {
     emptyForm: () => void
 }
 
-const createData = async (url: string, data: FormData, method: string) => {
-    try {
-        const res = await fetch(url, {
-            method: method,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
-        })
-        if (!res.ok) throw new Error(``)
-        const result = await res.json()
-        return result
-
-    } catch (error) {
-        alert(`Error fetch saat menambah data. status : ${error}`)
-    }
-}
-
 const FormAdd = ({ setClose, isEdit, form, setForm, setItemForm, emptyForm }: FormCreateProps) => {
 
     const Instansi = useGetMasterInstansiOption()
@@ -55,49 +33,19 @@ const FormAdd = ({ setClose, isEdit, form, setForm, setItemForm, emptyForm }: Fo
     const url = useUrlStore(state => state.URL.APP)
     const { mutate } = useCreateMasterSatker();
 
-
-    const createDataMutation = useMutation({
-        mutationFn: ({ newUrl, newForm, newMethod }: { newUrl: string, newForm: FormData, newMethod: string }) => createData(
-            newUrl,
-            newForm,
-            newMethod
-        ),
-        onSuccess: () => {
-            queryclient.invalidateQueries({ queryKey: ["ref_instansi"] });
-            emptyForm()
-            setClose(false)
-        },
-        onError: (err: any) => {
-            alert(`Error : ${err}`)
-        }
-    })
-
     const submit = () => {
         if (isEdit) {
-            // createDataMutation.mutate({
-            //     newUrl: `${url}/api/v1/simpeg/master/ref_instansi/update/${form.id}`,
-            //     newForm: form,
-            //     newMethod: "PUT"
-            // })
             mutate({
                 newUrl: `${url}/api/v1/simpeg/master/ref_satker/update/${form.id}`,
                 newForm: form,
                 method: "PUT"
             })
         } else {
-            // createDataMutation.mutate({
-            //     newUrl: `${url}/api/v1/simpeg/master/ref_instansi/create`,
-            //     newForm: form,
-            //     newMethod: "POST"
-            // })
-
-
             mutate({
                 newUrl: `${url}/api/v1/simpeg/master/ref_satker/creat`,
                 newForm: form,
                 method: "POST"
             })
-
         }
     }
 

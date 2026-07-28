@@ -7,14 +7,14 @@ import {useQuery, useQueryClient, useMutation} from "@tanstack/react-query"
 
 export const useMasterJnsLokasiList = (debounced:string, pageSelect:number, pageLimit:number, search:string) => {
     const url =  useUrlStore(state => state.URL.APP)
-    const {data, isLoading, isError, error} = useQuery({
+    const {data:List, isLoading, isError, error} = useQuery({
         queryFn : ()=> fetchData<MasterJnsLokasiList>(
             `${url}/api/v1/simpeg/master/ref_jns_lokasi/read?skip=${((pageSelect-1)*pageLimit)}&limit=${pageLimit}${search? `&search=${debounced}`:""}`
         ),
         queryKey : ["ref_jns_lokasi", pageSelect, pageLimit, debounced]
     })
     return {
-        List : data,
+        List : List,
         isLoading : isLoading,
         isError : isError,
         error : error
@@ -45,6 +45,29 @@ export const useMasterJnsLokasiDelete = () => {
 }
 
 
+
 export const useMasterJnsLokasiCreate = ()=>{
+    const url = useUrlStore(state => state.URL.APP)
+    const queryclient = useQueryClient()
+
+    const masterJnsLokasi = useMutation({
+        mutationFn : ({method, url, form}:{method:string, url:string, form:MasterJnsLokasiItem})=>fetchData<MasterJnsLokasiItem>(
+            url,
+            {
+                method : method,
+                headers : {
+                    "Content-Type" : "application/json"
+                },
+                body : JSON.stringify(form)
+            }
+        ),
+        onSuccess : ()=>{
+            queryclient.invalidateQueries({queryKey:["ref_jns_lokasi"]})
+        },
+        onError : (error)=> {
+            alert(error)
+        }
+    })
+    return masterJnsLokasi
 
 }

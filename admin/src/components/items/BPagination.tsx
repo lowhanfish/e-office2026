@@ -14,6 +14,8 @@ interface BPaginationProps {
 }
 
 const BPagination = ({ pageSelect, setPageSelect, pageLimit, pageShow, dataLength, onClick }: BPaginationProps) => {
+
+    // console.log(dataLength)
     const pageLength = useMemo(() => {
         if (!dataLength || !pageLimit) {
             return 1;
@@ -57,13 +59,15 @@ const BPagination = ({ pageSelect, setPageSelect, pageLimit, pageShow, dataLengt
         }
     }
 
-    if (pageLength <= 1) {
+    if (dataLength && dataLength < pageLimit) {
         return null;
+        // return (
+        //     <><p>Kosong</p></>
+        // );
     }
 
     return (
         <div className='flex flex-wrap gap-2 justify-center items-center'>
-
             <div className='flex gap-2'>
                 <button
                     onClick={() => {

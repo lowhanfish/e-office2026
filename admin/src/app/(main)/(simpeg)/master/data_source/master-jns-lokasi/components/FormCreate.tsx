@@ -2,37 +2,20 @@ import { useState, Dispatch, SetStateAction } from 'react'
 import BButton from '@/components/items/BButton'
 import BInput from '@/components/items/BInput'
 import { useUrlStore } from '@/store/useUrlStore'
-
-interface FormData {
-    id: string,
-    kode: string,
-    nama: string,
-    created_by: string
-}
-
-interface FormResponse {
-    id: string,
-    kode: string,
-    nama: string,
-    created_by: string,
-    created_at: string
-}
+import { MasterJnsLokasiItem } from "@/features/simpeg/master/data-source/master-jns-lokasi/types"
+import { useMasterJnsLokasiCreate } from '@/features/simpeg/master/data-source/master-jns-lokasi/hooks'
 
 interface FormCreateProps {
     setClose: Dispatch<SetStateAction<boolean>>,
     isEdit: boolean,
-    form: FormData,
-    setForm: Dispatch<SetStateAction<FormData>>
+    form: MasterJnsLokasiItem,
+    setForm: Dispatch<SetStateAction<MasterJnsLokasiItem>>
 }
-
 
 const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
 
-    const url = useUrlStore(state => state.URL)
-    const [textx, setTextx] = useState<string | number>("")
-
-
-
+    const url = useUrlStore(state => state.URL.APP)
+    const { mutate } = useMasterJnsLokasiCreate()
     const setItemForm = (key: string, value: any) => {
         setForm({
             ...form,
@@ -51,7 +34,19 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
     }
 
     const submit = () => {
-
+        if (isEdit) {
+            mutate({
+                url: `${url}/api/v1/simpeg/master/ref_jns_lokasi/update/${form.id}`,
+                method: 'PUT',
+                form: form
+            })
+        } else {
+            mutate({
+                url: `${url}/api/v1/simpeg/master/ref_jns_lokasi/create`,
+                method: 'POST',
+                form: form
+            })
+        }
     }
 
     return (
