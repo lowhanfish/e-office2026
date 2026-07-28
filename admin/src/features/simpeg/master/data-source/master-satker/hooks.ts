@@ -14,7 +14,7 @@ export const useGetMasterSatker = (pageSelect:number, pageLimit:number, search:s
 
     const url = useUrlStore(state => state.URL.APP)
     const {data:List, isLoading, isError, error} = useQuery({
-        queryFn : ()=> fetchData<masterSatkerList>(`${url}/api/v1/simpeg/master/ref_satker/read?skip=${pageSelect - 1}&limit=${pageLimit}${search ? `&search=${debounced}` : ""}`),
+        queryFn : ()=> fetchData<masterSatkerList>(`${url}/api/v1/simpeg/master/ref_satker/read?skip=${((pageSelect - 1) * pageLimit)}&limit=${pageLimit}${search ? `&search=${debounced}` : ""}`),
         queryKey : ["ref_satker", pageSelect, pageLimit, debounced]
     })
     return {
@@ -27,28 +27,29 @@ export const useGetMasterSatker = (pageSelect:number, pageLimit:number, search:s
 
 export const useCreateMasterSatker = () => {
     const url = useUrlStore(state => state.URL.APP)
-    const queryClient = useQueryClient()
-    const mutationData = useMutation({
-        mutationFn : (newForm:masterSatkerCreate)=> fetchData(
-            `${url}/api/v1/simpeg/master/ref_satker/creat`,
+    const queryclient = useQueryClient()
+    const createDataMutation = useMutation({
+        mutationFn : ({newUrl, newForm, method}:{newUrl:string, newForm:masterSatkerCreate, method:string})=>fetchData(
+            newUrl,
             {
                 headers : {
                     "Content-Type" : "application/json",
                 },
-                method : "POST",
+                method : method,
                 body : JSON.stringify(newForm)
+
             }
         ),
-        onSuccess : ()=>{
-            queryClient.invalidateQueries({queryKey: ["ref_satker"]})
+        onSuccess: ()=>{
+            queryclient.invalidateQueries({queryKey:["ref_satker"]})
         },
-        onError : (error)=> {
+        onError: (error)=>{
             alert(error)
         }
-
     })
 
-    return mutationData
+    return createDataMutation
+
 }
 
 export const useDeleteMasterSatker = () => {

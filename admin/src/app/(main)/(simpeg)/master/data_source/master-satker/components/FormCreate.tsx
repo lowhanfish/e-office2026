@@ -50,11 +50,11 @@ const createData = async (url: string, data: FormData, method: string) => {
 
 const FormAdd = ({ setClose, isEdit, form, setForm, setItemForm, emptyForm }: FormCreateProps) => {
 
+    const Instansi = useGetMasterInstansiOption()
     const queryclient = useQueryClient()
     const url = useUrlStore(state => state.URL.APP)
-    const { mutate, isPending } = useCreateMasterSatker();
+    const { mutate } = useCreateMasterSatker();
 
-    const Instansi = useGetMasterInstansiOption()
 
     const createDataMutation = useMutation({
         mutationFn: ({ newUrl, newForm, newMethod }: { newUrl: string, newForm: FormData, newMethod: string }) => createData(
@@ -79,6 +79,11 @@ const FormAdd = ({ setClose, isEdit, form, setForm, setItemForm, emptyForm }: Fo
             //     newForm: form,
             //     newMethod: "PUT"
             // })
+            mutate({
+                newUrl: `${url}/api/v1/simpeg/master/ref_satker/update/${form.id}`,
+                newForm: form,
+                method: "PUT"
+            })
         } else {
             // createDataMutation.mutate({
             //     newUrl: `${url}/api/v1/simpeg/master/ref_instansi/create`,
@@ -87,7 +92,11 @@ const FormAdd = ({ setClose, isEdit, form, setForm, setItemForm, emptyForm }: Fo
             // })
 
 
-            mutate(form)
+            mutate({
+                newUrl: `${url}/api/v1/simpeg/master/ref_satker/creat`,
+                newForm: form,
+                method: "POST"
+            })
 
         }
     }

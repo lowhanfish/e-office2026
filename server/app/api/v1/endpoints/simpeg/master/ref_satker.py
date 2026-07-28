@@ -47,11 +47,13 @@ async def read_satker(
     **Parameter:**
     - `search`   : String, Untuk mencari data value dari Satker.
     - `skip`: Int, Data page pertama akses page.
-    - `limit` : Int, Jumlah data yang ditarik.
+    - `limit` : Int, Jumlah data yang ditarik. 
 
     **Error yang mungkin terjadi:**
     - `422`: Jika format input tidak sesuai skema.
     """
+
+    print(f"limit {limit} dan skip {skip}")
 
     query = select(
         *Satker.__table__.c,
@@ -69,6 +71,10 @@ async def read_satker(
     total_result = await db.execute(total_query)
     total = total_result.scalar_one_or_none() or 0
 
+    query = (
+            query.order_by(Satker.created_at.asc()).offset(skip).limit(limit)
+        )
+
     result = await db.execute(query)
     data = result.mappings().all()
 
@@ -78,8 +84,6 @@ async def read_satker(
         "limit": limit,
         "data": data,
     }
-
-
 
 
 @router.post("/creat", response_model=SatkerResponse)

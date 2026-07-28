@@ -5,7 +5,7 @@ from typing import Optional, List
 
 class SatkerResponse(MasterResponse):
     instansi_id : str
-    # instansi_nama : str
+    instansi_nama : Optional[str] = None
 
 class SatkerCreat(MasterCreate):
     instansi_id : str

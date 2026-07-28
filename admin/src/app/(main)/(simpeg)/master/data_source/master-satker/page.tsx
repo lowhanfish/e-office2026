@@ -117,8 +117,8 @@ const Page = () => {
                                     <th className='w-[5%] text-center'>No</th>
                                     <th className='w-[5%] text-center'>Act</th>
                                     <th className='w-[10%] text-center'>Kode</th>
-                                    <th className='w-[30%]'>Instansi</th>
-                                    <th className='w-[50%]'>Nama Satker</th>
+                                    <th className='w-[30%]'>Nama Satker</th>
+                                    <th className='w-[50%]'>Instansi</th>
                                 </tr>
                             </thead>
 
