@@ -1,7 +1,7 @@
 import { fetchData } from "@/lib/api_secure"
 import { useUrlStore } from "@/store/useUrlStore"
 import {useQuery} from "@tanstack/react-query"
-import {masterInstansiItem,masterInstansiCreate, masterInstansiList, masterInstansiListAll} from "./types"
+import {masterInstansiItem, masterInstansiCreate, masterInstansiList, masterInstansiListAll} from "./types"
 
 
 export const useGetMasterInstansiOption = () => {
@@ -13,5 +13,14 @@ export const useGetMasterInstansiOption = () => {
         queryKey : ["ref_instansi_option"]
     })
 
-    return data
+    const option = data?.map((item)=>(
+        {
+            id : item.kode,
+            value : item.nama
+        }
+    ))
+
+    console.log(option)
+
+    return option
 }

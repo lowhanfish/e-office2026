@@ -6,6 +6,7 @@ import { useQueryClient, useMutation } from "@tanstack/react-query"
 import { useCreateMasterSatker } from '@/features/simpeg/master/data-source/master-satker/hooks'
 import { masterSatkerItem, masterSatkerListAll, masterSatkerList, masterSatkerCreate } from "@/features/simpeg/master/data-source/master-satker/types"
 import { useGetMasterInstansiOption } from '@/features/simpeg/master/data-source/master-instansi/hooks'
+import BInputSelect from '@/components/items/BInputSelect'
 
 
 interface FormData {
@@ -15,6 +16,11 @@ interface FormData {
     instansi_id: string,
     created_by: string
 }
+
+// const Instansi = [
+//     { id: "xx", value: "yyyy" },
+//     { id: "yyy", value: "yyyy" },
+// ]
 
 
 interface FormCreateProps {
@@ -47,6 +53,8 @@ const FormAdd = ({ setClose, isEdit, form, setForm, setItemForm, emptyForm }: Fo
     const queryclient = useQueryClient()
     const url = useUrlStore(state => state.URL.APP)
     const { mutate, isPending } = useCreateMasterSatker();
+
+    const Instansi = useGetMasterInstansiOption()
 
     const createDataMutation = useMutation({
         mutationFn: ({ newUrl, newForm, newMethod }: { newUrl: string, newForm: FormData, newMethod: string }) => createData(
@@ -113,12 +121,11 @@ const FormAdd = ({ setClose, isEdit, form, setForm, setItemForm, emptyForm }: Fo
             </div>
 
             <div className='pt-1'>
-                <BInput
-                    title='Nama Instansi'
-                    placeholder='Nama Instansi'
-                    type='text'
-                    value={form.instansi_id}
-                    onChange={(value) => {
+                <BInputSelect
+                    title='Jenis Instansi (Pada SIASN)'
+                    options={Instansi}
+                    datavalue={form.instansi_id}
+                    onChange={(value: any) => {
                         setItemForm('instansi_id', value)
                     }}
                 />
