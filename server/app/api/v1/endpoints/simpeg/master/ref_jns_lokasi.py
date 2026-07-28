@@ -5,14 +5,19 @@ from typing import List
 
 from app.db.session import get_db
 from app.models.simpeg.master.models import RefJnsLokasi
-from app.schemas.simpeg.master.ref_jns_lokasi import RefJnsLokasiCreate, RefJnsLokasiResponse, RefJnsLokasiUpdate
-
+from app.schemas.simpeg.master.ref_jns_lokasi import RefJnsLokasiCreate, RefJnsLokasiResponse, RefJnsLokasiUpdate, RefJnsLokasiResponseList
+from sqlalchemy.sql import func
 
 router = APIRouter()
 
 
-@router.get("/read", response_model=List[RefJnsLokasiResponse])
-async def read_ref_jns_lokasi(db:AsyncSession = Depends(get_db)):
+@router.get("/read", response_model=RefJnsLokasiResponseList)
+async def read_ref_jns_lokasi(
+    db:AsyncSession = Depends(get_db),
+    skip:int = 0,
+    limit:int = 100,
+    search:str | None = None
+):
     """
     ## Mengambil semua List Ref Jenis Lokasi
     Membaca data Ref Jenis Lokasi baru dari sistem.
@@ -26,8 +31,25 @@ async def read_ref_jns_lokasi(db:AsyncSession = Depends(get_db)):
     - `422`: Jika format input tidak sesuai skema.
     """
     query = select(RefJnsLokasi)
+
+    if search:
+        query = query.where(RefJnsLokasi.nama.ilike(f"%{search}%"))
+
+    total_query = select(func.count()).select_from(query.subquery())
+    total_result = await db.execute(total_query)
+    total = total_result.scalar_one_or_none() or 0
+
+    query = query.order_by(RefJnsLokasi.created_at.asc()).offset(skip).limit(limit)
+
+
     result = await db.execute(query)
-    return result.scalars().all()
+    data =  result.scalars().all()
+    return {
+        "data" : data,
+        "total" : total,
+        "skip" : skip,
+        "limit" : limit
+    }
 
 @router.post("/create", response_model=RefJnsLokasiResponse)
 async def create_ref_jns_lokasi(payload:RefJnsLokasiCreate, db:AsyncSession = Depends(get_db)):

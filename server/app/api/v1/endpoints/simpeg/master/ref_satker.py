@@ -7,6 +7,9 @@ from app.models.simpeg.master.models import Satker, Instansi
 from app.db.session import get_db
 from sqlalchemy.sql import func
 
+from app.api.deps import get_current_user
+from app.models.simpeg.master.models import User
+
 
 router = APIRouter()
 
@@ -37,7 +40,8 @@ async def read_satker(
     db: AsyncSession = Depends(get_db),
     limit: int = 100,
     skip: int = 0,
-    search: str | None = None
+    search: str | None = None,
+    user : User = Depends(get_current_user)
 ):
 
     """
