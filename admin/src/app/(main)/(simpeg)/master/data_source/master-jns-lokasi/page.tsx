@@ -12,6 +12,9 @@ import { useUrlStore } from "@/store/useUrlStore"
 import FormCreate from './components/FormCreate';
 import { listindex } from "@/utilities/pagination"
 import { BSkeletonTable } from '@/components/items/BSkeleton';
+import { useMasterJnsLokasiList, useMasterJnsLokasiDelete } from '@/features/simpeg/master/data-source/master-jns-lokasi/hooks';
+import useDebounced from '@/hooks/useDebounced';
+import { MasterJnsLokasiList, MasterJnsLokasiItem } from "@/features/simpeg/master/data-source/master-jns-lokasi/types"
 
 interface FormData {
     id: string,
@@ -50,9 +53,17 @@ const Page = () => {
 
     // PERBAIKAN DEBOUNCE STATE
     const [search, setSearch] = useState<string>("") // State instan untuk input
+    const debounced = useDebounced(search)
+    const deletemutation = useMasterJnsLokasiDelete()
+    // const [isLoading, setIsLoading] = useState<boolean>(true)
+    // const [List, setList] = useState<FormResponseList>()
 
-    const [isLoading, setIsLoading] = useState<boolean>(true)
-    const [List, setList] = useState<FormResponseList>()
+    const { List, isLoading, isError, error } = useMasterJnsLokasiList(
+        debounced,
+        pageSelect,
+        pageLimit,
+        search
+    )
 
 
     const [form, setForm] = useState<FormData>({
@@ -73,7 +84,7 @@ const Page = () => {
 
 
     const btnDelete = (id: string) => {
-
+        deletemutation.mutate(id)
     }
 
 
