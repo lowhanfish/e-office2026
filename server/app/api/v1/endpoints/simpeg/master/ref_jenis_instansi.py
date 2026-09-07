@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from sqlalchemy.future import select
 from app.models.simpeg.master.models import JenisInstansi
 from typing import List
@@ -21,12 +22,13 @@ async def read_JenisInstansi(
 @router.post("/create")
 async def create_JenisInstansi(
     payload:RefJenisInstansiCreate, 
-    db:AsyncSession = Depends(get_db)
+    db:AsyncSession = Depends(get_db),
+    current_user = Depends(get_current_user),
 ):
     new_data = JenisInstansi(
         kode = payload.kode,
         nama = payload.nama,
-        created_by = "user.id",
+        created_by = current_user.id,
     )
 
     db.add(new_data)
@@ -77,4 +79,3 @@ async def delete_JenisInstansi(id:str, db:AsyncSession = Depends(get_db)):
     return {
         "message" : f"Referensi Jenis Instansi '{nama}' telah dihapus"
     } 
-

@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.models.simpeg.master.models import RefJabatanFungsionalUmum
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from typing import List
 from sqlalchemy.sql import func
 
@@ -51,7 +52,7 @@ async def read_RefJabatanFungsionalUmum(
     }
 
 @router.post("/create", response_model=RefJabatanFungsionalUmumResponse)
-async def read_RefJabatanFungsionalUmum(payload : RefJabatanFungsionalUmumCreate, db :AsyncSession = Depends(get_db)):
+async def read_RefJabatanFungsionalUmum(payload: RefJabatanFungsionalUmumCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
     """
     ## Membuat Ref Jabatan Fungsional Umum
     Menambahkan data Jabatan Fungsional Umum baru ke dalam sistem.
@@ -73,7 +74,7 @@ async def read_RefJabatanFungsionalUmum(payload : RefJabatanFungsionalUmumCreate
         kode = payload.kode,
         kode_cepat = payload.kode_cepat,
         status = payload.status,
-        created_by = "user.id"
+        created_by = current_user.id
     )
     db.add(query)
     await db.commit()

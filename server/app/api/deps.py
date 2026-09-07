@@ -57,11 +57,6 @@ async def get_current_user(
     if user is None:
         raise credentials_exception
         
-    # 9. Jika semua aman, kembalikan data user yang sedang login.
-    return {
-        "id" : user.id,
-        "user" : user.username,
-        "email" : user.email,
-        "nama_lengkap" : user.nama_lengkap,
-        "nip" : user.nip
-    }
+    # 9. Kembalikan objek ORM User agar endpoint dapat memakai user.id,
+    #    user.username, dan atribut lainnya secara konsisten.
+    return user

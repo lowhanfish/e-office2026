@@ -1,4 +1,5 @@
 from .auth.models import AuthAccess, AuthUserGroup, AuthGroup, AuthMenu
+from .test import Test
 from .master.models import (
     User, 
     RefJnsPegawai,

@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.schemas.simpeg.master.ref_rumpun_jabatan_jf import CreateRumpunJabatanJF, ResponseRumpunJabatanJF, UpdateRumpunJabatanJF
 from typing import List
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.models.simpeg.master.models import RumpunJabatanJF
@@ -30,7 +31,7 @@ async def read_RumpunJabatanJF(db: AsyncSession = Depends(get_db)):
     return result.scalars().all()
 
 @router.post("/create", response_model=ResponseRumpunJabatanJF)
-async def create_RumpunJabatanJF(payload : CreateRumpunJabatanJF, db:AsyncSession = Depends(get_db)):
+async def create_RumpunJabatanJF(payload: CreateRumpunJabatanJF, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
     """
     ## Membuat Rumpun Jabatan JF
     Menambahkan data Rumpun Jabatan JF baru ke dalam sistem.
@@ -48,7 +49,7 @@ async def create_RumpunJabatanJF(payload : CreateRumpunJabatanJF, db:AsyncSessio
         kode = payload.kode,
         kode_rumpun = payload.kode_rumpun,
         nama = payload.nama,
-        created_by = "user.created_by"
+        created_by = current_user.id
     )
     db.add(new_data)
     await db.commit()

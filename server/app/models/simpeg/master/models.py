@@ -340,8 +340,15 @@ class RefLokasi(Base):
     ref_jns_lokasi_rel = relationship("RefJnsLokasi", back_populates="ref_lokasi_rel")
 
 
+class RefKPKN(Base):
+    __tablename__ = "ref_kpkn"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(50), index=True, nullable=False, unique=True)
+    nama = Column(String(100), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    
+  
 
 
    

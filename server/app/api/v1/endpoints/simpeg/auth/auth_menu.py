@@ -4,6 +4,7 @@ from sqlalchemy.future import select
 from typing import List
 
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from app.models.simpeg.auth.models import AuthMenu
 from app.schemas.simpeg.auth.auth_menu import AuthMenuCreate, AuthMenuResponse, AuthMenuUpdate
 
@@ -17,7 +18,7 @@ async def auth_menu_read(db : AsyncSession = Depends(get_db)):
 
 
 @router.post("/create", response_model=AuthMenuResponse)
-async def auth_menu_create(payload:AuthMenuCreate ,db : AsyncSession = Depends(get_db)):
+async def auth_menu_create(payload:AuthMenuCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
     new_data = AuthMenu(
         title = payload.title,
         path = payload.path,
@@ -25,7 +26,7 @@ async def auth_menu_create(payload:AuthMenuCreate ,db : AsyncSession = Depends(g
         color_icon = payload.color_icon,
         color_text = payload.color_text,
         parent_id = payload.parent_id,
-        created_by = "user.id",
+        created_by = current_user.id,
     )
 
     db.add(new_data)

@@ -5,6 +5,7 @@ from typing import List
 from sqlalchemy.sql import func
 
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from app.schemas.simpeg.master.ref_status_hidup import RefStatusHidupCreate, RefStatusHidupResponse, RefStatusHidupUpdate, RefStatusHidupResponseList
 from app.models.simpeg.master.models import RefStatusHidup
 
@@ -57,7 +58,7 @@ async def read_ref_status_hidup(
 
 
 @router.post("/create", response_model=RefStatusHidupResponse)
-async def create_ref_status_hidup(payload:RefStatusHidupCreate, db:AsyncSession=Depends(get_db)):
+async def create_ref_status_hidup(payload: RefStatusHidupCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
     """
     ## Membuat Ref Status Hidup
     Menambahkan data Ref Status Hidup baru ke dalam sistem.
@@ -72,7 +73,7 @@ async def create_ref_status_hidup(payload:RefStatusHidupCreate, db:AsyncSession=
     new_data = RefStatusHidup(
         kode = payload.kode,
         nama = payload.nama,
-        created_by = "user.id",
+        created_by = current_user.id,
     )
     db.add(new_data)
     await db.commit()
@@ -141,5 +142,4 @@ async def delete_ref_status_hidup(id:str, db:AsyncSession = Depends(get_db)):
     return {
         "message" : f"Referensi Status Hidup : '{nama}', telah dihapus"
     }
-
 

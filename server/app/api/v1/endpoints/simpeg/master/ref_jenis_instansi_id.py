@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from sqlalchemy.future import select
 from app.models.simpeg.master.models import JenisInstansiId
 from typing import List
@@ -18,12 +19,13 @@ async def read_JenisInstansiId(db:AsyncSession = Depends(get_db)):
 @router.post("/create", response_model=RefJenisInstansiIdResponse)
 async def create_JenisInstansiId(
     payload:RefJenisInstansiIdCreate, 
-    db:AsyncSession = Depends(get_db)
+    db:AsyncSession = Depends(get_db),
+    current_user = Depends(get_current_user),
 ):
     new_data = JenisInstansiId(
         kode = payload.kode,
         nama = payload.nama,
-        created_by = "payload.created_by",
+        created_by = current_user.id,
     )
     db.add(new_data)
     await db.commit()

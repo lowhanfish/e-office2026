@@ -3,6 +3,7 @@ from app.schemas.simpeg.master.ref_rumpun_pendidikan import RumpunPendidikanCrea
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from sqlalchemy.future import select
 from app.models.simpeg.master.models import RumpunPendidikan
 
@@ -30,7 +31,7 @@ async def read_rumpun_pendidikan(db:AsyncSession = Depends(get_db)):
 
 
 @router.post("/create", response_model=RumpunPendidikanResponse)
-async def create_rumpun_pendidikan(payload: RumpunPendidikanCreate, db: AsyncSession = Depends(get_db)):
+async def create_rumpun_pendidikan(payload: RumpunPendidikanCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
 
     """
     ## Membuat Ref Ref Ref Rumpun Pendidikan
@@ -49,7 +50,7 @@ async def create_rumpun_pendidikan(payload: RumpunPendidikanCreate, db: AsyncSes
         kode = payload.kode,
         nama = payload.nama,
         kode_cepat = payload.kode_cepat,
-        created_by = "user.id",
+        created_by = current_user.id,
     )
     db.add(query)
     await db.commit()

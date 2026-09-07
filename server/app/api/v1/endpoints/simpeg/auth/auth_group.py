@@ -4,6 +4,7 @@ from sqlalchemy.future import select
 from typing import List
 
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from app.models.simpeg.auth.models import AuthGroup
 from app.schemas.simpeg.auth.auth_group import AuthGroupCreate, AuthGroupUpdate, AuthGroupRespose
 
@@ -19,11 +20,11 @@ async def auth_group_read(db: AsyncSession = Depends(get_db)):
     return result.scalars().all()
 
 @router.post("/create", response_model=AuthGroupRespose)
-async def auth_group_create(payload: AuthGroupCreate, db: AsyncSession = Depends(get_db)):
+async def auth_group_create(payload: AuthGroupCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
     new_data = AuthGroup(
         nama = payload.nama,
         keterangan = payload.keterangan,
-        created_by = "user.id",
+        created_by = current_user.id,
     )
     db.add(new_data)
     await db.commit()

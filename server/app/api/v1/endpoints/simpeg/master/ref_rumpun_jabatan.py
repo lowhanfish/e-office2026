@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.schemas.simpeg.master.ref_rumpun_jabatan import ResponseRumpunJabatan, CreateRumpunJabatan, UpdateRumpunJabatan
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from typing import List
 from sqlalchemy.future import select
 from app.models.simpeg.master.models import RumpunJabatan
@@ -31,7 +32,7 @@ async def read_RumpunJabatan(db : AsyncSession = Depends(get_db)):
     return result.scalars().all()
 
 @router.post("/create", response_model=ResponseRumpunJabatan)
-async def read_RumpunJabatan(payload : CreateRumpunJabatan, db: AsyncSession = Depends(get_db)):
+async def read_RumpunJabatan(payload: CreateRumpunJabatan, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
     """
     ## Membuat Rumpun Jabatan
     Menambahkan data Rumpun Jabatan baru ke dalam sistem.
@@ -49,7 +50,7 @@ async def read_RumpunJabatan(payload : CreateRumpunJabatan, db: AsyncSession = D
         kode = payload.kode,
         nama = payload.nama,
         kode_cepat = payload.kode_cepat,
-        created_by = "user.id"
+        created_by = current_user.id
     )
 
     db.add(new_data)
@@ -117,4 +118,3 @@ async def read_RumpunJabatan(id:str, db: AsyncSession = Depends(get_db)):
     await db.delete(db_data)
     await db.commit()
     return {"message": f"Rumpun Jabatan {db_data.nama} berhasil dihapus"}
-

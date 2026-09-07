@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from typing import List
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from app.models.simpeg.master.models import RefJnsPegawai
 from app.schemas.simpeg.master.ref_jns_pegawai import RefJnsPegawaiCreate, RefJnsPegawaiResponse, RefJnsPegawaiUpdate, RefJnsPegawaiResponseList
 from sqlalchemy.sql import func
@@ -52,7 +53,7 @@ async def read_ref_jns_pegawai(
     }
 
 @router.post("/create", response_model=RefJnsPegawaiResponse)
-async def create_ref_jns_pegawai(payload: RefJnsPegawaiCreate, db:AsyncSession = Depends(get_db)):
+async def create_ref_jns_pegawai(payload: RefJnsPegawaiCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
     """
     ## Membuat Ref Jenis Pegawai
     Menambahkan data Ref Jenis Pegawai baru ke dalam sistem.
@@ -67,7 +68,7 @@ async def create_ref_jns_pegawai(payload: RefJnsPegawaiCreate, db:AsyncSession =
     new_data = RefJnsPegawai(
         kode = payload.kode,
         nama = payload.nama,
-        created_by ="user.id",
+        created_by = current_user.id,
     )
     db.add(new_data)
     await db.commit()

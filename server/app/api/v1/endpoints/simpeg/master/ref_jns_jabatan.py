@@ -3,6 +3,7 @@ from app.schemas.simpeg.master.ref_jns_jabatan import JenisJabatanCreate, JenisJ
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from app.models.simpeg.master.models import JenisJabatan
 from sqlalchemy.future import select
 
@@ -29,7 +30,7 @@ async def read_JenisJabatan(db:AsyncSession = Depends(get_db)):
 
 
 @router.post("/create", response_model=JenisJabatanResponse)
-async def read_JenisJabatan(payload : JenisJabatanCreate, db:AsyncSession = Depends(get_db)):
+async def read_JenisJabatan(payload: JenisJabatanCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
     
     """
     ## Membuat Jenis Jabatan
@@ -46,7 +47,7 @@ async def read_JenisJabatan(payload : JenisJabatanCreate, db:AsyncSession = Depe
     new_data = JenisJabatan(
         kode = payload.kode,
         nama = payload.nama,
-        created_by = "user.created_by"
+        created_by = current_user.id
     )
 
     db.add(new_data)

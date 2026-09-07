@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from app.schemas.simpeg.master.ref_hukdis import HukdisCreate, HukdisUpdate, HukdisResponse
 from app.models.simpeg.master.models import RefHukdis
 from typing import List
@@ -33,11 +34,11 @@ async def read_hukdis(db:AsyncSession = Depends(get_db)):
     return result.scalars().all()
 
 @router.post("/create", response_model=HukdisResponse)
-async def create_hukdis(payload:  HukdisCreate, db: AsyncSession = Depends(get_db)):
+async def create_hukdis(payload: HukdisCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
     query = RefHukdis(
         kode = payload.kode,
         nama = payload.nama,
-        created_by = "user.id"
+        created_by = current_user.id
     )
     db.add(query)
     await db.commit()

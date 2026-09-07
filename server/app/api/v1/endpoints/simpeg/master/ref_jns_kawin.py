@@ -4,6 +4,7 @@ from sqlalchemy.future import select
 from typing import List
 from app.schemas.simpeg.master.ref_jns_kawin import RefJnsKawinCreate, RefJnsKawinResponse, RefJnsKawinUpdate, RefJnsKawinResponseList
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from app.models.simpeg.master.models import RefJnsKawin
 from sqlalchemy.sql import func
 
@@ -55,7 +56,7 @@ async def read_ref_jns_kawin(
 
 
 @router.post("/create", response_model=RefJnsKawinResponse)
-async def creat_ref_jns_kawin(payload: RefJnsKawinCreate, db:AsyncSession = Depends(get_db)):
+async def creat_ref_jns_kawin(payload: RefJnsKawinCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
     """
     ## Membuat Ref Jenis Kawin
     Menambahkan data Ref Jenis Kawin baru ke dalam sistem.
@@ -70,7 +71,7 @@ async def creat_ref_jns_kawin(payload: RefJnsKawinCreate, db:AsyncSession = Depe
     new_data = RefJnsKawin(
         kode = payload.kode,
         nama = payload.nama,
-        created_by = "user.id",
+        created_by = current_user.id,
     )
 
     db.add(new_data)
@@ -141,4 +142,3 @@ async def delete_ref_jns_kawin(id:str, db:AsyncSession = Depends(get_db)):
     return {
         "message" : f"Referensi Jenis Pegawai : '{nama}', telah dihapus"
     }
-

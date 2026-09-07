@@ -1,6 +1,7 @@
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1.api import api_router
+from app.api.deps import get_current_user
 
 
 app = FastAPI(
@@ -27,7 +28,7 @@ app.include_router(
 
 
 
-@app.get("/")
+@app.get("/", dependencies=[Depends(get_current_user)])
 async def root():
     return {
         "message": "Welcome to e-Office Gateway",

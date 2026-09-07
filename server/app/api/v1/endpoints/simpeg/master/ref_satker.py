@@ -91,7 +91,11 @@ async def read_satker(
 
 
 @router.post("/creat", response_model=SatkerResponse)
-async def create_satker(payload:SatkerCreat, db: AsyncSession = Depends(get_db)):
+async def create_satker(
+    payload:SatkerCreat, 
+    db: AsyncSession = Depends(get_db),
+    user : User = Depends(get_current_user)
+):
     """
     ## Membuat Ref Satker
     Menambahkan data Satker baru ke dalam sistem.
@@ -109,7 +113,7 @@ async def create_satker(payload:SatkerCreat, db: AsyncSession = Depends(get_db))
         kode = payload.kode,
         nama = payload.nama,
         instansi_id = payload.instansi_id,
-        created_by = "user.id"
+        created_by = user.id
     )
 
     db.add(query)
@@ -120,7 +124,12 @@ async def create_satker(payload:SatkerCreat, db: AsyncSession = Depends(get_db))
 
 
 @router.put("/update/{id}")
-async def update_satker(id:str, payload : SatkerUpdate, db: AsyncSession = Depends(get_db)):
+async def update_satker(
+    id:str, 
+    payload : SatkerUpdate, 
+    db: AsyncSession = Depends(get_db),
+    user : User = Depends(get_current_user)
+):
     """
     ## Mengubah Satker
     Mengubah data item Satker di dalam sistem.
@@ -161,7 +170,11 @@ async def update_satker(id:str, payload : SatkerUpdate, db: AsyncSession = Depen
 
 
 @router.delete("/delete/{id}")
-async def root(id:str, db: AsyncSession = Depends(get_db)):
+async def root(
+    id:str, 
+    db: AsyncSession = Depends(get_db),
+    user : User = Depends(get_current_user)
+):
 
     """
     ## Menghapus Satker

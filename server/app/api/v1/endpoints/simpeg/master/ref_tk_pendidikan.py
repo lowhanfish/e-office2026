@@ -3,6 +3,7 @@ from typing import List
 from app.schemas.simpeg.master.ref_tk_pendidikan import RefTKPendidikanCreate, RefTKPendidikanResponse, RefTKPendidikanUpdate
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from sqlalchemy.future import select
 from app.models.simpeg.master.models import RefTKPendidikan
 
@@ -29,7 +30,7 @@ async def read_ref_tk_pendidikan(db:AsyncSession = Depends(get_db)):
     return result.scalars().all()
 
 @router.post("/create", response_model=RefTKPendidikanResponse)
-async def create_ref_tk_pendidikan(payload: RefTKPendidikanCreate, db:AsyncSession = Depends(get_db)):
+async def create_ref_tk_pendidikan(payload: RefTKPendidikanCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
     
     """
     ## Membuat Ref Tk Pendidikan
@@ -50,7 +51,7 @@ async def create_ref_tk_pendidikan(payload: RefTKPendidikanCreate, db:AsyncSessi
         nama = payload.nama,
         group_tk_pend_nm = payload.group_tk_pend_nm,
         keterangan = payload.keterangan,
-        created_by = "user.id",
+        created_by = current_user.id,
     )
     db.add(new_data)
     await db.commit()

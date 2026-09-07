@@ -54,13 +54,13 @@ async def create_esselon(
     """
 
     # Bapak bisa lihat di log terminal siapa yang sedang nge-create data
-    print(f"User yang membuat data: {current_user.username}") 
+    print(f"User yang membuat data: {current_user.username}")
     
     new_Data = Esselon(
         kode = payload.kode,
         nama = payload.nama,
         jabatan_asn = payload.jabatan_asn,
-        created_by = current_user.username # <--- OTOMATIS mengambil username dari token yang login
+        created_by = current_user.id
     )
     db.add(new_Data)
     await db.commit()

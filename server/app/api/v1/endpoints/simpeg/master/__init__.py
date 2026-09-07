@@ -27,6 +27,7 @@ from . import (
     ref_rumpun_pendidikan, 
     ref_tk_pendidikan,
     ref_pendidikan,
+    ref_kpkn
 )
 
 master_router = APIRouter()
@@ -58,3 +59,5 @@ master_router.include_router(ref_hukdis.router, prefix="/ref_hukdis")
 master_router.include_router(ref_rumpun_pendidikan.router, prefix="/ref_rumpun_pendidikan")
 master_router.include_router(ref_tk_pendidikan.router, prefix="/ref_tk_pendidikan")
 master_router.include_router(ref_pendidikan.router, prefix="/ref_pendidikan")
+
+master_router.include_router(ref_kpkn.router, prefix="/ref_kpkn")

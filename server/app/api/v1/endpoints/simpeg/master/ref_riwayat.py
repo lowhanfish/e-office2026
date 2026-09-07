@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from app.models.simpeg.master.models import RefRiwayat
 from app.schemas.simpeg.master.ref_riwayat import RiwayatResponse, RiwayatCreate, RiwayatUpdate
 from typing import List
@@ -30,7 +31,7 @@ async def read_riwayat(db: AsyncSession = Depends(get_db)):
     return result.scalars().all()
 
 @router.post("/create", response_model= RiwayatResponse)
-async def read_riwayat(payload : RiwayatCreate, db: AsyncSession = Depends(get_db)):
+async def read_riwayat(payload: RiwayatCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
     
     """
     ## Membuat Ref Ref Jenis Riwayat
@@ -47,7 +48,7 @@ async def read_riwayat(payload : RiwayatCreate, db: AsyncSession = Depends(get_d
     query = RefRiwayat(
         kode = payload.kode,
         nama = payload.nama,
-        create_by = "user.id"
+        created_by = current_user.id
     )
     db.add(query)
     await db.commit()

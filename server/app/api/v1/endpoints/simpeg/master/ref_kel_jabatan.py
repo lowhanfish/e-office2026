@@ -3,6 +3,7 @@ from app.schemas.simpeg.master.ref_kel_jabatan import KelJabatanResponse, KelJab
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from sqlalchemy.future import select
 from app.models.simpeg.master.models import KelJabatan
 
@@ -30,7 +31,7 @@ async def create_KelJabatan(db: AsyncSession = Depends(get_db)):
     return result.scalars().all()
 
 @router.post("/create", response_model=KelJabatanResponse)
-async def create_KelJabatan(payload : KelJabatanCreate, db : AsyncSession = Depends(get_db)):
+async def create_KelJabatan(payload: KelJabatanCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
     """
     ## Membuat Ref Jabfung
     Menambahkan data Jabfung baru ke dalam sistem.
@@ -53,7 +54,7 @@ async def create_KelJabatan(payload : KelJabatanCreate, db : AsyncSession = Depe
         ref_jns_jabatan_id = payload.ref_jns_jabatan_id,
         ref_rumpun_jabatan_id = payload.ref_rumpun_jabatan_id,
         pembina_id = payload.pembina_id,
-        created_by = "user.created_by"
+        created_by = current_user.id
     )
     db.add(new_data)
     await db.commit()

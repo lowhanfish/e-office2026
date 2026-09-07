@@ -1,7 +1,7 @@
 // src/hooks/useCrudMutation.ts
-'use client';
+"use client";
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type CrudConfig<TPayload, TResult> = {
   mutationFn: (payload: TPayload) => Promise<TResult>;
@@ -10,7 +10,9 @@ type CrudConfig<TPayload, TResult> = {
   onError?: (error: Error, payload: TPayload) => void;
 };
 
-export function useCrudMutation<TPayload, TResult>(config: CrudConfig<TPayload, TResult>) {
+export function useCrudMutation<TPayload, TResult>(
+  config: CrudConfig<TPayload, TResult>,
+) {
   const queryClient = useQueryClient();
 
   return useMutation({

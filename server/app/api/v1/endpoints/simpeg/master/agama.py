@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from app.schemas.simpeg.master.agama import AgamaCreate, AgamaResponse, AgamaUpdate
 from app.services.simpeg.master_service import crud_agama
 
@@ -27,7 +28,7 @@ async def read_agama(db: AsyncSession = Depends(get_db), skip: int = 0, limit: i
 
 # Tambah Data
 @router.post("/create", response_model=AgamaResponse)
-async def create_agama(payload: AgamaCreate, db: AsyncSession = Depends(get_db)):
+async def create_agama(payload: AgamaCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
     """
     ## Membuat Ref Agama
     Menambahkan data Agama baru ke dalam sistem.
@@ -39,8 +40,10 @@ async def create_agama(payload: AgamaCreate, db: AsyncSession = Depends(get_db))
     **Error yang mungkin terjadi:**
     - `422`: Jika format input tidak sesuai skema.
     """
-    # .model_dump() mengubah schema Pydantic jadi Dictionary Python
-    return await crud_agama.create(db, obj_in=payload.model_dump())
+    # created_by selalu berasal dari user yang sudah terautentikasi.
+    create_data = payload.model_dump()
+    create_data["created_by"] = current_user.id
+    return await crud_agama.create(db, obj_in=create_data)
 
 # Edit Data (Metode POST)
 @router.put("/update/{id}", response_model=AgamaResponse)

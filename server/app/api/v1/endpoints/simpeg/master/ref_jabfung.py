@@ -3,6 +3,7 @@ from app.schemas.simpeg.master.ref_jabfung import RefJabfungCreate, RefJabfungRe
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from app.models.simpeg.master.models import RefJabatanFungsional
 from typing import List
 
@@ -27,7 +28,7 @@ async def read_jabfung(db:AsyncSession = Depends(get_db)):
     return result.scalars().all()
 
 @router.post("/create", response_model=RefJabfungResponse)
-async def create_jabfung(payload: RefJabfungCreate, db:AsyncSession = Depends(get_db)):
+async def create_jabfung(payload: RefJabfungCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
     """
     ## Membuat Ref Jabatan Fungsional
     Menambahkan data Ref Jabatan Fungsional baru ke dalam sistem.
@@ -52,7 +53,7 @@ async def create_jabfung(payload: RefJabfungCreate, db:AsyncSession = Depends(ge
         ref_kel_jabatan_id = payload.ref_kel_jabatan_id,
         jenjang = payload.jenjang,
         status = payload.status,
-        created_by = "payload.user"
+        created_by = current_user.id
     )
 
     db.add(data)
@@ -129,4 +130,3 @@ async def delete_jabfung(id:str, db:AsyncSession = Depends(get_db)):
     return {
         "message" : f"Referensi jabatan fungsional '{data_db.nama}' telah dihapus"
     }
-

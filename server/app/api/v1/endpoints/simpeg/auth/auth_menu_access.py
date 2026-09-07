@@ -5,6 +5,7 @@ from sqlalchemy.future import select
 
 
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from app.models.simpeg.auth.models import AuthAccess
 from app.schemas.simpeg.auth.auth_menu_access import AuthAccessCreate, AuthAccessResponse, AuthAccessUpdate
 
@@ -18,7 +19,7 @@ async def auth_menu_access_read(db:AsyncSession = Depends(get_db)):
     return result.scalars().all()
 
 @router.post("/create", response_model=AuthAccessResponse)
-async def auth_menu_access_create(payload:AuthAccessCreate, db:AsyncSession = Depends(get_db)):
+async def auth_menu_access_create(payload:AuthAccessCreate, db:AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
     new_data = AuthAccess(
         auth_menu_id = payload.auth_menu_id,
         auth_group_id = payload.auth_group_id,
@@ -26,6 +27,7 @@ async def auth_menu_access_create(payload:AuthAccessCreate, db:AsyncSession = De
         readx = payload.readx,
         updatex = payload.updatex,
         deletex = payload.deletex,
+        created_by = current_user.id,
     )
     db.add(new_data)
     await db.commit()

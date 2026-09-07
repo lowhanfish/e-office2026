@@ -8,6 +8,9 @@ from app.models.simpeg.master.models import RefJnsLokasi
 from app.schemas.simpeg.master.ref_jns_lokasi import RefJnsLokasiCreate, RefJnsLokasiResponse, RefJnsLokasiUpdate, RefJnsLokasiResponseList
 from sqlalchemy.sql import func
 
+from app.api.deps import get_current_user
+from app.models.simpeg.master.models import User
+
 router = APIRouter()
 
 
@@ -16,7 +19,8 @@ async def read_ref_jns_lokasi(
     db:AsyncSession = Depends(get_db),
     skip:int = 0,
     limit:int = 100,
-    search:str | None = None
+    search:str | None = None,
+    user : User = Depends(get_current_user)
 ):
     """
     ## Mengambil semua List Ref Jenis Lokasi
@@ -52,7 +56,11 @@ async def read_ref_jns_lokasi(
     }
 
 @router.post("/create", response_model=RefJnsLokasiResponse)
-async def create_ref_jns_lokasi(payload:RefJnsLokasiCreate, db:AsyncSession = Depends(get_db)):
+async def create_ref_jns_lokasi(
+    payload:RefJnsLokasiCreate, 
+    db:AsyncSession = Depends(get_db),
+    user : User = Depends(get_current_user)
+):
     """
     ## Membuat Ref Jenis Lokasi
     Menambahkan data Ref Jenis Lokasi baru ke dalam sistem.
@@ -67,7 +75,7 @@ async def create_ref_jns_lokasi(payload:RefJnsLokasiCreate, db:AsyncSession = De
     new_data = RefJnsLokasi(
         kode = payload.kode,
         nama = payload.nama,
-        created_by = "user.id",
+        created_by = user.id,
     )
     db.add(new_data)
     await db.commit()
@@ -75,7 +83,12 @@ async def create_ref_jns_lokasi(payload:RefJnsLokasiCreate, db:AsyncSession = De
     return new_data
 
 @router.put("/update/{id}", response_model=RefJnsLokasiResponse)
-async def update_ref_jns_lokasi(id:str, payload:RefJnsLokasiUpdate, db:AsyncSession = Depends(get_db)):
+async def update_ref_jns_lokasi(
+    id:str, 
+    payload:RefJnsLokasiUpdate, 
+    db:AsyncSession = Depends(get_db),
+    user : User = Depends(get_current_user)
+):
     """
     ## Mengubah Ref Jenis Lokasi
     Mengubah data item Ref Jenis Lokasi di dalam sistem.
@@ -111,7 +124,11 @@ async def update_ref_jns_lokasi(id:str, payload:RefJnsLokasiUpdate, db:AsyncSess
 
 
 @router.delete("/delete/{id}")
-async def delete_ref_jns_lokasi(id:str, db:AsyncSession = Depends(get_db)):
+async def delete_ref_jns_lokasi(
+    id:str, 
+    db:AsyncSession = Depends(get_db),
+    user : User = Depends(get_current_user)
+):
     """
     ## Menghapus Ref Jenis Lokasi
     Menghapus data item Ref Jenis Lokasi di dalam sistem.
@@ -136,7 +153,6 @@ async def delete_ref_jns_lokasi(id:str, db:AsyncSession = Depends(get_db)):
     return {
         "message" : f"Referensi Status Hidup : '{nama}', telah dihapus"
     }
-
 
 
 

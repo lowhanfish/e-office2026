@@ -4,6 +4,7 @@ from sqlalchemy.future import select
 from typing import List
 
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from app.models.simpeg.master.models import RefLokasi
 from app.schemas.simpeg.master.ref_lokasi import RefLokasiCreate, RefLokasiResponse, RefLokasiUpdate
 
@@ -29,7 +30,7 @@ async def read_ref_lokasi(db:AsyncSession = Depends(get_db)):
     return result.scalars().all()
 
 @router.post("/create", response_model=RefLokasiResponse)
-async def create_ref_lokasi(payload: RefLokasiCreate, db:AsyncSession = Depends(get_db)):
+async def create_ref_lokasi(payload: RefLokasiCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
     """
     ## Membuat Ref Lokasi
     Menambahkan data Ref Lokasi baru ke dalam sistem.
@@ -52,7 +53,7 @@ async def create_ref_lokasi(payload: RefLokasiCreate, db:AsyncSession = Depends(
         ref_lokasi_id = payload.ref_lokasi_id,
         kode_cepat = payload.kode_cepat,
         ref_jns_lokasi_id = payload.ref_jns_lokasi_id,
-        created_by = "user.id"
+        created_by = current_user.id
     )
 
     db.add(new_data)

@@ -1,9 +1,10 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from app.api.deps import get_current_user
 from .master import master_router
 from .riwayat import riwayat_router
 from .auth import auth_router
 
-simpeg_router = APIRouter()
+simpeg_router = APIRouter(dependencies=[Depends(get_current_user)])
 
 
 simpeg_router.include_router(

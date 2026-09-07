@@ -69,7 +69,11 @@ class UserResponse(BaseModel):
 # ==========================================
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
-async def register(payload: RegisterPayload, db: AsyncSession = Depends(get_db)):
+async def register(
+    payload: RegisterPayload,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """
     Endpoint untuk mendaftarkan user/pegawai baru ke dalam sistem.
     Password akan otomatis di-hash demi keamanan.
@@ -249,7 +253,10 @@ async def refresh_token(
 
 
 @router.post("/logout")
-async def logout(response: Response):
+async def logout(
+    response: Response,
+    current_user: User = Depends(get_current_user),
+):
     """
     Logout membersihkan cookie agar browser tidak lagi mengirim token lama.
     """

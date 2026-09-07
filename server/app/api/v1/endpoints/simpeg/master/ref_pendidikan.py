@@ -3,6 +3,7 @@ from app.schemas.simpeg.master.ref_pendidikan import RefPendidikanCreate, RefPen
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from sqlalchemy.future import select
 from app.models.simpeg.master.models import RefPendidikan
 
@@ -30,7 +31,7 @@ async def read_ref_pendidikan(db:AsyncSession = Depends(get_db)):
     return result.scalars().all()
 
 @router.post("/create", response_model=RefPendidikanResponse)
-async def create_ref_pendidikan(payload:RefPendidikanCreate ,db:AsyncSession = Depends(get_db)):
+async def create_ref_pendidikan(payload: RefPendidikanCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
 
     """
     ## Membuat Ref Pendidikan
@@ -51,7 +52,7 @@ async def create_ref_pendidikan(payload:RefPendidikanCreate ,db:AsyncSession = D
         kode = payload.kode,
         nama = payload.nama,
         status = payload.status,
-        created_by = "user.id",
+        created_by = current_user.id,
     )
 
     db.add(new_data)
@@ -126,6 +127,5 @@ async def delete_ref_pendidikan(id:str, db:AsyncSession = Depends(get_db)):
     await db.commit()
     return {"message": f"Ref Pendidikan {nama} berhasil dihapus"}
  
-
 
 

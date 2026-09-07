@@ -5,6 +5,7 @@ from sqlalchemy.sql import func
 from typing import List
 from app.schemas.simpeg.master.ref_golongan import RefGolonganCreate, RefGolonganResponse, RefGolonganUpdate, RefGolonganResponseList
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from app.models.simpeg.master.models import RefGolongan
 
 router = APIRouter()
@@ -55,7 +56,7 @@ async def read_ref_golongan(
 
 
 @router.post("/create", response_model=RefGolonganResponse)
-async def create_ref_golongan(payload:RefGolonganCreate, db:AsyncSession = Depends(get_db)):
+async def create_ref_golongan(payload:RefGolonganCreate, db:AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
     """
     ## Membuat Ref Golongan
     Menambahkan data Ref Golongan baru ke dalam sistem.
@@ -74,7 +75,7 @@ async def create_ref_golongan(payload:RefGolonganCreate, db:AsyncSession = Depen
         nama = payload.nama,
         nama_pangkat = payload.nama_pangkat,
         gol_pppk = payload.gol_pppk,
-        created_by = "user.id",
+        created_by = current_user.id,
     )
     db.add(new_data)
     await db.commit()

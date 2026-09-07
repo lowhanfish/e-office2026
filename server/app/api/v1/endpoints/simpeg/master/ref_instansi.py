@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
+from app.api.deps import get_current_user
 # Menggunakan import modern, hilangkan sqlalchemy.future
 from sqlalchemy import select, insert, update, delete, func 
 from app.models.simpeg.master.models import Instansi, JenisInstansi, JenisInstansiId
@@ -70,7 +71,7 @@ async def read_Instansi(
 
 
 @router.post("/create")
-async def create_Instansi(payload: InstansiCreate, db: AsyncSession = Depends(get_db)):
+async def create_Instansi(payload: InstansiCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
     """
     ## Membuat Ref Instansi
     Menambahkan data Instansi baru ke dalam sistem dengan 1x query.
@@ -83,7 +84,7 @@ async def create_Instansi(payload: InstansiCreate, db: AsyncSession = Depends(ge
             nama=payload.nama,
             jenis=payload.jenis,
             jenis_instansi_id=payload.jenis_instansi_id,
-            created_by=payload.created_by,
+            created_by=current_user.id,
         )
         .returning(*Instansi.__table__.c)
     )

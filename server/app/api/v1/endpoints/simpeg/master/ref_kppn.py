@@ -4,6 +4,7 @@ from sqlalchemy.future import select
 from typing import List
 
 from app.db.session import get_db
+from app.api.deps import get_current_user
 from app.schemas.simpeg.master.ref_kppn import RefKPPNCreate, RefKPPNResponse, RefKPPNUpdate
 from app.models.simpeg.master.models import RefKPPN
 
@@ -29,7 +30,7 @@ async def read_ref_kppn(db:AsyncSession=Depends(get_db)):
 
 
 @router.post("/create", response_model=RefKPPNResponse)
-async def create_ref_kppn(payload:RefKPPNCreate,db:AsyncSession=Depends(get_db)):
+async def create_ref_kppn(payload: RefKPPNCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
     """
     ## Membuat Ref KPPN
     Menambahkan data Ref KPPN baru ke dalam sistem.
@@ -44,7 +45,7 @@ async def create_ref_kppn(payload:RefKPPNCreate,db:AsyncSession=Depends(get_db))
     new_data = RefKPPN(
         kode = payload.kode,
         nama = payload.nama,
-        created_by = "user.id"
+        created_by = current_user.id
     )
     db.add(new_data)
     await db.commit()
