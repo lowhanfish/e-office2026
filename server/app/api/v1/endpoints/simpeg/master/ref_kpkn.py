@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas.simpeg.master.ref_kpkn import RefCreateKpkn, RefResponseKpkn, RefResponseListKpkn, RefUpdateKpkn
 from app.models.simpeg.master.models import User, RefKPKN
@@ -39,7 +39,7 @@ async def create_ref_kpkn(
     return query
 
 
-@router.get('read/', response_model=RefResponseListKpkn)
+@router.get('/read', response_model=RefResponseListKpkn)
 async def read_ref_kpkn(
     limit : int = 100,
     skip : int = 0,
@@ -50,7 +50,7 @@ async def read_ref_kpkn(
     query = select(RefKPKN)
 
     if search:
-        query = query.where(RefKPKN.nama.ilike(f"{search}"))
+        query = query.where(RefKPKN.nama.ilike(f"%{search}%"))
 
     total_query = select(func.count()).select_from(query.subquery())
     total_result = await db.execute(total_query)
@@ -63,7 +63,7 @@ async def read_ref_kpkn(
 
     result = await db.execute(query)
 
-    data = result.mappings().all()
+    data = result.scalars().all()
     
     return {
         "total": total,
@@ -72,24 +72,64 @@ async def read_ref_kpkn(
         "data": data,
     }
 
-@router.get('readOne/{id}')
-async def read_one_ref_kpkn(id:str):
-    return {
-        "status" : 200,
-        "message" : "ok"
-    }
+@router.get('/option')
+async def option_ref_kpkn(
+    search : str | None = None,
+    limit : int = 100,
+    db : AsyncSession = Depends(get_db)
+):
 
+    query = select(RefKPKN)
+    if search:
+        query = query.where(RefKPKN.nama.ilike(f"%{search}%"))
+
+    query = query.limit(limit)
+    result = await db.execute(query)
+    return result.scalars().all()
 
 @router.patch('/update/{id}')
-async def update_ref_kpkn(id:str):
-    return {
-        "status" : 200,
-        "message" : "ok"
-    }
+async def update_ref_kpkn(
+    id:str,
+    payload : RefUpdateKpkn,
+    db : AsyncSession = Depends(get_db)
+):
+
+    query = select(RefKPKN).where(RefKPKN.id == id)
+    result = await db.execute(query)
+
+    db_data = result.scalar_one_or_none()
+
+    if not db_data:
+        raise HTTPException(status_code=404, detail="id dari data yang anda tuju tidak ditemukan")
+
+    update_data = payload.model_dump(exclude_unset=True)
+
+    for key, value in update_data.items():
+        if hasattr(db_data, key):
+            setattr(db_data, key, value)
+
+    await db.commit()
+    await db.refresh(db_data)
+    return db_data
 
 @router.delete('/delete/{id}')
-async def delete_ref_kpkn(id:str):
+async def delete_ref_kpkn(
+    id:str,
+    db: AsyncSession = Depends(get_db)
+):
+
+    query = select(RefKPKN).where(RefKPKN.id == id)
+    result = await db.execute(query)
+    data_db = result.scalar_one_or_none()
+
+    if not data_db:
+        raise HTTPException(status_code=404, detail="id dari data yang anda tuju tidak ditemukan")
+
+    last_data = data_db
+    await db.delete(data_db)
+    await db.commit()
+
     return {
         "status" : 200,
-        "message" : "ok"
+        "message" : f"Data Ref KPKN : {last_data.nama} telah dihapus",
     }
