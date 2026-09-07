@@ -1,3 +1,4 @@
+from app.db.transaction import commit_or_raise_unique_conflict
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -30,7 +31,7 @@ async def auth_menu_create(payload:AuthMenuCreate, db: AsyncSession = Depends(ge
     )
 
     db.add(new_data)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(new_data)
     return new_data
 
@@ -49,7 +50,7 @@ async def auth_menu_update(id:str, payload:AuthMenuUpdate, db : AsyncSession = D
         if hasattr(data_db, key):
             setattr(data_db, key, value)
 
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(data_db)
     return data_db
 
@@ -65,5 +66,5 @@ async def auth_menu_delete(id:str, db : AsyncSession = Depends(get_db)):
     
     nama = data_db.title
     await db.delete(data_db)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     return {"message": f"Data menu : {nama} berhasil dihapus dari database..!"}

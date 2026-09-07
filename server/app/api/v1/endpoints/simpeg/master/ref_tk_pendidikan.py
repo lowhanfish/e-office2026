@@ -1,3 +1,4 @@
+from app.db.transaction import commit_or_raise_unique_conflict
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from app.schemas.simpeg.master.ref_tk_pendidikan import RefTKPendidikanCreate, RefTKPendidikanResponse, RefTKPendidikanUpdate
@@ -54,7 +55,7 @@ async def create_ref_tk_pendidikan(payload: RefTKPendidikanCreate, db: AsyncSess
         created_by = current_user.id,
     )
     db.add(new_data)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(new_data)
     return new_data
 
@@ -91,7 +92,7 @@ async def update_ref_tk_pendidikan(id:str, payload:RefTKPendidikanUpdate, db:Asy
         if hasattr(db_data, key):
             setattr(db_data, key, value)
 
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(db_data)
     return db_data
 
@@ -119,7 +120,7 @@ async def delete_ref_tk_pendidikan(id:str, db:AsyncSession = Depends(get_db)):
     
     nama = db_data.nama
     await db.delete(db_data)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
 
     return {"message": f"Ref Riwayat : {nama}, berhasil dihapus"}
  

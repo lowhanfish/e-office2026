@@ -1,3 +1,4 @@
+from app.db.transaction import commit_or_raise_unique_conflict
 from fastapi import APIRouter, Depends, HTTPException
 from app.schemas.simpeg.master.ref_rumpun_jabatan import ResponseRumpunJabatan, CreateRumpunJabatan, UpdateRumpunJabatan
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -54,7 +55,7 @@ async def read_RumpunJabatan(payload: CreateRumpunJabatan, db: AsyncSession = De
     )
 
     db.add(new_data)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(new_data)
     return new_data
 
@@ -90,7 +91,7 @@ async def read_RumpunJabatan(id:str, payload : UpdateRumpunJabatan, db: AsyncSes
         if hasattr(db_data, key):
             setattr(db_data, key, value)
 
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(db_data)
     return db_data
 
@@ -116,5 +117,5 @@ async def read_RumpunJabatan(id:str, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Data tidak ditemukan")
     
     await db.delete(db_data)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     return {"message": f"Rumpun Jabatan {db_data.nama} berhasil dihapus"}

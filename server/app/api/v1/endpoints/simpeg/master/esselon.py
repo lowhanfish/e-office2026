@@ -1,3 +1,4 @@
+from app.db.transaction import commit_or_raise_unique_conflict
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -63,7 +64,7 @@ async def create_esselon(
         created_by = current_user.id
     )
     db.add(new_Data)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(new_Data)
     return new_Data
 
@@ -105,7 +106,7 @@ async def update_esselon(
         if hasattr(db_data, key):
             setattr(db_data, key, value)
 
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(db_data)
     return db_data
 
@@ -135,6 +136,6 @@ async def delete_esselon( # Diperbaiki nama fungsinya biar tidak bentrok dengan 
         raise HTTPException(status_code=404, detail="Data tidak ditemukan")
     
     await db.delete(db_data)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
 
     return {"message": f"Esselon {db_data.nama} berhasil dihapus oleh {current_user.username}"}

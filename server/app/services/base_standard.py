@@ -1,3 +1,4 @@
+from app.db.transaction import commit_or_raise_unique_conflict
 from typing import TypeVar, Type, Generic, List, Optional, Any, Dict
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -24,7 +25,7 @@ class CRUDBase(Generic[ModelType]):
     async def create(self, db: AsyncSession, *, obj_in: Dict[str, Any]) -> ModelType:
         db_obj = self.model(**obj_in)
         db.add(db_obj)
-        await db.commit()
+        await commit_or_raise_unique_conflict(db)
         await db.refresh(db_obj)
         return db_obj
 
@@ -41,7 +42,7 @@ class CRUDBase(Generic[ModelType]):
                 if hasattr(db_obj, field):
                     setattr(db_obj, field, value)
             
-            await db.commit()
+            await commit_or_raise_unique_conflict(db)
             await db.refresh(db_obj)
         return db_obj
 
@@ -53,6 +54,6 @@ class CRUDBase(Generic[ModelType]):
         
         if db_obj:
             await db.delete(db_obj)
-            await db.commit()
+            await commit_or_raise_unique_conflict(db)
             return True
         return False

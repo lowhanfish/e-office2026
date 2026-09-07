@@ -1,3 +1,4 @@
+from app.db.transaction import commit_or_raise_unique_conflict
 from fastapi import APIRouter, Depends, HTTPException
 from app.schemas.simpeg.master.ref_jabfung import RefJabfungCreate, RefJabfungResponse, RefJabfungUpdate
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -57,7 +58,7 @@ async def create_jabfung(payload: RefJabfungCreate, db: AsyncSession = Depends(g
     )
 
     db.add(data)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(data)
 
     return data
@@ -99,7 +100,7 @@ async def update_jabfung(id:str, payload: RefJabfungUpdate, db : AsyncSession = 
         if hasattr(db_data, key):
             setattr(db_data, key, value)
 
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(db_data)
     return db_data
 
@@ -125,7 +126,7 @@ async def delete_jabfung(id:str, db:AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Data tidak ditemukan")
 
     await db.delete(data_db)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
 
     return {
         "message" : f"Referensi jabatan fungsional '{data_db.nama}' telah dihapus"

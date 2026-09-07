@@ -1,3 +1,4 @@
+from app.db.transaction import commit_or_raise_unique_conflict
 from fastapi import APIRouter, Depends, HTTPException
 from app.schemas.simpeg.master.ref_rumpun_pendidikan import RumpunPendidikanCreate, RumpunPendidikanResponse, RumpunPendidikanUpdate
 from typing import List
@@ -53,7 +54,7 @@ async def create_rumpun_pendidikan(payload: RumpunPendidikanCreate, db: AsyncSes
         created_by = current_user.id,
     )
     db.add(query)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(query)
     return query
 
@@ -90,7 +91,7 @@ async def update_rumpun_pendidikan(id:str, payload : RumpunPendidikanUpdate, db:
         if hasattr(db_data, key):
             setattr(db_data, key, value)
 
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(db_data)
     return db_data
 
@@ -119,6 +120,6 @@ async def delete_rumpun_pendidikan(id:str,  db:AsyncSession = Depends(get_db)):
 
     nama = db_data.nama
     await db.delete(db_data)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
 
     return {"message": f"Ref Rumpun Pendidikan : {nama}, berhasil dihapus"} 

@@ -1,3 +1,4 @@
+from app.db.transaction import commit_or_raise_unique_conflict
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -90,7 +91,7 @@ async def create_Instansi(payload: InstansiCreate, db: AsyncSession = Depends(ge
     )
 
     result = await db.execute(query)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     
     # Langsung return data baru tanpa perlu SELECT ulang (db.refresh)
     return result.mappings().first()
@@ -119,7 +120,7 @@ async def update_Instansi(id: str, payload: InstansiUpdate, db: AsyncSession = D
     )
 
     result = await db.execute(query)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     
     db_data = result.mappings().first()
     
@@ -143,7 +144,7 @@ async def delete_Instansi(id: str, db: AsyncSession = Depends(get_db)):
     )
 
     result = await db.execute(query)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     
     deleted_nama = result.scalar_one_or_none()
     

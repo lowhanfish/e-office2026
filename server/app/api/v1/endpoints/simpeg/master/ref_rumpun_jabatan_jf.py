@@ -1,3 +1,4 @@
+from app.db.transaction import commit_or_raise_unique_conflict
 from fastapi import APIRouter, Depends, HTTPException
 from app.schemas.simpeg.master.ref_rumpun_jabatan_jf import CreateRumpunJabatanJF, ResponseRumpunJabatanJF, UpdateRumpunJabatanJF
 from typing import List
@@ -52,7 +53,7 @@ async def create_RumpunJabatanJF(payload: CreateRumpunJabatanJF, db: AsyncSessio
         created_by = current_user.id
     )
     db.add(new_data)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(new_data)
     return new_data
 
@@ -88,7 +89,7 @@ async def update_RumpunJabatanJF(id:str, payload: UpdateRumpunJabatanJF, db:Asyn
         if hasattr(data_db, key):
             setattr(data_db, key, value)
 
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(data_db)
     return data_db
 
@@ -103,6 +104,6 @@ async def delete_RumpunJabatanJF(id:str, db:AsyncSession = Depends(get_db)):
     
     nama = data_db.nama
     await db.delete(data_db)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
 
     return {"message": f"Ref RumpunJabatanJF : {nama}, berhasil dihapus"}

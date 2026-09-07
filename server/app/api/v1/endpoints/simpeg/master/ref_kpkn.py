@@ -1,3 +1,4 @@
+from app.db.transaction import commit_or_raise_unique_conflict
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas.simpeg.master.ref_kpkn import RefCreateKpkn, RefResponseKpkn, RefResponseListKpkn, RefUpdateKpkn
@@ -33,7 +34,7 @@ async def create_ref_kpkn(
     )
 
     db.add(query)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(query)
     
     return query
@@ -108,7 +109,7 @@ async def update_ref_kpkn(
         if hasattr(db_data, key):
             setattr(db_data, key, value)
 
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(db_data)
     return db_data
 
@@ -127,7 +128,7 @@ async def delete_ref_kpkn(
 
     last_data = data_db
     await db.delete(data_db)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
 
     return {
         "status" : 200,

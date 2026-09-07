@@ -1,3 +1,4 @@
+from app.db.transaction import commit_or_raise_unique_conflict
 from fastapi import APIRouter, HTTPException, Depends
 from app.schemas.simpeg.master.ref_jns_jabatan import JenisJabatanCreate, JenisJabatanResponse, JenisJabatanUpdate
 from typing import List
@@ -51,7 +52,7 @@ async def read_JenisJabatan(payload: JenisJabatanCreate, db: AsyncSession = Depe
     )
 
     db.add(new_data)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(new_data)
     return new_data
 
@@ -87,7 +88,7 @@ async def read_JenisJabatan(id:str, payload:JenisJabatanUpdate ,db:AsyncSession 
         if hasattr(db_data, key):
             setattr(db_data, key, value)
     
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(db_data)
     return db_data
 
@@ -114,5 +115,5 @@ async def read_JenisJabatan(id:str, db:AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Data tidak ditemukan")
     
     await db.delete(db_data)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     return {"message": f"Esselon {db_data.nama} berhasil dihapus"}

@@ -1,3 +1,4 @@
+from app.db.transaction import commit_or_raise_unique_conflict
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
@@ -32,7 +33,7 @@ async def create_JenisInstansi(
     )
 
     db.add(new_data)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(new_data)
 
     return new_data
@@ -57,7 +58,7 @@ async def update_JenisInstansi(
         if hasattr(data_db, key):
             setattr(data_db, key, value, )
 
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(data_db)
     
     return data_db
@@ -74,7 +75,7 @@ async def delete_JenisInstansi(id:str, db:AsyncSession = Depends(get_db)):
     
     nama = delete_data.nama
     await db.delete(delete_data)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
 
     return {
         "message" : f"Referensi Jenis Instansi '{nama}' telah dihapus"

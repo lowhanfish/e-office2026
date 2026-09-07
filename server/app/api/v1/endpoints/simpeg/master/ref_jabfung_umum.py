@@ -1,3 +1,4 @@
+from app.db.transaction import commit_or_raise_unique_conflict
 from fastapi import APIRouter, Depends, HTTPException
 from app.schemas.simpeg.master.ref_jabfung_umum import RefJabatanFungsionalUmumCreate, RefJabatanFungsionalUmumResponse, RefJabatanFungsionalUmumUpdate, RefJabatanFungsionalUmumResponseList
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -77,7 +78,7 @@ async def read_RefJabatanFungsionalUmum(payload: RefJabatanFungsionalUmumCreate,
         created_by = current_user.id
     )
     db.add(query)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(query)
     return query
 
@@ -115,7 +116,7 @@ async def read_RefJabatanFungsionalUmum(id:str, payload : RefJabatanFungsionalUm
         if hasattr(db_data, key):
             setattr(db_data, key, value)
 
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(db_data)
     return db_data
 
@@ -141,7 +142,7 @@ async def read_RefJabatanFungsionalUmum(id:str, db:AsyncSession = Depends(get_db
         raise HTTPException(status_code=404, detail="id data yang anda pilih tidak ditemukan")
     
     await db.delete(db_data)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
 
     return {
         "message" : f"Referensi jabatan fungsional umum '{db_data.nama}' telah dihapus"

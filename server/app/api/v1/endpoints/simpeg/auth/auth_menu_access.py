@@ -1,3 +1,4 @@
+from app.db.transaction import commit_or_raise_unique_conflict
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -30,7 +31,7 @@ async def auth_menu_access_create(payload:AuthAccessCreate, db:AsyncSession = De
         created_by = current_user.id,
     )
     db.add(new_data)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(new_data)
     return new_data
 
@@ -48,7 +49,7 @@ async def auth_menu_access_update(id:str, payload:AuthAccessUpdate, db:AsyncSess
         if hasattr(data_db, key):
             setattr(data_db, key, value)
 
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(data_db)
     return data_db
 
@@ -64,7 +65,7 @@ async def auth_menu_access_delete(id:str, db:AsyncSession = Depends(get_db)):
     
     nama = data_db.id
     await db.delete(data_db)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
 
     return {"message": f"Data Auth Akses dengan id : {nama} berhasil dihapus dari database..!"}
 

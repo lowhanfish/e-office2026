@@ -1,3 +1,4 @@
+from app.db.transaction import commit_or_raise_unique_conflict
 import jwt
 from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -110,7 +111,7 @@ async def register(
 
     # 5. Simpan ke database
     db.add(new_user)
-    await db.commit()
+    await commit_or_raise_unique_conflict(db)
     await db.refresh(new_user)
     
     return new_user
