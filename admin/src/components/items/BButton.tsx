@@ -7,7 +7,9 @@ interface BButtonProps {
     children: ReactNode,
     size: string,
     mode?: string,
-    onClick: () => void,
+    onClick?: () => void,
+    type?: "button" | "submit" | "reset",
+    disabled?: boolean,
 }
 
 const colorMap: Record<string, string> = {
@@ -135,11 +137,13 @@ const sizeMap: Record<string, string> = {
 
 
 
-const BButton = ({ color, children, size, mode, onClick }: BButtonProps) => {
+const BButton = ({ color, children, size, mode, onClick, type = "button", disabled = false }: BButtonProps) => {
     return (
         <div className='w-full'>
             <button
+                type={type}
                 onClick={onClick}
+                disabled={disabled}
                 className={`
                 flex flex-row gap-2 justify-center items-center
                 
@@ -160,7 +164,7 @@ const BButton = ({ color, children, size, mode, onClick }: BButtonProps) => {
                 ${sizeMap[size]}
                 w-full
                 transition-all duration-300 hover:scale-102
-                cursor-pointer
+                ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}
                 
             `}>
                 {children}

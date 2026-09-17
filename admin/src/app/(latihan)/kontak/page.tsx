@@ -3,7 +3,7 @@
 
 import { useState, type FormEvent } from 'react';
 import { useCreateKontak, useDeleteKontak, useKontakList, useUpdateKontak } from '@/features/kontak/hooks';
-import type { Kontak } from '@/features/kontak/api';
+import type { Kontak } from '@/features/kontak/apixx';
 
 export default function KontakPage() {
   const { data: daftarKontak, isLoading, isError, error } = useKontakList();

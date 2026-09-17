@@ -1,10 +1,9 @@
-
 // features/kontak/hooks.ts
 
-'use client';
+"use client";
 
-import { useQuery } from '@tanstack/react-query';
-import { useCrudMutation } from '@/hooks/useCrudMutation';
+import { useQuery } from "@tanstack/react-query";
+import { useCrudMutation } from "@/hooks/useCrudMutation";
 import {
   createKontak,
   deleteKontak,
@@ -13,7 +12,7 @@ import {
   updateKontak,
   type KontakPayload,
   type KontakUpdatePayload,
-} from './api';
+} from "./apixx";
 
 export function useKontakList() {
   return useQuery({

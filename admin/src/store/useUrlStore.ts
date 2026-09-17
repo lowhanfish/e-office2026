@@ -1,6 +1,6 @@
 import {create} from 'zustand'
 
-const url = 'http://localhost:8000'
+const url = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000'
 
 interface DataShowProps {
     id : string | number;
@@ -26,8 +26,8 @@ export const useUrlStore = create<useUrlStoreProps>((set)=>({
     setTOKEN : (newToken) => set({TOKEN : newToken}),
     URL : {
         APP      : url,
-        LOGIN    : url+'/login',
-        REGISTER : url+'/register',
+        LOGIN    : url+'/api/v1/auth/login',
+        REGISTER : url+'/api/v1/auth/register',
     },
     DataShow : [
         {

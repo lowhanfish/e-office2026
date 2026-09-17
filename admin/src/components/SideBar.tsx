@@ -1,29 +1,42 @@
 "use client"
 
 import { ReactNode, useEffect, useState } from 'react'
-import { BsFillHouseFill, BsPlayFill, BsDot, BsFillLockFill } from "react-icons/bs";
+import { BsPlayFill, BsDot, BsFillLockFill } from "react-icons/bs";
 import BButton from '@/components/items/BButton'
 import routes from '@/constants/routes';
 import { useStorex } from '@/store/useStorex';
 import Link from 'next/link';
 import useCheckScreen from '@/hooks/useCheckScreen';
 import { useRouter } from 'next/navigation'
-
-
-
-
-
+import { fetchData } from '@/lib/api_secure';
+import { useUrlStore } from '@/store/useUrlStore';
 const SideBar = () => {
 
     const router = useRouter()
+    const apiUrl = useUrlStore(state => state.URL.APP)
+    const [isLoggingOut, setIsLoggingOut] = useState(false)
 
     const screenx = useCheckScreen()
     const isSideBarOpen = useStorex(state => state.isSideBarOpen)
     const setIsSideBarStat = useStorex((state) => state.setIsSideBarStat)
 
 
-    const LogOut = () => {
-        router.push('/login');
+    const logOut = async () => {
+        if (isLoggingOut) return
+
+        setIsLoggingOut(true)
+
+        try {
+            await fetchData(`${apiUrl}/api/v1/auth/logout`, {
+                method: 'POST',
+            })
+        } catch {
+            // Tetap kembali ke login jika sesi di server sudah tidak valid.
+        } finally {
+            router.replace('/login')
+            router.refresh()
+            setIsLoggingOut(false)
+        }
     }
 
 
@@ -34,7 +47,7 @@ const SideBar = () => {
             setIsSideBarStat(true)
         }
 
-    }, [screenx])
+    }, [screenx, setIsSideBarStat])
 
     return (
 
@@ -63,7 +76,7 @@ const SideBar = () => {
                 w-full h-full rounded-[10] px-2 py-5 overflow-y-scroll`
             }>
                 {
-                    routes.map((data, index) => (
+                    routes.map((data) => (
                         <div key={data.title} className=''>
                             <Submenu key={data.title} data={data} level={1} />
                         </div>
@@ -76,12 +89,13 @@ const SideBar = () => {
                         color='yellow'
                         mode="glossy"
                         size='sm'
-                        onClick={() => LogOut()}
+                        onClick={logOut}
+                        disabled={isLoggingOut}
                     >
                         <div className='flex gap-2'>
                             <BsFillLockFill />
                             <p className='text-white text-shadow-sm text-[12px]'>
-                                Logout
+                                {isLoggingOut ? 'Keluar...' : 'Logout'}
                             </p>
                         </div>
                     </BButton>

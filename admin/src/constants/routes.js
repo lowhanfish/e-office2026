@@ -1,9 +1,9 @@
-import { BsFillHouseFill, BsPlayFill, BsGrid, BsBuildings, BsRobot, BsGear } from "react-icons/bs";
+import { BsFillHouseFill, BsGrid, BsBuildings, BsGear } from "react-icons/bs";
 
 const routex = [
     {
         title : "Home",
-        path:"/home",
+        path:"/simpeg/home",
         icon : <BsFillHouseFill />,
         children : []
     },
@@ -80,27 +80,27 @@ const routex = [
                 children : [
                     {
                         title : "Route List",
-                        path:"/master/access_management/route_list",
+                        path:"/simpeg/master/access_management/route_list",
                         children : []
                     },
                     {
                         title : "Group Role Database",
-                        path:"/master/access_management/group_role_database",
+                        path:"/simpeg/master/access_management/group_role_database",
                         children : []
                     },
                     {
                         title : "Group Role Management",
-                        path:"/master/access_management/group_role_management",
+                        path:"/simpeg/master/access_management/group_role_management",
                         children : []
                     },
                     {
                         title : "User Authorization",
-                        path:"/master/access_management/user_authorization",
+                        path:"/simpeg/master/access_management/user_authorization",
                         children : []
                     },
                     {
                         title : "User Register",
-                        path:"/master/access_management/user_register",
+                        path:"/simpeg/master/access_management/user_register",
                         children : []
                     },
                 ]
@@ -111,12 +111,17 @@ const routex = [
                 children : [
                     {
                         title : "Component Template",
-                        path:"/master/template_management/component_template",
+                        path:"/simpeg/master/template_management/component_template",
                         children : []
                     },
                     {
                         title : "Example Template",
-                        path:"/master/template_management/example_template",
+                        path:"/simpeg/master/template_management/example_template",
+                        children : []
+                    },
+                    {
+                        title : "Example Template Admin",
+                        path:"/simpeg/master/template_management/master-template",
                         children : []
                     },
                 ]
@@ -127,52 +132,57 @@ const routex = [
                 children : [
                     {
                         title : "Master Jenis Pegawai",
-                        path:"/master/data_source/master-jenis-pegawai",
+                        path:"/simpeg/master/data_source/master-jenis-pegawai",
                         children : []
                     },
                     {
                         title : "Master Status Hidup",
-                        path:"/master/data_source/master-status-hidup",
+                        path:"/simpeg/master/data_source/master-status-hidup",
+                        children : []
+                    },
+                    {
+                        title : "Master Agama",
+                        path:"/simpeg/master/data_source/master-agama",
                         children : []
                     },
                     {
                         title : "Master Jenis Kawin",
-                        path:"/master/data_source/master-jenis-kawin",
+                        path:"/simpeg/master/data_source/master-jenis-kawin",
                         children : []
                     },
                     {
                         title : "Master Jenis Instansi",
-                        path:"/master/data_source/master-jenis-instansi",
+                        path:"/simpeg/master/data_source/master-jenis-instansi",
                         children : []
                     },
                     {
                         title : "Master Jenis Instansi Id",
-                        path:"/master/data_source/master-jenis-instansi-id",
+                        path:"/simpeg/master/data_source/master-jenis-instansi-id",
                         children : []
                     },
                     {
                         title : "Master Instansi",
-                        path:"/master/data_source/master-instansi",
+                        path:"/simpeg/master/data_source/master-instansi",
                         children : []
                     },
                     {
                         title : "Master Satker",
-                        path:"/master/data_source/master-satker",
+                        path:"/simpeg/master/data_source/master-satker",
                         children : []
                     },
                     {
                         title : "Master Jenis Lokasi",
-                        path:"/master/data_source/master-jns-lokasi",
+                        path:"/simpeg/master/data_source/master-jns-lokasi",
                         children : []
                     },
                     {
                         title : "Master Referensi Lokasi",
-                        path:"/master/data_source/master-ref-lokasi",
+                        path:"/simpeg/master/data_source/master-ref-lokasi",
                         children : []
                     },
                     {
                         title : "Master Golongan",
-                        path:"/master/data_source/master-golongan",
+                        path:"/simpeg/master/data_source/master-golongan",
                         children : []
                     },
                    

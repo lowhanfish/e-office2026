@@ -7,11 +7,6 @@ import FormLogin from './component/FormLogin'
 
 const page = () => {
 
-
-
-
-
-
     return (
         <main className=" h-screen w-full p-2  bg-black">
 
