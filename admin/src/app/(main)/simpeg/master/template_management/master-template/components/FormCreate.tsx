@@ -25,9 +25,8 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
             id: '',
             kode: '',
             nama: '',
-            nama_pangkat: '',
-            gol_pppk: '',
-            created_by: "user.id"
+            created_by: "user.id",
+            created_at: "user.id"
         })
         setClose(false)
     }

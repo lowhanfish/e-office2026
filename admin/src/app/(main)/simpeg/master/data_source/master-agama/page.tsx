@@ -13,23 +13,8 @@ import FormCreate from './components/FormCreate';
 import { listindex } from "@/utilities/pagination"
 import { BSkeletonTable } from '@/components/items/BSkeleton';
 import { ResponseInterface } from "./types"
-
-const List = {
-    skip: 0,
-    limit: 8,
-    total: 1,
-    data: [
-        {
-            id: "1",
-            kode: "01",
-            nama: "Contoh Nama",
-            nama_pangkat: "Contoh Pangkat",
-            gol_pppk: "Contoh Gol PPPK",
-            created_by: "dibuat olej",
-            created_at: "di buat tgl"
-        }
-    ]
-}
+import useDebounced from '@/hooks/useDebounced';
+import { useResponseListMasterAgama, useDeleteMasterAgama, useCreateMasterAgama, useUpdateMasterAgama } from './hooks/crud';
 
 
 const InputData = () => {
@@ -40,8 +25,9 @@ const InputData = () => {
     const [createType, setCreateType] = useState(false)
     const [pageSelect, setPageSelect] = useState<number>(1);
     const [pageLimit, setPageLimit] = useState<number>(8)
-    const [isLoading, setIsLoading] = useState<boolean>(false)
     const [search, setSearch] = useState<string>("")
+    const debouncedSearch = useDebounced(search)
+
     const [form, setForm] = useState<ResponseInterface>({
         id: '',
         kode: '',
@@ -49,6 +35,9 @@ const InputData = () => {
         created_at: "user.id",
         created_by: "user.id"
     })
+
+    const { List, isLoading, isError, error } = useResponseListMasterAgama(pageSelect, pageLimit, debouncedSearch)
+    const deleteMutation = useDeleteMasterAgama()
 
     const selectItem = (item: ResponseInterface) => {
         setForm({
@@ -70,14 +59,8 @@ const InputData = () => {
         })
     }
 
-    useEffect(() => {
-
-    }, [search]);
-
-
-
     const btnDelete = (idx: string) => {
-        alert(`Data dengan id: ${idx}, Sukses dihapus..!`)
+        deleteMutation.mutate(idx)
     }
 
     return (
@@ -126,10 +109,8 @@ const InputData = () => {
                                 <tr className="text-left">
                                     <th className='w-[5%] text-center'>No</th>
                                     <th className='w-[5%] text-center'>Act</th>
-                                    <th className='w-[10%] text-center'>Kode</th>
-                                    <th className='w-[20%]'>Nama</th>
-                                    <th className='w-[40%]'>Nama Pangkat</th>
-                                    <th className='w-[20%]'>Gol-PPPK</th>
+                                    <th className='w-[40%] text-center'>Kode</th>
+                                    <th className='w-[50%]'>Nama</th>
                                 </tr>
                             </thead>
 
@@ -148,8 +129,6 @@ const InputData = () => {
                                         </td>
                                         <td className=''><p className='text-center'>{item.kode}</p></td>
                                         <td className=''><p>{item.nama}</p></td>
-                                        <td className=''><p>{item.nama_pangkat}</p></td>
-                                        <td className=''><p>{item.gol_pppk}</p></td>
                                     </tr>
                                 ))}
                             </tbody>

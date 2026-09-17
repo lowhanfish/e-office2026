@@ -3,15 +3,26 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 
 from app.db.session import get_db
+from app.models.simpeg.master.models import Agama
 from app.api.deps import get_current_user
-from app.schemas.simpeg.master.agama import AgamaCreate, AgamaResponse, AgamaUpdate
+from app.schemas.simpeg.master.agama import AgamaCreate, AgamaResponse, AgamaResponseList, AgamaUpdate
 from app.services.simpeg.master_service import crud_agama
+
+from sqlalchemy.future import select
+from sqlalchemy.sql import func
 
 router = APIRouter()
 
-# Tampil Semua Data
-@router.get("/", response_model=List[AgamaResponse])
-async def read_agama(db: AsyncSession = Depends(get_db), skip: int = 0, limit: int = 100):
+
+@router.get("/option")
+
+@router.get("/", response_model=AgamaResponseList)
+async def read_agama(
+    db: AsyncSession = Depends(get_db), 
+    skip: int = 0, 
+    limit: int = 100, 
+    search:str |None = None
+):
     """
     ## Mengambil semua List Agama
     Membaca data Jabatan fungsional baru dari sistem.
@@ -24,9 +35,27 @@ async def read_agama(db: AsyncSession = Depends(get_db), skip: int = 0, limit: i
     **Error yang mungkin terjadi:**
     - `422`: Jika format input tidak sesuai skema.
     """
-    return await crud_agama.get_multi(db, skip=skip, limit=limit)
+    query = select(Agama)
+    if search:
+        query = query.where(Agama.nama.ilike(f"%{search}%"))
 
-# Tambah Data
+    total_query = select(func.count()).select_from(query.subquery())
+    total_result = await db.execute(total_query)
+    total = total_result.scalar_one_or_none()
+
+    query = query.order_by(Agama.created_at.asc()).offset(skip).limit(limit)
+
+    result = await db.execute(query)
+    data = result.scalars().all()
+    
+    return {
+        "skip" : skip,
+        "limit" : limit,
+        "total" : total,
+        "data" : data
+    }
+
+
 @router.post("/create", response_model=AgamaResponse)
 async def create_agama(payload: AgamaCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
     """
@@ -45,7 +74,6 @@ async def create_agama(payload: AgamaCreate, db: AsyncSession = Depends(get_db),
     create_data["created_by"] = current_user.id
     return await crud_agama.create(db, obj_in=create_data)
 
-# Edit Data (Metode POST)
 @router.put("/update/{id}", response_model=AgamaResponse)
 async def update_agama(id: str, payload: AgamaUpdate, db: AsyncSession = Depends(get_db)):
     # exclude_unset=True agar kolom yang tidak diisi di Next.js tidak merusak data lama
@@ -70,7 +98,6 @@ async def update_agama(id: str, payload: AgamaUpdate, db: AsyncSession = Depends
         raise HTTPException(status_code=404, detail="Data tidak ditemukan")
     return updated
 
-# Hapus Data (Metode POST)
 @router.delete("/delete/{id}")
 async def delete_agama(id: str, db: AsyncSession = Depends(get_db)):
     """
