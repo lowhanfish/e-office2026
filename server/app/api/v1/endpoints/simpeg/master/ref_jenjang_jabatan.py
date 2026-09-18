@@ -56,7 +56,6 @@ async def create_ref_jenjang_jabatan(
     db: AsyncSession = Depends(get_db),
     user:User = Depends(get_current_user)
 ):
-
     query = RefJenjangJabatan(
         **payload.model_dump(),
         created_by = user.id
@@ -66,15 +65,35 @@ async def create_ref_jenjang_jabatan(
     # await db.commit()
     await commit_or_raise_unique_conflict(db)
     await db.refresh(query)
-
     return query
 
     
 
-@router.patch("/update", response_model=RefJenjangResponse)
-async def update_ref_jenjang_jabatan():
-    pass
+@router.patch("/update/{id}", response_model=RefJenjangResponse)
+async def update_ref_jenjang_jabatan(
+    id:str,
+    payload : RefJenjangCreate,
+    db:AsyncSession = Depends(get_db)
+):
 
-@router.delete("delete")
+    query = select(RefJenjangJabatan).where(RefJenjangJabatan.id == id)
+    result = await db.execute(query)
+    data_db = result.scalar_one_or_none()
+
+    if not data_db:
+        raise HTTPException(status_code=404, detail="Id dari data yang anda tuju tidak ditemukan..!")
+
+    update_data = payload.model_dump(exclude_unset=True)
+
+    for key, value in update_data.items():
+        if hasattr(data_db, key):
+            setattr(data_db, key, value)
+
+    await commit_or_raise_unique_conflict(db)
+    await db.refresh(data_db)
+
+    return data_db
+
+@router.delete("/delete")
 async def delete_ref_jenjang_jabatan():
     pass
