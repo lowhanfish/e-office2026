@@ -94,6 +94,24 @@ async def update_ref_jenjang_jabatan(
 
     return data_db
 
-@router.delete("/delete")
-async def delete_ref_jenjang_jabatan():
-    pass
+@router.delete("/delete/{id}")
+async def delete_ref_jenjang_jabatan(
+    id:str,
+    db : AsyncSession = Depends(get_db)
+):
+    query = select(RefJenjangJabatan).where(RefJenjangJabatan.id == id)
+    result = await db.execute(query)
+    data_db = result.scalar_one_or_none()
+
+    if not data_db:
+        raise HTTPException(status_code=404, detail="id dari data yang anda tuju tidak ditemukan")
+
+    last_data = data_db
+    await db.delete(data_db)
+    await commit_or_raise_unique_conflict(db)
+
+    return {
+        "message" : f"Data Ref Jenjang Jabatan : {last_data.nama} telah dihapus",
+        "satus" : 200
+    }
+    
