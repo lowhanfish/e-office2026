@@ -7,13 +7,10 @@ class MasterBase(BaseModel):
     nama : str
 
 class MasterCreate(MasterBase):
-    created_by : Optional[str] = None
+    pass
 
-class MasterUpdate(BaseModel):
-    id : Optional[str] = None
-    kode : Optional[str] = None
-    nama : Optional[str] = None
-    created_by : Optional[str] = None
+class MasterUpdate(MasterBase):
+    pass
 
 class MasterResponse(MasterBase):
     id : str

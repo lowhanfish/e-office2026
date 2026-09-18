@@ -14,7 +14,7 @@ import { listindex } from "@/utilities/pagination"
 import { BSkeletonTable } from '@/components/items/BSkeleton';
 import { ResponseInterface } from "./types"
 import useDebounced from '@/hooks/useDebounced';
-import { useResponseListMasterAgama, useDeleteMasterAgama } from './hooks/crud';
+import { useResponseList, useDelete } from './hooks/crud';
 import { showLoadingAlert } from '@/lib/show_swall';
 
 
@@ -39,8 +39,8 @@ const InputData = () => {
         created_by: "user.id"
     })
 
-    const { List, isLoading, isError, error } = useResponseListMasterAgama(pageSelect, pageLimit, debouncedSearch)
-    const deleteMutation = useDeleteMasterAgama()
+    const { List, isLoading, isError, error } = useResponseList(pageSelect, pageLimit, debouncedSearch)
+    const deleteMutation = useDelete()
 
     const selectItem = (item: ResponseInterface) => {
         setForm({
@@ -68,14 +68,14 @@ const InputData = () => {
 
     return (
         <div>
-            <TextSeparate title='Master Agama' />
+            <TextSeparate title='Master Esselon' />
             <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
                 <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-1 w-full'>
                     <div className='col-span-6 '>
                         <div className='text-[12px] text-b-gray-3 pl-2'>Cari Data</div>
                         <div className='flex gap-1 relative'>
                             <BInput
-                                placeholder='Cari Data Agama...'
+                                placeholder='Cari Data Esselon...'
                                 type='text'
                                 value={search}
                                 onChange={(value) => {

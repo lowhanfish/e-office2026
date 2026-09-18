@@ -190,12 +190,14 @@ class RefJabatanFungsionalUmum(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class RefJenjangJabatan(Base): #Fungsional tertentu dan Struktural
-    __tablename__ = "ref_jenjang_jabatan_struktural"
-    id = Column(String(50), primary_key=True, index=True)
+    __tablename__ = "ref_jenjang_jabatan"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     kode = Column(String(2), index=True, nullable=False)
     nama = Column(String(100), nullable=False)
-    ref_jns_pegawai_id = Column(String(50), ForeignKey("ref_jns_pegawai.kode"), index=True)
-    created_bu = Column(String(50), index=True, nullable=False)
+    kode_cepat = Column(String(2), unique=True, nullable=False)
+    asn_jenis_jabatan_id = Column(String(2), nullable=False)
+    level_kompetensi_jabatan = Column(String(2), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class RefJabatanStruktural(Base):

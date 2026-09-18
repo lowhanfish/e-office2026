@@ -16,31 +16,31 @@ interface ConfirmDeleteOptions {
 }
 
 
-export const useResponseListMasterAgama = (skip: number, limit: number, search: string) => {
+export const useResponseList = (skip: number, limit: number, search: string) => {
     const url = useUrlStore(state => state.URL.APP)
     const { data: List, isLoading, isError, error } = useQuery({
         queryFn: () => fetchData<ResponseListInterface>(
-            `${url}/api/v1/simpeg/master/agama/?skip=${(skip - 1) * limit}&limit=${limit}&search=${search}`
+            `${url}/api/v1/simpeg/master/esselon/?skip=${(skip - 1) * limit}&limit=${limit}&search=${search}`
         ),
-        queryKey: ["master-agama", skip, limit, search]
+        queryKey: ["master-esselon", skip, limit, search]
     })
     return { List, isLoading, isError, error }
 }
 
-export const useDeleteMasterAgama = () => {
+export const useDelete = () => {
 
     const url = useUrlStore(state => state.URL.APP)
     const queryClient = useQueryClient()
     const deleteMutation = useMutation({
         mutationFn: (id: string) => fetchData(
-            `${url}/api/v1/simpeg/master/agama/delete/${id}`,
+            `${url}/api/v1/simpeg/master/esselon/delete/${id}`,
             {
                 method: "DELETE"
             }
         ),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ["master-agama"]
+                queryKey: ["master-esselon"]
             })
             swallAlert("sukses dihapus", "success")
         },
@@ -57,13 +57,13 @@ export const useDeleteMasterAgama = () => {
 }
 
 
-export const useCreateMasterAgama = () => {
+export const useCreate = () => {
     const url = useUrlStore(state => state.URL.APP)
     const queryClient = useQueryClient()
 
     const createMutation = useMutation({
         mutationFn: (body: ResponseInterface) => fetchData(
-            `${url}/api/v1/simpeg/master/agama/create`,
+            `${url}/api/v1/simpeg/master/esselon/create`,
             {
                 method: "POST",
                 body: JSON.stringify(body),
@@ -74,7 +74,7 @@ export const useCreateMasterAgama = () => {
         ),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ["master-agama"]
+                queryKey: ["master-esselon"]
             });
             swallAlert("sukses ditambahkan", "success")
         },
@@ -87,13 +87,13 @@ export const useCreateMasterAgama = () => {
 }
 
 
-export const useUpdateMasterAgama = () => {
+export const useUpdate = () => {
     const url = useUrlStore(state => state.URL.APP)
     const queryClient = useQueryClient()
 
     const updateMutation = useMutation({
         mutationFn: ({ body, id }: { body: ResponseInterface, id: string }) => fetchData(
-            `${url}/api/v1/simpeg/master/agama/update/${id}`,
+            `${url}/api/v1/simpeg/master/esselon/update/${id}`,
             {
                 method: "PUT",
                 body: JSON.stringify(body),
@@ -103,7 +103,7 @@ export const useUpdateMasterAgama = () => {
             }
         ),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["master-agama"] })
+            queryClient.invalidateQueries({ queryKey: ["master-esselon"] })
             swallAlert("sukses diubah", "success")
         },
         onError: (err: any) => {

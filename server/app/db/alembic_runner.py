@@ -56,7 +56,10 @@ def run_migrations(target_metadata, database_env: str) -> None:
             poolclass=pool.NullPool,
         )
 
-        async with connectable.connect() as connection:
+        # Use an explicit transaction so Alembic's version-table writes are
+        # committed. MySQL may auto-commit DDL while still rolling back the
+        # INSERT/UPDATE on ``alembic_version`` when a plain connection closes.
+        async with connectable.begin() as connection:
             await connection.run_sync(run_with_connection)
 
         await connectable.dispose()

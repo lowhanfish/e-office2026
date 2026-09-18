@@ -14,7 +14,18 @@ from sqlalchemy.sql import func
 router = APIRouter()
 
 
-@router.get("/option")
+@router.get("/option", response_model=List[AgamaResponse])
+async def option(
+    db: AsyncSession = Depends(get_db), 
+    search : str | None = None
+):
+    query = select(Agama)
+    if search:
+        query = query.where(Agama.nama.ilike(f"%{search}%"))
+
+    query = query.limit(20)
+    result = await db.execute(query)
+    return result
 
 @router.get("/", response_model=AgamaResponseList)
 async def read_agama(
@@ -57,7 +68,11 @@ async def read_agama(
 
 
 @router.post("/create", response_model=AgamaResponse)
-async def create_agama(payload: AgamaCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
+async def create_agama(
+    payload: AgamaCreate, 
+    db: AsyncSession = Depends(get_db), 
+    current_user = Depends(get_current_user)
+):
     """
     ## Membuat Ref Agama
     Menambahkan data Agama baru ke dalam sistem.

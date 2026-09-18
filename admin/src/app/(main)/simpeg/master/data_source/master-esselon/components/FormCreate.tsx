@@ -3,7 +3,7 @@ import BButton from '@/components/items/BButton'
 import BInput from '@/components/items/BInput'
 
 import { CreateInterface, ResponseInterface, ResponseListInterface } from "../types"
-import { useCreateMasterAgama, useUpdateMasterAgama } from '../hooks/crud';
+import { useCreate, useUpdate } from '../hooks/crud';
 
 interface FormCreateProps {
     setClose: Dispatch<SetStateAction<boolean>>,
@@ -14,8 +14,8 @@ interface FormCreateProps {
 
 const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
 
-    const createMasterAgama = useCreateMasterAgama()
-    const updateMasterAgama = useUpdateMasterAgama()
+    const createMasterAgama = useCreate()
+    const updateMasterAgama = useUpdate()
 
     const setItemForm = (key: keyof ResponseInterface, value: string | number) => {
         setForm({
@@ -52,8 +52,8 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
         <div className='px-5 pb-2'>
             <div className='pt-1'>
                 <BInput
-                    title='Kode Agama (Id pada SIASN)'
-                    placeholder='Kode Agama'
+                    title='Kode Esselon (Id pada SIASN)'
+                    placeholder='Kode Esselon'
                     type='text'
                     value={form.kode}
                     onChange={(value) => {
@@ -63,8 +63,8 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
             </div>
             <div className='pt-1'>
                 <BInput
-                    title='Nama Agama'
-                    placeholder='Nama Agama'
+                    title='Nama Esselon'
+                    placeholder='Nama Esselon'
                     type='text'
                     value={form.nama}
                     onChange={(value) => {

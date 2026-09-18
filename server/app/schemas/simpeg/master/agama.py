@@ -1,17 +1,16 @@
-from app.schemas.simpeg.master.base_schemas import MasterCreate, MasterResponse, MasterBase
+from app.schemas.simpeg.master.base_schemas import MasterCreate, MasterResponse, MasterUpdate
 from typing import Optional, List
 from pydantic import BaseModel
 
 
 class AgamaCreate(MasterCreate):
-    pass 
+    pass
 
 class AgamaResponse(MasterResponse):
     pass
 
-class AgamaUpdate(MasterBase):
-    kode: Optional[str] = None
-    nama: Optional[str] = None
+class AgamaUpdate(MasterUpdate):
+    pass
 
 class AgamaResponseList(BaseModel):
     total : int

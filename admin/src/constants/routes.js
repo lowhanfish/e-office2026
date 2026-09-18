@@ -146,6 +146,11 @@ const routex = [
                         children : []
                     },
                     {
+                        title : "Master Esselon",
+                        path:"/simpeg/master/data_source/master-esselon",
+                        children : []
+                    },
+                    {
                         title : "Master Jenis Kawin",
                         path:"/simpeg/master/data_source/master-jenis-kawin",
                         children : []

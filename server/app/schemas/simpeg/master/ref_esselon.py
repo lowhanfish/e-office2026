@@ -1,10 +1,18 @@
 from app.schemas.simpeg.master.base_schemas import MasterBase, MasterCreate, MasterResponse
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
+
 
 
 class EsselonResponse(MasterResponse):
     jabatan_asn : str
+
+class EsselonResponseList(BaseModel):
+    skip : int
+    limit : int
+    total : int
+    data : List[EsselonResponse]
+
 
 class EsselonCreate(MasterCreate):
     jabatan_asn : Optional[str] = None

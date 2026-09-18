@@ -191,6 +191,9 @@ Ketiga database mempunyai contoh model `Test` dengan kolom:
 Konfigurasi dan folder migrasi dipisahkan agar migration history tidak
 diterapkan ke database yang salah.
 
+Panduan lengkap, termasuk penanganan error `Target database is not up to date`,
+tersedia di [`docs/alembic.md`](docs/alembic.md).
+
 | Database | Config | Folder migration |
 |---|---|---|
 | SIMPEG | `alembic.ini` | `migrations/` |

@@ -3,13 +3,13 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.db.session import get_db
-from app.schemas.simpeg.master.ref_esselon import EsselonCreate, EsselonResponse, EsselonUpdate
+from app.schemas.simpeg.master.ref_esselon import EsselonCreate, EsselonResponse, EsselonResponseList, EsselonUpdate
 from app.models.simpeg.master.models import Esselon, User # <--- Tambah import User jika dibutuhkan type-hint
 from app.api.deps import get_current_user # <--- IMPORT PAGAR GHAIB DI SINI
 from typing import List
 
 router = APIRouter()
-@router.get("/read", response_model=List[EsselonResponse])
+@router.get("/read", response_model=EsselonResponseList)
 async def read_esselon(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user) # <--- DIKUNCI
@@ -29,8 +29,6 @@ async def read_esselon(
     """
 
     query = select(Esselon)
-    result = await db.execute(query)
-    return result.scalars().all()
 
 
 @router.post("/create", response_model=EsselonResponse) # Ubah response_model ke EsselonResponse agar id & created_at ikut tampil
