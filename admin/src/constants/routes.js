@@ -186,6 +186,11 @@ const routex = [
                         children : []
                     },
                     {
+                        title : "Master Referensi Jenjang Jabatan",
+                        path:"/simpeg/master/data_source/master-ref-jenjang-jabatan",
+                        children : []
+                    },
+                    {
                         title : "Master Golongan",
                         path:"/simpeg/master/data_source/master-golongan",
                         children : []

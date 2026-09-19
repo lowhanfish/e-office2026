@@ -16,12 +16,17 @@ from app.db.transaction import commit_or_raise_unique_conflict
 router = APIRouter()
 
 
-@router.get("/")
-async def test():
-    return {
-        "status" : 200,
-        "Message" : "Router Active"
-    }
+@router.get("/option", response_model=list[RefJenjangResponse])
+async def test(
+    search: str|None = None,
+    db: AsyncSession = Depends(get_db)
+):
+    query = select(RefJenjangJabatan)
+    if search:
+        query = query.where(RefJenjangJabatan.nama.ilike(f"%{search}%"))
+    result = await db.execute(query)
+    return result.scalars().all()
+   
 
 @router.get("/read", response_model=RefJenjangResponseList)
 async def read_ref_jenjang_jabatan(
@@ -68,7 +73,6 @@ async def create_ref_jenjang_jabatan(
     return query
 
     
-
 @router.patch("/update/{id}", response_model=RefJenjangResponse)
 async def update_ref_jenjang_jabatan(
     id:str,
@@ -93,6 +97,7 @@ async def update_ref_jenjang_jabatan(
     await db.refresh(data_db)
 
     return data_db
+
 
 @router.delete("/delete/{id}")
 async def delete_ref_jenjang_jabatan(

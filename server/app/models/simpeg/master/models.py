@@ -70,6 +70,22 @@ class Agama(Base):
     nama = Column(String(100), nullable=False)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class RefAsnJenisJabatan(Base):
+    __tablename__ = "ref_asn_jenis_jabatan"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(2), index=True, nullable=False, unique=True)
+    nama = Column(String(100), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class RefLevelKompetensiAsn(Base):
+    __tablename__ = "ref_level_kompetensi_asn"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(2), index=True, nullable=False, unique=True)
+    nama = Column(String(100), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
     
 class Esselon(Base):
     __tablename__ = "ref_esselon"
