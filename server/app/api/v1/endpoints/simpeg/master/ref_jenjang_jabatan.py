@@ -43,7 +43,7 @@ async def read_ref_jenjang_jabatan(
     total_result = await db.execute(total_query)
     total = total_result.scalar_one_or_none()
 
-    query = query.order_by(RefJenjangJabatan.nama).offset(skip).limit(limit)
+    query = query.order_by(RefJenjangJabatan.created_at).offset(skip).limit(limit)
 
     result = await db.execute(query)
     data = result.scalars().all()
