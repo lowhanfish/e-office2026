@@ -1,84 +1,98 @@
-# Backend e-Office (FastAPI) - Struktur Folder
+# Backend e-Office (FastAPI) - Struktur Aplikasi
 
-Dokumentasi struktur ini disesuaikan dengan struktur file yang benar-benar ada di repo `server` saat ini.
-
----
+Backend menggunakan pendekatan modular per resource. Setiap resource menyimpan
+endpoint, schema, dan placeholder service dalam satu package.
 
 ## Struktur Utama
 
 ```text
-/backend-bff
-├── app/
-│   ├── main.py # Entry point utama & inisialisasi FastAPI
-│   ├── api/
-│   │   └── v1/
-│   │       ├── api.py # Root Router V1 (Menyatukan semua modul)
-│   │       └── endpoints/
-│   │           └── simpeg/
-│   │               ├── __init__.py
-│   │               ├── master/
-│   │               │   ├── __init__.py
-│   │               │   ├── agama.py
-│   │               │   ├── esselon.py
-│   │               │   ├── ref_hukdis.py
-│   │               │   ├── ref_jabfung.py
-│   │               │   ├── ref_jabfung_umum.py
-│   │               │   ├── ref_kel_jabatan.py
-│   │               │   └── ref_riwayat.py
-│   │               └── riwayat/
-│   │                   ├── __init__.py
-│   │                   └── pendidikan/
-│   │                       ├── __init__.py
-│   │                       ├── diklat.py
-│   │                       ├── kursus.py
-│   │                       └── pendidikan_formal.py
-│   │
-│   ├── db/
-│   │   ├── session.py
-│   │   └── sessionq.py
-│   │
-│   ├── models/
-│   │   └── simpeg_models.py # Semua ORM model saat ini
-│   │
-│   ├── schemas/
-│   ├── services/
-│   ├── utils/
-│   └── middleware/
-│
-├── migrations/
-│   ├── env.py # Alembic runtime config + target_metadata
-│   ├── README
-│   └── versions/
-│       ├── *.py # File migrasi Alembic
-│
-├── README.md
-└── requirements.txt
+app/
+├── main.py
+├── api/
+│   ├── deps.py
+│   └── v1/
+│       ├── api.py
+│       └── endpoints/
+│           ├── auth/
+│           │   ├── __init__.py
+│           │   ├── auth.py
+│           │   ├── schema.py
+│           │   └── service.py
+│           └── simpeg/
+│               ├── __init__.py
+│               ├── auth/
+│               ├── master/
+│               │   ├── __init__.py
+│               │   ├── agama/
+│               │   │   ├── __init__.py
+│               │   │   ├── agama.py
+│               │   │   ├── schema.py
+│               │   │   └── service.py
+│               │   └── <resource_lain>/
+│               │       ├── __init__.py
+│               │       ├── <resource_lain>.py
+│               │       ├── schema.py
+│               │       └── service.py
+│               └── riwayat/
+├── core/
+├── db/
+├── models/
+├── schemas/
+│   └── simpeg/
+│       └── master/
+│           └── base_schema.py
+└── services/
+    ├── __init__.py
+    └── crud_service.py
 ```
 
----
+## Konvensi Resource
 
-## Catatan Integrasi Penting (sesuai repo saat ini)
+Contoh package `agama`:
 
-### 1) Routing
+- `agama.py`: router FastAPI dan implementasi CRUD saat ini;
+- `schema.py`: schema request dan response Pydantic;
+- `service.py`: sengaja dikosongkan untuk pemisahan business logic berikutnya;
+- `__init__.py`: mengekspor objek `router` ke router induk.
 
-- Router utama didefinisikan di: `app/api/v1/api.py`
-- Endpoint SIMPEG di-include dari: `app/api/v1/endpoints/simpeg/...`
+Schema yang dipakai bersama oleh banyak resource tetap berada di `app/schemas/`.
+Contohnya, seluruh schema master SIMPEG dapat mewarisi class dari
+`app/schemas/simpeg/master/base_schema.py`.
 
-### 2) Model ORM
+Service yang benar-benar reusable lintas-resource berada di `app/services/`.
+Service khusus satu resource nantinya ditempatkan pada `service.py` di package
+resource masing-masing.
 
-- Semua model ORM saat ini berada di: `app/models/simpeg_models.py`
+Nama service dan schema menggunakan `service.py` serta `schema.py`, bukan
+`agama.service.py` atau `agama.schema.py`, karena tanda titik pada nama modul
+memiliki arti khusus dalam sistem import Python.
 
-### 3) Alembic
+## Routing
 
-- Konfigurasi Alembic ada di: `migrations/env.py`
-- `target_metadata` diambil dari `Base.metadata`.
-- `migrations/env.py` meng-import `app.models.simpeg_models` agar Alembic dapat mendeteksi metadata model untuk `--autogenerate`.
+Router disusun secara bertingkat:
 
----
+```text
+app.main
+└── app.api.v1.api
+    ├── auth
+    └── simpeg
+        ├── auth
+        ├── master
+        └── riwayat
+```
 
-## Dokumentasi Lanjutan
+Package setiap resource mengekspor `router`, sehingga router induk tetap dapat
+menggunakan pola berikut:
 
-Lihat juga:
+```python
+from . import agama
 
-- `README.md`
-- `migrations/README`
+master_router.include_router(agama.router, prefix="/agama")
+```
+
+## Database dan Model
+
+Model SQLAlchemy tetap dipisahkan berdasarkan database di `app/models/`.
+Konfigurasi session dan `Base` masing-masing database berada di `app/db/`.
+Pemindahan endpoint dan schema tidak mengubah model, implementasi CRUD, URL API,
+atau riwayat migrasi Alembic.

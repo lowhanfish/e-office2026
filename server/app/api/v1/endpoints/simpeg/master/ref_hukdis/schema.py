@@ -1,0 +1,17 @@
+from app.schemas.simpeg.master.base_schema import MasterBase, MasterCreate, MasterResponse
+from pydantic import BaseModel
+from typing import Optional, List
+
+
+class HukdisResponse(MasterResponse):
+    pass
+
+class HukdisCreate(MasterCreate):
+    pass
+
+class HukdisUpdate(MasterBase):
+    kode : Optional[str] = None
+    nama : Optional[str] = None
+
+class HukdisDelete(BaseModel):
+    pass
