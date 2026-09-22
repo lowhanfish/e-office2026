@@ -117,6 +117,6 @@ async def delete_ref_jenjang_jabatan(
 
     return {
         "message" : f"Data Ref Jenjang Jabatan : {last_data.nama} telah dihapus",
-        "satus" : 200
+        "status" : 200
     }
     

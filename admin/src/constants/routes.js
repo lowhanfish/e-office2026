@@ -186,6 +186,16 @@ const routex = [
                         children : []
                     },
                     {
+                        title : "Master Referensi ASN Jenis Jabatan",
+                        path:"/simpeg/master/data_source/master-ref-asn-jenis-jabatan",
+                        children : []
+                    },
+                    {
+                        title : "Master Referensi Level Kompetensi ASN",
+                        path:"/simpeg/master/data_source/master-ref-level-kompetensi-asn",
+                        children : []
+                    },
+                    {
                         title : "Master Referensi Jenjang Jabatan",
                         path:"/simpeg/master/data_source/master-ref-jenjang-jabatan",
                         children : []
