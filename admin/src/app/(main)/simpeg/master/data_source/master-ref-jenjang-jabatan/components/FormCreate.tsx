@@ -11,7 +11,8 @@ interface FormCreateProps {
     setClose: Dispatch<SetStateAction<boolean>>,
     isEdit: boolean,
     form: ResponseInterface,
-    setForm: Dispatch<SetStateAction<ResponseInterface>>
+    setForm: Dispatch<SetStateAction<ResponseInterface>>,
+    emptyForm: () => void
 }
 
 const option = [
@@ -19,7 +20,7 @@ const option = [
     { id: "2", value: "bbb" },
 ]
 
-const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
+const FormAdd = ({ setClose, isEdit, form, setForm, emptyForm }: FormCreateProps) => {
 
     const createMasterAgama = useCreate()
     const updateMasterAgama = useUpdate()
@@ -29,19 +30,6 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
             ...form,
             [key]: String(value)
         })
-    }
-
-    const emptyForm = () => {
-        setForm({
-            id: '',
-            kode: '',
-            nama: '',
-            asn_jenis_jabatan_id: '',
-            level_kompetensi_jabatan: '',
-            created_by: "",
-            created_at: "",
-        })
-        setClose(false)
     }
 
     const submit = () => {
