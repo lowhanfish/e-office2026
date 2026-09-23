@@ -35,8 +35,10 @@ const InputData = () => {
         id: '',
         kode: '',
         nama: '',
-        created_at: "user.id",
-        created_by: "user.id"
+        asn_jenis_jabatan_id: '',
+        level_kompetensi_jabatan: '',
+        created_at: "",
+        created_by: ""
     })
 
     const { List, isLoading, isError, error } = useResponseList(pageSelect, pageLimit, debouncedSearch)
@@ -47,6 +49,8 @@ const InputData = () => {
             id: item.id,
             kode: item.kode,
             nama: item.nama,
+            asn_jenis_jabatan_id: item.asn_jenis_jabatan_id,
+            level_kompetensi_jabatan: item.level_kompetensi_jabatan,
             created_by: item.created_by,
             created_at: item.created_at,
         })
@@ -57,6 +61,8 @@ const InputData = () => {
             id: "",
             kode: "",
             nama: "",
+            asn_jenis_jabatan_id: '',
+            level_kompetensi_jabatan: '',
             created_by: "",
             created_at: "",
         })

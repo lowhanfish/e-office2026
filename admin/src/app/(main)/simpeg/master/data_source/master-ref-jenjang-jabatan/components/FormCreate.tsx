@@ -1,6 +1,8 @@
 import { Dispatch, SetStateAction } from 'react'
 import BButton from '@/components/items/BButton'
 import BInput from '@/components/items/BInput'
+import BInputSelect from '@/components/items/BInputSelect'
+
 
 import { CreateInterface, ResponseInterface, ResponseListInterface } from "../types"
 import { useCreate, useUpdate } from '../hooks/crud';
@@ -11,6 +13,11 @@ interface FormCreateProps {
     form: ResponseInterface,
     setForm: Dispatch<SetStateAction<ResponseInterface>>
 }
+
+const option = [
+    { id: "1", value: "aaa" },
+    { id: "2", value: "bbb" },
+]
 
 const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
 
@@ -29,8 +36,10 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
             id: '',
             kode: '',
             nama: '',
-            created_by: "user.id",
-            created_at: "user.id",
+            asn_jenis_jabatan_id: '',
+            level_kompetensi_jabatan: '',
+            created_by: "",
+            created_at: "",
         })
         setClose(false)
     }
@@ -69,6 +78,28 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
                     value={form.nama}
                     onChange={(value) => {
                         setItemForm('nama', value)
+                    }}
+                />
+            </div>
+
+            <div className='pt-1'>
+                <BInputSelect
+                    title='ASN Jenis Jabatan Id'
+                    options={option}
+                    datavalue={form.id}
+                    onChange={(value) => {
+                        setItemForm('id', value)
+                    }}
+                />
+            </div>
+
+            <div className='pt-1'>
+                <BInputSelect
+                    title='Level Kompetensi Jabatan'
+                    options={option}
+                    datavalue={form.id}
+                    onChange={(value) => {
+                        setItemForm('id', value)
                     }}
                 />
             </div>
