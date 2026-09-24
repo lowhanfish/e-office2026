@@ -22,7 +22,7 @@ async def test():
 
 @router.get("/option", response_model=List[RefLevelKompetensiAsnResponse])
 async def option(
-    search:str,
+    search : str | None = None,
     db : AsyncSession = Depends(get_db)
 ):
     query = select(RefLevelKompetensiAsn)

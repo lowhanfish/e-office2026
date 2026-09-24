@@ -11,6 +11,8 @@ export interface ResponseInterface extends CreateInterface {
   created_at: string;
 }
 
+export type ResponseInterfaceOption = ResponseInterface[];
+
 export interface ResponseListInterface {
   skip: number;
   limit: number;

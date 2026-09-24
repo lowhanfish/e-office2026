@@ -1,11 +1,14 @@
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useState, useEffect } from 'react'
 import BButton from '@/components/items/BButton'
 import BInput from '@/components/items/BInput'
 import BInputSelect from '@/components/items/BInputSelect'
 
-
-import { CreateInterface, ResponseInterface, ResponseListInterface } from "../types"
+import { CreateInterface, ResponseInterface, ResponseListInterface, ResponseInterfaceOption } from "../types"
 import { useCreate, useUpdate } from '../hooks/crud';
+import { useResponseOption as useListRefLevelKompetensi } from '../../master-ref-level-kompetensi-asn/hooks/crud'
+import { apiRestructureOption } from '@/lib/api_restructure_option'
+
+
 
 interface FormCreateProps {
     setClose: Dispatch<SetStateAction<boolean>>,
@@ -31,6 +34,9 @@ const FormAdd = ({ setClose, isEdit, form, setForm, emptyForm }: FormCreateProps
             [key]: String(value)
         })
     }
+    const { List: ListRefLevelKompetensi, isLoading, isError, error } = useListRefLevelKompetensi()
+
+    const [refLevelKompetensi, setRefLevelKompetensi] = useState<ResponseInterface[]>([])
 
     const submit = () => {
         if (isEdit) {
@@ -44,6 +50,15 @@ const FormAdd = ({ setClose, isEdit, form, setForm, emptyForm }: FormCreateProps
             setClose(false)
         }
     }
+
+
+    useEffect(() => {
+        if (ListRefLevelKompetensi) {
+            console.log(ListRefLevelKompetensi)
+            const level = apiRestructureOption(ListRefLevelKompetensi as any)
+            setRefLevelKompetensi(level as any)
+        }
+    }, [ListRefLevelKompetensi])
 
     return (
         <div className='px-5 pb-2'>
@@ -84,7 +99,7 @@ const FormAdd = ({ setClose, isEdit, form, setForm, emptyForm }: FormCreateProps
             <div className='pt-1'>
                 <BInputSelect
                     title='Level Kompetensi Jabatan'
-                    options={option}
+                    options={refLevelKompetensi as any}
                     datavalue={form.id}
                     onChange={(value) => {
                         setItemForm('id', value)

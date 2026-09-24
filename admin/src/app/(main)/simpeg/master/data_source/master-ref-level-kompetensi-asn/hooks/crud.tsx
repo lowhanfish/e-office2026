@@ -7,6 +7,23 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { ResponseListInterface, ResponseInterface } from '../types'
 import { swallAlert, showLoadingAlert } from '@/lib/show_swall';
 
+
+export const useResponseOption = () => {
+    const url = useUrlStore(state => state.URL.APP)
+    const { data, isLoading, isError, error } = useQuery({
+        queryFn: () => fetchData(`
+            ${url}/api/v1/simpeg/master/ref_level_kompetensi_asn/option
+        `),
+        queryKey: ["master-ref-level-kompetensi-asn-option"]
+    })
+    return {
+        List: data,
+        isLoading: isLoading,
+        isError: isError,
+        error: error
+    }
+}
+
 export const useResponseListMaster = (skip: number, limit: number, search: string) => {
     const url = useUrlStore(state => state.URL.APP)
     const { data: List, isLoading, isError, error } = useQuery({
