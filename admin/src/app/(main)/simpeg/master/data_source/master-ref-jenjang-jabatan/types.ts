@@ -9,6 +9,8 @@ export interface CreateInterface {
 export interface ResponseInterface extends CreateInterface {
   created_by: string;
   created_at: string;
+  level_kompetensi_jabatan_uraian?: string;
+  asn_jenis_jabatan_id_uraian?: string;
 }
 
 export type ResponseInterfaceOption = ResponseInterface[];

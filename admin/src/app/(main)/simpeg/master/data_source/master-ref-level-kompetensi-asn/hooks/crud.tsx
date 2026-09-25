@@ -6,6 +6,7 @@ import { useUrlStore } from '@/store/useUrlStore'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { ResponseListInterface, ResponseInterface } from '../types'
 import { swallAlert, showLoadingAlert } from '@/lib/show_swall';
+import { ListOptionSchema } from '@/types/global'
 
 
 export const useResponseOption = () => {
@@ -16,8 +17,18 @@ export const useResponseOption = () => {
         `),
         queryKey: ["master-ref-level-kompetensi-asn-option"]
     })
+
+    let result: ListOptionSchema = []
+    if (data) {
+        result = (data as ResponseInterface[])?.map((item: any) => ({
+            id: item.kode,
+            value: item.nama
+        }))
+    }
+
+
     return {
-        List: data,
+        List: result,
         isLoading: isLoading,
         isError: isError,
         error: error

@@ -37,6 +37,8 @@ const InputData = () => {
         nama: '',
         asn_jenis_jabatan_id: '',
         level_kompetensi_jabatan: '',
+        level_kompetensi_jabatan_uraian: "",
+        asn_jenis_jabatan_id_uraian: "",
         created_at: "",
         created_by: ""
     })
@@ -119,7 +121,9 @@ const InputData = () => {
                                     <th className='w-[5%] text-center'>No</th>
                                     <th className='w-[5%] text-center'>Act</th>
                                     <th className='w-[10%] text-center'>Kode</th>
-                                    <th className='w-[80%]'>Nama</th>
+                                    <th className='w-[30%]'>Nama</th>
+                                    <th className='w-[25%]'>ASN Jenis Jabatan</th>
+                                    <th className='w-[25%]'>Level Kompetensi</th>
                                 </tr>
                             </thead>
 
@@ -138,6 +142,8 @@ const InputData = () => {
                                         </td>
                                         <td className=''><p className='text-center'>{item.kode}</p></td>
                                         <td className=''><p>{item.nama}</p></td>
+                                        <td className=''><p>{item.asn_jenis_jabatan_id_uraian}</p></td>
+                                        <td className=''><p>{item.level_kompetensi_jabatan_uraian}</p></td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -195,7 +201,7 @@ const InputData = () => {
                 </BModal>
 
                 <BModal title={`${isEdit ? 'Edit' : 'Add'} Data`} openModal={modalCreate} setOpenModal={setModalCreate} size='sm'>
-                    <FormCreate setClose={setModalCreate} isEdit={isEdit} form={form} setForm={setForm} />
+                    <FormCreate setClose={setModalCreate} isEdit={isEdit} form={form} setForm={setForm} emptyForm={emptyForm} />
                 </BModal>
             </div>
         </div>

@@ -94,7 +94,7 @@ export const useUpdate = () => {
         mutationFn: ({ body, id }: { body: ResponseInterface, id: string }) => fetchData(
             `${url}/api/v1/simpeg/master/ref_jenjang_jabatan/update/${id}`,
             {
-                method: "PUT",
+                method: "PATCH",
                 body: JSON.stringify(body),
                 headers: {
                     "Content-Type": "application/json"

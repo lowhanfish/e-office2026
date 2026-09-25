@@ -3,11 +3,11 @@ import BButton from '@/components/items/BButton'
 import BInput from '@/components/items/BInput'
 import BInputSelect from '@/components/items/BInputSelect'
 
-import { CreateInterface, ResponseInterface, ResponseListInterface, ResponseInterfaceOption } from "../types"
+import { ResponseInterface } from "../types"
+import { ListOptionSchema } from '@/types/global'
 import { useCreate, useUpdate } from '../hooks/crud';
 import { useResponseOption as useListRefLevelKompetensi } from '../../master-ref-level-kompetensi-asn/hooks/crud'
-import { apiRestructureOption } from '@/lib/api_restructure_option'
-
+import { useOptionMaster as useListRefAsnJenisJabatan } from '../../master-ref-asn-jenis-jabatan/hooks/crud'
 
 
 interface FormCreateProps {
@@ -17,11 +17,6 @@ interface FormCreateProps {
     setForm: Dispatch<SetStateAction<ResponseInterface>>,
     emptyForm: () => void
 }
-
-const option = [
-    { id: "1", value: "aaa" },
-    { id: "2", value: "bbb" },
-]
 
 const FormAdd = ({ setClose, isEdit, form, setForm, emptyForm }: FormCreateProps) => {
 
@@ -34,9 +29,8 @@ const FormAdd = ({ setClose, isEdit, form, setForm, emptyForm }: FormCreateProps
             [key]: String(value)
         })
     }
-    const { List: ListRefLevelKompetensi, isLoading, isError, error } = useListRefLevelKompetensi()
-
-    const [refLevelKompetensi, setRefLevelKompetensi] = useState<ResponseInterface[]>([])
+    const { List: ListRefLevelKompetensi } = useListRefLevelKompetensi();
+    const { List: ListRefAsnJenisJabatan } = useListRefAsnJenisJabatan();
 
     const submit = () => {
         if (isEdit) {
@@ -50,15 +44,6 @@ const FormAdd = ({ setClose, isEdit, form, setForm, emptyForm }: FormCreateProps
             setClose(false)
         }
     }
-
-
-    useEffect(() => {
-        if (ListRefLevelKompetensi) {
-            console.log(ListRefLevelKompetensi)
-            const level = apiRestructureOption(ListRefLevelKompetensi as any)
-            setRefLevelKompetensi(level as any)
-        }
-    }, [ListRefLevelKompetensi])
 
     return (
         <div className='px-5 pb-2'>
@@ -88,10 +73,10 @@ const FormAdd = ({ setClose, isEdit, form, setForm, emptyForm }: FormCreateProps
             <div className='pt-1'>
                 <BInputSelect
                     title='ASN Jenis Jabatan Id'
-                    options={option}
-                    datavalue={form.id}
+                    options={ListRefAsnJenisJabatan as ListOptionSchema}
+                    datavalue={form.asn_jenis_jabatan_id}
                     onChange={(value) => {
-                        setItemForm('id', value)
+                        setItemForm('asn_jenis_jabatan_id', value)
                     }}
                 />
             </div>
@@ -99,10 +84,11 @@ const FormAdd = ({ setClose, isEdit, form, setForm, emptyForm }: FormCreateProps
             <div className='pt-1'>
                 <BInputSelect
                     title='Level Kompetensi Jabatan'
-                    options={refLevelKompetensi as any}
-                    datavalue={form.id}
+                    options={ListRefLevelKompetensi as ListOptionSchema}
+                    datavalue={form.level_kompetensi_jabatan}
                     onChange={(value) => {
-                        setItemForm('id', value)
+                        console.log(value)
+                        setItemForm('level_kompetensi_jabatan', value)
                     }}
                 />
             </div>

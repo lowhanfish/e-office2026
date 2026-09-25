@@ -210,7 +210,6 @@ class RefJenjangJabatan(Base): #Fungsional tertentu dan Struktural
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     kode = Column(String(2), index=True, nullable=False)
     nama = Column(String(100), nullable=False)
-    kode_cepat = Column(String(2), unique=True, nullable=False)
     asn_jenis_jabatan_id = Column(String(2), nullable=False)
     level_kompetensi_jabatan = Column(String(2), nullable=False)
     created_by = Column(String(50), index=True, nullable=False)

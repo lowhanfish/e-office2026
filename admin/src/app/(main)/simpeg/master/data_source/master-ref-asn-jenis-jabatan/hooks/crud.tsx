@@ -4,11 +4,32 @@ import React from 'react'
 import { fetchData } from '@/lib/api_secure'
 import { useUrlStore } from '@/store/useUrlStore'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { ResponseListInterface, ResponseInterface } from '../types'
+import { ResponseListInterface, ResponseInterface, OptionInterfaceList } from '../types'
 import { swallAlert, showLoadingAlert } from '@/lib/show_swall';
 
 export const useOptionMaster = () => {
+    const url = useUrlStore(state => state.URL.APP)
+    const { data, isLoading, isError, error } = useQuery({
+        queryFn: () => fetchData(
+            `${url}/api/v1/simpeg/master/ref_asn_jenis_jabatan/option`
+        ),
+        queryKey: ["master-ref-asn-jenis-jabatan-option"]
+    })
 
+    let RestructureData: OptionInterfaceList = []
+    if (data) {
+        RestructureData = (data as OptionInterfaceList).map((item: any) => ({
+            id: item.kode,
+            value: item.nama,
+        }))
+    }
+
+    return {
+        List: RestructureData,
+        isLoading: isLoading,
+        isError: isError,
+        error: error
+    }
 }
 
 export const useResponseListMaster = (skip: number, limit: number, search: string) => {

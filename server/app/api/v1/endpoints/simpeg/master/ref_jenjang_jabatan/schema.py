@@ -1,12 +1,13 @@
 from app.schemas.simpeg.master.base_schema import MasterCreate, MasterResponse
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 
 
 class RefJenjangResponse(MasterResponse):
-    kode_cepat : str
     asn_jenis_jabatan_id : str
     level_kompetensi_jabatan : str
+    level_kompetensi_jabatan_uraian : Optional[str] | None = None
+    asn_jenis_jabatan_id_uraian : Optional[str] | None = None
 
 class RefJenjangResponseList(BaseModel):
     skip : int
@@ -16,6 +17,5 @@ class RefJenjangResponseList(BaseModel):
 
 
 class RefJenjangCreate(MasterCreate):
-    kode_cepat : str
     asn_jenis_jabatan_id : str
     level_kompetensi_jabatan : str

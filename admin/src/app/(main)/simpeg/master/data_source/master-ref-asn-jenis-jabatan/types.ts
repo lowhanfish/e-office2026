@@ -1,3 +1,10 @@
+export interface OptionInterface {
+  id: string;
+  value: string;
+}
+
+export type OptionInterfaceList = OptionInterface[];
+
 export interface CreateInterface {
   id: string;
   kode: string;

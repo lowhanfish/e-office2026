@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from .schema import RefJenjangCreate, RefJenjangResponse, RefJenjangResponseList
-from app.models.simpeg.master.models import RefJenjangJabatan
+from app.models.simpeg.master.models import RefJenjangJabatan, RefLevelKompetensiAsn, RefAsnJenisJabatan
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import func
@@ -35,7 +35,14 @@ async def read_ref_jenjang_jabatan(
     skip : int = 0,
     limit : int = 100
 ):
-    query = select(RefJenjangJabatan)
+    query = select(
+        *RefJenjangJabatan.__table__.c,
+        RefLevelKompetensiAsn.nama.label("level_kompetensi_jabatan_uraian"),
+        RefAsnJenisJabatan.nama.label("asn_jenis_jabatan_id_uraian"),
+    )
+    query = query.join(RefLevelKompetensiAsn, RefLevelKompetensiAsn.kode == RefJenjangJabatan.level_kompetensi_jabatan)
+    query = query.join(RefAsnJenisJabatan, RefAsnJenisJabatan.kode == RefJenjangJabatan.asn_jenis_jabatan_id)
+    
     if search:
         query = query.where(RefJenjangJabatan.nama.ilike(f"%{search}%"))
 
@@ -46,7 +53,8 @@ async def read_ref_jenjang_jabatan(
     query = query.order_by(RefJenjangJabatan.created_at).offset(skip).limit(limit)
 
     result = await db.execute(query)
-    data = result.scalars().all()
+    # data = result.scalars().all()
+    data = result.mappings().all()
 
     return {
         "skip" : skip,
