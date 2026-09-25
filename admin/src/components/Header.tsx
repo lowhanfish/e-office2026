@@ -1,36 +1,29 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useSyncExternalStore } from 'react'
 import { FaList } from 'react-icons/fa';
 import { useTheme } from "next-themes"
 import Image from 'next/image';
-import { useUrlStore } from '@/store/useUrlStore';
 import { useStorex } from '@/store/useStorex';
+
+const emptySubscribe = () => () => undefined
 
 const Header = () => {
     // Zustand
-    const isSideBarOpen = useStorex(state => state.isSideBarOpen)
     const togleIsSideBarOpen = useStorex(state => state.setIsSideBarOpen)
 
     // Themes
-    const { theme, setTheme } = useTheme()
-    const [mounted, setMounted] = useState(false)
-
-    // 1. Pastikan komponen sudah "menempel" di browser
-    useEffect(() => {
-        setMounted(true)
-    }, [])
+    const { resolvedTheme, setTheme } = useTheme()
+    const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false)
 
     // 2. Cegah rendering sebelum mounted untuk menghindari error Hydration
     if (!mounted) {
         return <div className="h-15 w-full bg-b-gray-1"></div> // Placeholder kerangka (skeleton)
     }
 
-    const changeTheme = () => {
-        setTheme(theme === "light" ? "dark" : "light")
-    }
-
-    // Variabel pembantu agar kode di bawah lebih bersih
-    const isDark = theme === "dark"
+    // `resolvedTheme` sudah menerjemahkan tema `system` menjadi light/dark
+    // sesuai Appearance browser/OS yang sedang aktif.
+    const isDark = resolvedTheme === "dark"
+    const changeTheme = () => setTheme(isDark ? "light" : "dark")
 
     return (
         <div className='w-full'>
@@ -57,9 +50,15 @@ const Header = () => {
                 </div>
 
                 <div className='md:flex-1 flex justify-end px-5 gap-2'>
-                    <div onClick={changeTheme} className='md:flex hidden cursor-pointer justify-center items-center h-8 w-8 bg-b-gray-3/90 hover:bg-b-gray-3/70 rounded-full'>
-                        <span className='text-b-gray-6'>{isDark ? '☀️' : '🌙'}</span>
-                    </div>
+                    <button
+                        type="button"
+                        onClick={changeTheme}
+                        aria-label={`Ubah ke mode ${isDark ? 'terang' : 'gelap'}`}
+                        title={`Ubah ke mode ${isDark ? 'terang' : 'gelap'}`}
+                        className='md:flex hidden cursor-pointer justify-center items-center h-8 w-8 bg-b-gray-3/90 hover:bg-b-gray-3/70 rounded-full'
+                    >
+                        <span className='text-b-gray-6'>{isDark ? '🌙' : '☀️'}</span>
+                    </button>
 
                     <div className='md:flex hidden cursor-pointer justify-center items-center h-8 w-8 bg-b-gray-2/90 hover:bg-b-gray-3/70 rounded-full'>
                         <span className='text-b-gray-6'>🛎️</span>
