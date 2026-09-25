@@ -26,7 +26,7 @@ async def test(
         query = query.where(RefJenjangJabatan.nama.ilike(f"%{search}%"))
     result = await db.execute(query)
     return result.scalars().all()
-   
+
 
 @router.get("/read", response_model=RefJenjangResponseList)
 async def read_ref_jenjang_jabatan(
@@ -80,7 +80,6 @@ async def create_ref_jenjang_jabatan(
     await db.refresh(query)
     return query
 
-    
 @router.patch("/update/{id}", response_model=RefJenjangResponse)
 async def update_ref_jenjang_jabatan(
     id:str,

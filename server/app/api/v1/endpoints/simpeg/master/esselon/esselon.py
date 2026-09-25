@@ -1,7 +1,7 @@
 from app.db.transaction import commit_or_raise_unique_conflict
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
+from sqlalchemy import func, select
 from app.db.session import get_db
 from .schema import EsselonCreate, EsselonResponse, EsselonResponseList, EsselonUpdate
 from app.models.simpeg.master.models import Esselon, User # <--- Tambah import User jika dibutuhkan type-hint
@@ -10,9 +10,12 @@ from typing import List
 
 router = APIRouter()
 @router.get("/read", response_model=EsselonResponseList)
+# @router.get("/read")
 async def read_esselon(
-    db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user) # <--- DIKUNCI
+    skip : int = 0,
+    limit : int = 100,
+    search : str | None = None,
+    db: AsyncSession = Depends(get_db)
 ):
     
     """
@@ -29,6 +32,25 @@ async def read_esselon(
     """
 
     query = select(Esselon)
+
+    if(search):
+        query = query.where(Esselon.nama.ilike(f"%{search}%"))
+
+    query_total = select(func.count()).select_from(query.subquery())
+    result_total = await db.execute(query_total)
+    total = result_total.scalar_one_or_none()
+
+    result = await db.execute(query)
+    data = result.scalars().all()
+
+    # return data
+    
+    return {
+        "skip" : skip,
+        "limit" : limit,
+        "total" : total,
+        "data": data
+    }
 
 
 @router.post("/create", response_model=EsselonResponse) # Ubah response_model ke EsselonResponse agar id & created_at ikut tampil

@@ -11,7 +11,7 @@ class EsselonResponseList(BaseModel):
     skip : int
     limit : int
     total : int
-    data : List[EsselonResponse]
+    data : List[EsselonResponse] = []
 
 
 class EsselonCreate(MasterCreate):

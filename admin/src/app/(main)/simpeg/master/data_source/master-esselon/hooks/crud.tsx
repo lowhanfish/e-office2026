@@ -20,7 +20,7 @@ export const useResponseList = (skip: number, limit: number, search: string) => 
     const url = useUrlStore(state => state.URL.APP)
     const { data: List, isLoading, isError, error } = useQuery({
         queryFn: () => fetchData<ResponseListInterface>(
-            `${url}/api/v1/simpeg/master/esselon/?skip=${(skip - 1) * limit}&limit=${limit}&search=${search}`
+            `${url}/api/v1/simpeg/master/esselon/read?skip=${(skip - 1) * limit}&limit=${limit}&search=${search}`
         ),
         queryKey: ["master-esselon", skip, limit, search]
     })
