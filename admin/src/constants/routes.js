@@ -131,6 +131,11 @@ const routex = [
                 path:"/",
                 children : [
                     {
+                        title : "Master Jenis Riwayat",
+                        path:"/simpeg/master/data_source/master-jenis-riwayat",
+                        children : []
+                    },
+                    {
                         title : "Master Jenis Pegawai",
                         path:"/simpeg/master/data_source/master-jenis-pegawai",
                         children : []
