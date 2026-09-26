@@ -206,6 +206,11 @@ const routex = [
                         children : []
                     },
                     {
+                        title : "Master Referensi Jenis Jabatan Umum",
+                        path:"/simpeg/master/data_source/master-jenis-jabatan-umum",
+                        children : []
+                    },
+                    {
                         title : "Master Golongan",
                         path:"/simpeg/master/data_source/master-golongan",
                         children : []

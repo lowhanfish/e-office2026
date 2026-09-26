@@ -133,7 +133,19 @@ class JenisJabatan(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     # Relationship
-    ref_kel_jabatan = relationship("KelJabatan", back_populates="ref_jns_jabatan_rel")
+    # ref_kel_jabatan = relationship("KelJabatan", back_populates="ref_jns_jabatan_rel")
+
+
+
+class RefJnsJabatanUmum(Base):
+    __tablename__ = "ref_jns_jabatan_umum"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(2), index=True, nullable=False, unique=True)
+    nama = Column(String(100), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    ref_kel_jabatan = relationship("KelJabatan", back_populates="ref_jns_jabatan_umum_rel")
 
 
 class KelJabatan(Base):
@@ -141,14 +153,14 @@ class KelJabatan(Base):
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     kode = Column(CHAR(50), index=True, nullable=False, unique=True)
     nama = Column(String(50), nullable=False)
-    ref_jns_jabatan_id = Column(String(50), ForeignKey("ref_jns_jabatan.kode"),index=True, nullable=False, comment="dari kolom kode tabel ref_jns_jabatan")
+    ref_jns_jabatan_id = Column(String(2), ForeignKey("ref_jns_jabatan_umum.kode"),index=True, nullable=False, comment="dari kolom kode tabel ref_jns_jabatan_umum")
     ref_rumpun_jabatan_id = Column(String(50), ForeignKey("ref_rumpun_jabatan.kode"),index=True, nullable=False, comment="dari kolom kode tabel ref_rumpun_jabatan")
     pembina_id = Column(String(50), index=True, nullable=False)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     # Relationship
-    ref_jns_jabatan_rel = relationship("JenisJabatan", back_populates="ref_kel_jabatan")
+    ref_jns_jabatan_umum_rel = relationship("RefJnsJabatanUmum", back_populates="ref_kel_jabatan")
     ref_rumpun_jabatan_rel = relationship("RumpunJabatan", back_populates="ref_kel_jabatan")
     ref_jabatan_fungsional = relationship("RefJabatanFungsional", back_populates="ref_kel_jabatan_rel")
 
