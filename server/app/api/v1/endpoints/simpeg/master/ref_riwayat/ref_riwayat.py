@@ -1,18 +1,23 @@
 from app.db.transaction import commit_or_raise_unique_conflict
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
+from sqlalchemy import select, func
 from app.db.session import get_db
 from app.api.deps import get_current_user
 from app.models.simpeg.master.models import RefRiwayat
-from .schema import RiwayatResponse, RiwayatCreate, RiwayatUpdate
+from .schema import RiwayatResponse, RiwayatCreate, RiwayatUpdate, RiwayatResponseList
 from typing import List
 
 
 router = APIRouter()
 
-@router.post("/read", response_model=List[RiwayatResponse])
-async def read_riwayat(db: AsyncSession = Depends(get_db)):
+@router.get("/read", response_model=RiwayatResponseList)
+async def read_riwayat(
+    skip : int = 0,
+    limit : int = 100,
+    search : str | None = None,
+    db: AsyncSession = Depends(get_db)
+):
 
     """
     ## Mengambil semua List Ref Jenis Riwayat
@@ -28,11 +33,29 @@ async def read_riwayat(db: AsyncSession = Depends(get_db)):
     """
 
     query = select(RefRiwayat)
+
+    if search:
+        query = query.where(RefRiwayat.nama.ilike(f"%{search}%"))
+
+    query_total = select(func.count()).select_from(query.subquery())
+    result_total = await db.execute(query_total)
+    total = result_total.scalar_one_or_none()
+
+
+    query = query.order_by(RefRiwayat.kode.desc()).offset(skip).limit(limit)
+
     result = await db.execute(query)
-    return result.scalars().all()
+    data =  result.scalars().all()
+
+    return {
+        "skip" : skip, 
+        "limit" : limit, 
+        "total" : total, 
+        "data" : data, 
+    }
 
 @router.post("/create", response_model= RiwayatResponse)
-async def read_riwayat(payload: RiwayatCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
+async def create_riwayat(payload: RiwayatCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
     
     """
     ## Membuat Ref Ref Jenis Riwayat
@@ -58,8 +81,8 @@ async def read_riwayat(payload: RiwayatCreate, db: AsyncSession = Depends(get_db
 
 
 
-@router.post("/update/{id}", response_model= RiwayatResponse)
-async def read_riwayat(id : str, payload: RiwayatUpdate, db: AsyncSession = Depends(get_db)):
+@router.patch("/update/{id}", response_model= RiwayatResponse)
+async def update_riwayat(id : str, payload: RiwayatUpdate, db: AsyncSession = Depends(get_db)):
     
     """
     ## Mengubah Ref Jenis Riwayat
@@ -95,8 +118,8 @@ async def read_riwayat(id : str, payload: RiwayatUpdate, db: AsyncSession = Depe
 
 
 
-@router.post("/delete/{id}")
-async def read_riwayat(id : str, db: AsyncSession = Depends(get_db)):
+@router.delete("/delete/{id}")
+async def delete_riwayat(id : str, db: AsyncSession = Depends(get_db)):
 
     """
     ## Menghapus Ref Jenis Riwayat

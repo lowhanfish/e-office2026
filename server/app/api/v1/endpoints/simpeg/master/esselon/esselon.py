@@ -40,6 +40,8 @@ async def read_esselon(
     result_total = await db.execute(query_total)
     total = result_total.scalar_one_or_none()
 
+    query = query.order_by(Esselon.kode.desc()).offset(skip).limit(limit)
+
     result = await db.execute(query)
     data = result.scalars().all()
 
