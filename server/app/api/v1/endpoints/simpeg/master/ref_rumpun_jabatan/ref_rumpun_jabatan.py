@@ -1,18 +1,23 @@
 from app.db.transaction import commit_or_raise_unique_conflict
 from fastapi import APIRouter, Depends, HTTPException
-from .schema import ResponseRumpunJabatan, CreateRumpunJabatan, UpdateRumpunJabatan
+from .schema import ResponseRumpunJabatan, CreateRumpunJabatan, UpdateRumpunJabatan, ResponseRumpunJabatanList
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
 from app.api.deps import get_current_user
 from typing import List
-from sqlalchemy.future import select
+from sqlalchemy import select, func
 from app.models.simpeg.master.models import RumpunJabatan
 
 
 router = APIRouter()
 
-@router.get("/read", response_model=List[ResponseRumpunJabatan])
-async def read_RumpunJabatan(db : AsyncSession = Depends(get_db)):
+@router.get("/read", response_model=ResponseRumpunJabatanList)
+async def read_RumpunJabatan(
+    skip : int = 0,
+    limit : int = 100,
+    search : str | None = None,
+    db : AsyncSession = Depends(get_db)
+):
 
     """
     ## Mengambil semua List Rumpun Jabatan
@@ -29,8 +34,23 @@ async def read_RumpunJabatan(db : AsyncSession = Depends(get_db)):
 
 
     query = select(RumpunJabatan)
+    if search:
+        query = query.where(RumpunJabatan.nama.ilike(f"%{search}%"))
+
+    query_total = select(func.count()).select_from(query.subquery())
+    query_result = await db.execute(query_total)
+    total = query_result.scalar_one_or_none()
+
+    query = query.order_by(RumpunJabatan.created_at).offset(skip).limit(limit)
     result = await db.execute(query)
-    return result.scalars().all()
+    data = result.scalars().all()
+
+    return {
+        "skip" : skip,
+        "limit" : limit,
+        "total" : total,
+        "data" : data
+    }
 
 @router.post("/create", response_model=ResponseRumpunJabatan)
 async def read_RumpunJabatan(payload: CreateRumpunJabatan, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
@@ -60,7 +80,7 @@ async def read_RumpunJabatan(payload: CreateRumpunJabatan, db: AsyncSession = De
     return new_data
 
 
-@router.put("/update/{id}", response_model=ResponseRumpunJabatan)
+@router.patch("/update/{id}", response_model=ResponseRumpunJabatan)
 async def read_RumpunJabatan(id:str, payload : UpdateRumpunJabatan, db: AsyncSession = Depends(get_db)):
     """
     ## Mengubah Rumpun Jabatan
