@@ -9,19 +9,19 @@ import { swallAlert, showLoadingAlert } from '@/lib/show_swall';
 import { ListOptionSchema } from '@/types/global'
 
 
-export const useResponseOption = (search: string) => {
+export const useResponseOption = () => {
     const url = useUrlStore(state => state.URL.APP)
     const { data, isLoading, isError, error } = useQuery({
         queryFn: () => fetchData(`
-            ${url}/api/v1/simpeg/master/ref_rumpun_jabatan/option?skip=0&limit=100&search=${search}
+            ${url}/api/v1/simpeg/master/ref_rumpun_jabatan_jf/option
         `),
-        queryKey: ["master-ref-rumpun-jabatan-option", search]
+        queryKey: ["master-ref-rumpun-jabatan-jf-option"]
     })
 
     let result: ListOptionSchema = []
     if (data) {
         result = (data as ResponseInterface[])?.map((item: any) => ({
-            id: item.kode_cepat,
+            id: item.kode,
             value: item.nama
         }))
     }
@@ -39,9 +39,9 @@ export const useResponseListMaster = (skip: number, limit: number, search: strin
     const url = useUrlStore(state => state.URL.APP)
     const { data: List, isLoading, isError, error } = useQuery({
         queryFn: () => fetchData<ResponseListInterface>(
-            `${url}/api/v1/simpeg/master/ref_rumpun_jabatan/read/?skip=${(skip - 1) * limit}&limit=${limit}&search=${search}`
+            `${url}/api/v1/simpeg/master/ref_rumpun_jabatan_jf/read/?skip=${(skip - 1) * limit}&limit=${limit}&search=${search}`
         ),
-        queryKey: ["master-ref-rumpun-jabatan", skip, limit, search]
+        queryKey: ["master-ref-rumpun-jabatan-jf", skip, limit, search]
     })
     return { List, isLoading, isError, error }
 }
@@ -52,14 +52,14 @@ export const useDeleteMaster = () => {
     const queryClient = useQueryClient()
     const deleteMutation = useMutation({
         mutationFn: (id: string) => fetchData(
-            `${url}/api/v1/simpeg/master/ref_rumpun_jabatan/delete/${id}`,
+            `${url}/api/v1/simpeg/master/ref_rumpun_jabatan_jf/delete/${id}`,
             {
                 method: "DELETE"
             }
         ),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ["master-ref-rumpun-jabatan"]
+                queryKey: ["master-ref-rumpun-jabatan-jf"]
             })
             swallAlert("sukses dihapus", "success")
         },
@@ -81,7 +81,7 @@ export const useCreateMaster = () => {
 
     const createMutation = useMutation({
         mutationFn: (body: ResponseInterface) => fetchData(
-            `${url}/api/v1/simpeg/master/ref_rumpun_jabatan/create`,
+            `${url}/api/v1/simpeg/master/ref_rumpun_jabatan_jf/create`,
             {
                 method: "POST",
                 body: JSON.stringify(body),
@@ -92,7 +92,7 @@ export const useCreateMaster = () => {
         ),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ["master-ref-rumpun-jabatan"]
+                queryKey: ["master-ref-rumpun-jabatan-jf"]
             });
             swallAlert("sukses ditambahkan", "success")
         },
@@ -111,7 +111,7 @@ export const useUpdateMaster = () => {
 
     const updateMutation = useMutation({
         mutationFn: ({ body, id }: { body: ResponseInterface, id: string }) => fetchData(
-            `${url}/api/v1/simpeg/master/ref_rumpun_jabatan/update/${id}`,
+            `${url}/api/v1/simpeg/master/ref_rumpun_jabatan_jf/update/${id}`,
             {
                 method: "PATCH",
                 body: JSON.stringify(body),
@@ -121,7 +121,7 @@ export const useUpdateMaster = () => {
             }
         ),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["master-ref-rumpun-jabatan"] })
+            queryClient.invalidateQueries({ queryKey: ["master-ref-rumpun-jabatan-jf"] })
             swallAlert("sukses diubah", "success")
         },
         onError: (err: any) => {

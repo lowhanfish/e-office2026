@@ -35,7 +35,7 @@ const InputData = () => {
         id: '',
         kode: '',
         nama: '',
-        kode_cepat: '',
+        kode_rumpun: '',
         created_at: "user.id",
         created_by: "user.id"
     })
@@ -48,7 +48,7 @@ const InputData = () => {
             id: item.id,
             kode: item.kode,
             nama: item.nama,
-            kode_cepat: item.kode_cepat,
+            kode_rumpun: item.kode_rumpun,
             created_by: item.created_by,
             created_at: item.created_at,
         })
@@ -59,7 +59,6 @@ const InputData = () => {
             id: "",
             kode: "",
             nama: "",
-            kode_cepat: "",
             created_by: "",
             created_at: "",
         })
@@ -71,7 +70,7 @@ const InputData = () => {
 
     return (
         <div>
-            <TextSeparate title='Master Referensi Rumpun Jabatan' />
+            <TextSeparate title='Master Referensi Rumpun Jabatan JF' />
             <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
                 <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-1 w-full'>
                     <div className='col-span-6 '>
@@ -115,9 +114,9 @@ const InputData = () => {
                                 <tr className="text-left">
                                     <th className='w-[5%] text-center'>No</th>
                                     <th className='w-[5%] text-center'>Act</th>
-                                    <th className='w-[25%] text-center'>Kode</th>
-                                    <th className='w-[15%] text-center'>Kode Cepat</th>
-                                    <th className='w-[50%]'>Nama</th>
+                                    <th className='w-[15%] text-center'>Kode</th>
+                                    <th className='w-[50%]'>Rumpun-JF</th>
+                                    <th className='w-[25%] text-center'>Rumpun</th>
                                 </tr>
                             </thead>
 
@@ -135,8 +134,21 @@ const InputData = () => {
                                             </div>
                                         </td>
                                         <td className=''><p className=''>{item.kode}</p></td>
-                                        <td className=''><p className='text-center'>{item.kode_cepat}</p></td>
                                         <td className=''><p>{item.nama}</p></td>
+                                        <td className=''>
+                                            {
+                                                item?.kode_rumpun ? (
+                                                    // <p className='text-left'>[{item.kode_rumpun}]. {item.nama_rumpun}</p>
+                                                    <div className='flex'>
+                                                        <p className='w-7'>[{item.kode_rumpun}]</p>
+                                                        <p>-</p>
+                                                        <p className='pl-1'>{item.nama_rumpun}</p>
+                                                    </div>
+                                                ) : (
+                                                    <p className='text-center'>-</p>
+                                                )
+                                            }
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>

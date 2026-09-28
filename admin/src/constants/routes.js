@@ -216,6 +216,11 @@ const routex = [
                         children : []
                     },
                     {
+                        title : "Master Referensi Rumpun Jabatan JF",
+                        path:"/simpeg/master/data_source/master-ref-rumpun-jabatan-jf",
+                        children : []
+                    },
+                    {
                         title : "Master Golongan",
                         path:"/simpeg/master/data_source/master-golongan",
                         children : []

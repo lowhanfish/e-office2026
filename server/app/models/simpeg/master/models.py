@@ -119,7 +119,7 @@ class RumpunJabatanJF(Base):
     __tablename__ = "ref_rumpun_jabatan_jf"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     kode = Column(String(50), index=True, nullable=False, unique=True)
-    kode_rumpun = Column(CHAR(3), index=True, nullable=True)
+    kode_rumpun = Column(CHAR(3), index=True, nullable=True, comment="di ambil dari kode_cepat tabel ref_rumpun_jabatan")
     nama = Column(String(250), nullable=False)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())

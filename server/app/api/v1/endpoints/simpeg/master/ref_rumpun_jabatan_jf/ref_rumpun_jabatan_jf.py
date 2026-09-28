@@ -1,18 +1,23 @@
 from app.db.transaction import commit_or_raise_unique_conflict
 from fastapi import APIRouter, Depends, HTTPException
-from .schema import CreateRumpunJabatanJF, ResponseRumpunJabatanJF, UpdateRumpunJabatanJF
+from .schema import CreateRumpunJabatanJF, ResponseRumpunJabatanJF, UpdateRumpunJabatanJF, ResponseRumpunJabatanJFList
 from typing import List
 from app.db.session import get_db
 from app.api.deps import get_current_user
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
-from app.models.simpeg.master.models import RumpunJabatanJF
+from sqlalchemy import select, func
+from app.models.simpeg.master.models import RumpunJabatanJF, RumpunJabatan
 
 router = APIRouter()
 
 
-@router.get("/read", response_model=List[ResponseRumpunJabatanJF])
-async def read_RumpunJabatanJF(db: AsyncSession = Depends(get_db)):
+@router.get("/read", response_model=ResponseRumpunJabatanJFList)
+async def read_RumpunJabatanJF(
+    skip : int = 0,
+    limit: int = 100,
+    search : str | None = None,
+    db: AsyncSession = Depends(get_db)
+):
 
     """
     ## Mengambil semua List Rumpun Jabatan JF
@@ -27,9 +32,32 @@ async def read_RumpunJabatanJF(db: AsyncSession = Depends(get_db)):
     - `422`: Jika format input tidak sesuai skema.
     """
 
-    query = select(RumpunJabatanJF)
+    query = select(
+        *RumpunJabatanJF.__table__.c,
+        RumpunJabatan.kode.label("kode_utama_rumpun"),
+        RumpunJabatan.nama.label("nama_rumpun")
+    )
+
+    query = query.outerjoin(RumpunJabatan, RumpunJabatan.kode_cepat == RumpunJabatanJF.kode_rumpun)
+
+    if search:
+        query = query.where(RumpunJabatanJF.nama.ilike(f"%{search}%"))
+
+    query_total = select(func.count()).select_from(query.subquery())
+    result_total = await db.execute(query_total)
+    total = result_total.scalar_one_or_none()
+
+    query = query.order_by(RumpunJabatanJF.created_at.desc()).offset(skip).limit(limit)
+
     result = await db.execute(query)
-    return result.scalars().all()
+    data =  result.mappings().all()
+
+    return {
+        "skip" : skip,
+        "limit" : limit,
+        "total" : total,
+        "data" : data
+    }
 
 @router.post("/create", response_model=ResponseRumpunJabatanJF)
 async def create_RumpunJabatanJF(payload: CreateRumpunJabatanJF, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
@@ -57,7 +85,7 @@ async def create_RumpunJabatanJF(payload: CreateRumpunJabatanJF, db: AsyncSessio
     await db.refresh(new_data)
     return new_data
 
-@router.put("/update/{id}")
+@router.patch("/update/{id}")
 async def update_RumpunJabatanJF(id:str, payload: UpdateRumpunJabatanJF, db:AsyncSession = Depends(get_db)):
     
     """

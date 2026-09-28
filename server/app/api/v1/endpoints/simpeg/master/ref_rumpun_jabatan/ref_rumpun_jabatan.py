@@ -8,8 +8,24 @@ from typing import List
 from sqlalchemy import select, func
 from app.models.simpeg.master.models import RumpunJabatan
 
-
 router = APIRouter()
+
+@router.get("/option")
+async def option__RumpunJabatan(
+    skip : int = 0,
+    limit : int = 100,
+    search : str | None = None,
+    db : AsyncSession = Depends(get_db)
+):
+    query = select(RumpunJabatan)
+    if search:
+        query = query.where(RumpunJabatan.nama.ilike(f"%{search}%"))
+
+    query = query.order_by(RumpunJabatan.created_at).offset(skip).limit(limit)
+
+    result = await db.execute(query)
+    return result.scalars().all()
+    
 
 @router.get("/read", response_model=ResponseRumpunJabatanList)
 async def read_RumpunJabatan(
@@ -42,6 +58,7 @@ async def read_RumpunJabatan(
     total = query_result.scalar_one_or_none()
 
     query = query.order_by(RumpunJabatan.created_at).offset(skip).limit(limit)
+    
     result = await db.execute(query)
     data = result.scalars().all()
 
