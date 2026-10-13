@@ -2,21 +2,21 @@ import { Dispatch, SetStateAction } from 'react'
 import BButton from '@/components/items/BButton'
 import BInput from '@/components/items/BInput'
 import { useUrlStore } from '@/store/useUrlStore'
-import { MasterJnsLokasiItem } from "../types"
+import { MasterResponse } from "../types"
 import { useMasterJnsLokasiCreate } from '../hooks'
 
 interface FormCreateProps {
     setClose: Dispatch<SetStateAction<boolean>>,
     isEdit: boolean,
-    form: MasterJnsLokasiItem,
-    setForm: Dispatch<SetStateAction<MasterJnsLokasiItem>>
+    form: MasterResponse,
+    setForm: Dispatch<SetStateAction<MasterResponse>>
 }
 
 const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
 
     const url = useUrlStore(state => state.URL.APP)
     const { mutate } = useMasterJnsLokasiCreate()
-    const setItemForm = (key: keyof MasterJnsLokasiItem, value: string | number) => {
+    const setItemForm = (key: keyof MasterResponse, value: string | number) => {
         setForm({
             ...form,
             [key]: String(value)
@@ -36,13 +36,13 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
     const submit = () => {
         if (isEdit) {
             mutate({
-                url: `${url}/api/v1/simpeg/master/ref_jns_lokasi/update/${form.id}`,
+                url: `${url}/api/v1/simpeg/master/ref_jns_jabatan/update/${form.id}`,
                 method: 'PUT',
                 form: form
             })
         } else {
             mutate({
-                url: `${url}/api/v1/simpeg/master/ref_jns_lokasi/create`,
+                url: `${url}/api/v1/simpeg/master/ref_jns_jabatan/create`,
                 method: 'POST',
                 form: form
             })
@@ -53,8 +53,8 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
         <div className='px-5 pb-2'>
             <div className='pt-1'>
                 <BInput
-                    title='Kode Jenis Lokasi (Id pada SIASN)'
-                    placeholder='Kode Jenis Lokasi'
+                    title='Kode Jenis Jabatan (Id pada SIASN)'
+                    placeholder='Kode Jenis Jabatan'
                     type='text'
                     value={form.kode}
                     onChange={(value) => {
@@ -64,8 +64,8 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
             </div>
             <div className='pt-1'>
                 <BInput
-                    title='Nama Jenis Lokasi'
-                    placeholder='Nama Jenis Lokasi'
+                    title='Nama Jenis Jabatan'
+                    placeholder='Nama Jenis Jabatan'
                     type='text'
                     value={form.nama}
                     onChange={(value) => {

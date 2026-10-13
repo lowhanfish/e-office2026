@@ -1,17 +1,23 @@
 from app.db.transaction import commit_or_raise_unique_conflict
 from fastapi import APIRouter, HTTPException, Depends
-from .schema import JenisJabatanCreate, JenisJabatanResponse, JenisJabatanUpdate
+from .schema import JenisJabatanCreate, JenisJabatanResponse, JenisJabatanUpdate, JenisJabatanResponseList
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
 from app.api.deps import get_current_user
 from app.models.simpeg.master.models import JenisJabatan
-from sqlalchemy.future import select
+from sqlalchemy import select, func
+
 
 router = APIRouter()
 
-@router.get("/read", response_model = List[JenisJabatanResponse])
-async def read_JenisJabatan(db:AsyncSession = Depends(get_db)):
+@router.get("/read", response_model = JenisJabatanResponseList)
+async def read_JenisJabatan(
+    skip : int = 0,
+    limit : int = 100,
+    search : str | None = None,
+    db:AsyncSession = Depends(get_db)
+):
     """
     ## Mengambil semua List Jenis Jabatan
     Membaca data Jenis Jabatan baru dari sistem.
@@ -26,8 +32,27 @@ async def read_JenisJabatan(db:AsyncSession = Depends(get_db)):
     """
 
     query = select(JenisJabatan)
+
+    if search:
+        query = query.where(JenisJabatan.nama.ilike(f"%{search}%"))
+
+    query_total = select(func.count()).select_from(query.subquery())
+    total_result = await db.execute(query_total)
+    total = total_result.scalar_one_or_none()
+
+
+    query = query.order_by(JenisJabatan.created_at.desc()).offset(skip).limit(limit)
+
     result = await db.execute(query)
-    return result.scalars().all()
+
+    data =  result.scalars().all()
+
+    return {
+        "skip" : skip,
+        "limit" : limit,
+        "total" : total,
+        "data" : data
+    }
 
 
 @router.post("/create", response_model=JenisJabatanResponse)
@@ -57,7 +82,7 @@ async def read_JenisJabatan(payload: JenisJabatanCreate, db: AsyncSession = Depe
     return new_data
 
 
-@router.put("/update/{id}")
+@router.patch("/update/{id}")
 async def read_JenisJabatan(id:str, payload:JenisJabatanUpdate ,db:AsyncSession = Depends(get_db)):
     
     """
@@ -93,7 +118,7 @@ async def read_JenisJabatan(id:str, payload:JenisJabatanUpdate ,db:AsyncSession 
     return db_data
 
 
-@router.delete("/delete/")
+@router.delete("/delete/{id}")
 async def read_JenisJabatan(id:str, db:AsyncSession = Depends(get_db)):
 
     """

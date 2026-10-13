@@ -13,7 +13,7 @@ import FormCreate from './components/FormCreate';
 import { listindex } from "@/utilities/pagination"
 import { BSkeletonTable } from '@/components/items/BSkeleton';
 import { useMasterJnsLokasiList, useMasterJnsLokasiDelete } from './hooks';
-import { MasterJnsLokasiItem } from "./types"
+import { MasterResponse } from "./types"
 import useDebounced from '@/hooks/useDebounced';
 import useForm from '@/hooks/useForm';
 
@@ -40,14 +40,14 @@ const Page = () => {
     )
 
 
-    const { form, setForm, emptyForm } = useForm<MasterJnsLokasiItem>({
+    const { form, setForm, emptyForm } = useForm<MasterResponse>({
         id: '',
         kode: '',
         nama: '',
         created_by: ""
     })
 
-    const selectItem = (item: MasterJnsLokasiItem) => {
+    const selectItem = (item: MasterResponse) => {
         setForm({
             id: item.id,
             kode: item.kode,
@@ -64,7 +64,7 @@ const Page = () => {
 
     return (
         <div>
-            <TextSeparate title='Master Acuan' />
+            <TextSeparate title='Master Jenis Jabatan' />
             <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
                 <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-1 w-full'>
                     <div className='col-span-6 '>
@@ -72,7 +72,7 @@ const Page = () => {
                         <div className='flex gap-1 relative'>
                             {/* PERBAIKAN INPUT: Mengikat value dan onChange langsung ke state 'search' */}
                             <BInput
-                                placeholder='Cari Data Jenis Lokasi...'
+                                placeholder='Cari Data...'
                                 type='text'
                                 value={search}
                                 onChange={(value) => {
@@ -178,7 +178,7 @@ const Page = () => {
                             Edit
                         </button>
                         <button className='bg-b-red-4 hover:bg-b-red-5/70 cursor-pointer flex gap-2 justify-center items-center text-[12px] p-1.5 rounded-md shadow-md'
-                            onClick={() => { setOpen(!open); btnDelete(form.id) }}
+                            onClick={() => { setOpen(!open); btnDelete(form.id as string) }}
                         >
                             Delete
                         </button>
