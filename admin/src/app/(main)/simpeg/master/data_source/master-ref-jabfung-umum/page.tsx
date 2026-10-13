@@ -43,7 +43,9 @@ const Page = () => {
     const { form, setForm, emptyForm } = useForm<MasterResponse>({
         id: '',
         kode: '',
+        kode_cepat: '',
         nama: '',
+        status: true,
         created_by: ""
     })
 
@@ -51,7 +53,9 @@ const Page = () => {
         setForm({
             id: item.id,
             kode: item.kode,
+            kode_cepat: item.kode_cepat,
             nama: item.nama,
+            status: item.status,
             created_by: item.created_by
         })
     }
@@ -64,7 +68,7 @@ const Page = () => {
 
     return (
         <div>
-            <TextSeparate title='Master Jenis Jabatan' />
+            <TextSeparate title='Master Ref Jabfung Umum' />
             <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
                 <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-1 w-full'>
                     <div className='col-span-6 '>
@@ -110,7 +114,9 @@ const Page = () => {
                                     <th className='w-[5%] text-center'>No</th>
                                     <th className='w-[5%] text-center'>Act</th>
                                     <th className='w-[10%] text-center'>Kode</th>
-                                    <th className='w-[80%]'>Nama</th>
+                                    <th className='w-[10%] text-center'>Kode Cepat</th>
+                                    <th className='w-[10%] text-center'>Status</th>
+                                    <th className='w-[60%]'>Nama</th>
                                 </tr>
                             </thead>
 
@@ -128,6 +134,8 @@ const Page = () => {
                                             </div>
                                         </td>
                                         <td className=''><p className='text-center'>{item.kode}</p></td>
+                                        <td className=''><p className='text-center'>{item.kode_cepat}</p></td>
+                                        <td className=''><p className='text-center'>{String(item.status)}</p></td>
                                         <td className=''><p>{item.nama}</p></td>
                                     </tr>
                                 ))}

@@ -20,9 +20,9 @@ export const useMasterJnsLokasiList = (
   } = useQuery({
     queryFn: () =>
       fetchData<MasterResponseList>(
-        `${url}/api/v1/simpeg/master/ref_jns_jabatan/read?skip=${(pageSelect - 1) * pageLimit}&limit=${pageLimit}${search ? `&search=${debounced}` : ""}`,
+        `${url}/api/v1/simpeg/master/ref_jabfung_umum/read?skip=${(pageSelect - 1) * pageLimit}&limit=${pageLimit}${search ? `&search=${debounced}` : ""}`,
       ),
-    queryKey: ["ref_jns_jabatan", pageSelect, pageLimit, debounced],
+    queryKey: ["ref_jabfung_umum", pageSelect, pageLimit, debounced],
   });
 
   return { List, isLoading, isError, error };
@@ -34,12 +34,12 @@ export const useMasterJnsLokasiDelete = () => {
 
   return useMutation({
     mutationFn: (id: string) =>
-      fetchData(`${url}/api/v1/simpeg/master/ref_jns_jabatan/delete/${id}`, {
+      fetchData(`${url}/api/v1/simpeg/master/ref_jabfung_umum/delete/${id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["ref_jns_jabatan"] });
+      queryClient.invalidateQueries({ queryKey: ["ref_jabfung_umum"] });
     },
     onError: (error) => {
       alert(error);
@@ -66,7 +66,7 @@ export const useMasterJnsLokasiCreate = () => {
         body: JSON.stringify(form),
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["ref_jns_jabatan"] });
+      queryClient.invalidateQueries({ queryKey: ["ref_jabfung_umum"] });
     },
     onError: (error) => {
       alert(error);

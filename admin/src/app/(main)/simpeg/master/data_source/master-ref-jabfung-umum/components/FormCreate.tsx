@@ -4,6 +4,8 @@ import BInput from '@/components/items/BInput'
 import { useUrlStore } from '@/store/useUrlStore'
 import { MasterResponse } from "../types"
 import { useMasterJnsLokasiCreate } from '../hooks'
+import BInputSelect from '@/components/items/BInputSelect'
+
 
 interface FormCreateProps {
     setClose: Dispatch<SetStateAction<boolean>>,
@@ -15,6 +17,9 @@ interface FormCreateProps {
 const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
 
     const url = useUrlStore(state => state.URL.APP)
+    const statusArr = useUrlStore(state => state.status)
+
+
     const { mutate } = useMasterJnsLokasiCreate()
     const setItemForm = (key: keyof MasterResponse, value: string | number) => {
         setForm({
@@ -27,7 +32,9 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
         setForm({
             id: '',
             kode: '',
+            kode_cepat: '',
             nama: '',
+            status: true,
             created_by: "user.id"
         })
         setClose(false)
@@ -36,13 +43,13 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
     const submit = () => {
         if (isEdit) {
             mutate({
-                url: `${url}/api/v1/simpeg/master/ref_jns_jabatan/update/${form.id}`,
+                url: `${url}/api/v1/simpeg/master/ref_jabfung_umum/update/${form.id}`,
                 method: 'PUT',
                 form: form
             })
         } else {
             mutate({
-                url: `${url}/api/v1/simpeg/master/ref_jns_jabatan/create`,
+                url: `${url}/api/v1/simpeg/master/ref_jabfung_umum/create`,
                 method: 'POST',
                 form: form
             })
@@ -53,8 +60,8 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
         <div className='px-5 pb-2'>
             <div className='pt-1'>
                 <BInput
-                    title='Kode Jenis Jabatan (Id pada SIASN)'
-                    placeholder='Kode Jenis Jabatan'
+                    title='Kode Ref jabfung Umum (Id pada SIASN)'
+                    placeholder='Kode Ref jabfung Umum'
                     type='text'
                     value={form.kode}
                     onChange={(value) => {
@@ -64,12 +71,36 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
             </div>
             <div className='pt-1'>
                 <BInput
-                    title='Nama Jenis Jabatan'
-                    placeholder='Nama Jenis Jabatan'
+                    title='Kode Cepat Ref jabfung Umum (Kode Cepat pada SIASN)'
+                    placeholder='Kode Cepat Ref jabfung Umum'
+                    type='text'
+                    value={form.kode_cepat}
+                    onChange={(value) => {
+                        setItemForm('kode_cepat', value)
+                    }}
+                />
+            </div>
+            <div className='pt-1'>
+                <BInput
+                    title='Nama Ref jabfung Umum'
+                    placeholder='Nama Ref jabfung Umum'
                     type='text'
                     value={form.nama}
                     onChange={(value) => {
                         setItemForm('nama', value)
+                    }}
+                />
+            </div>
+            <div className='pt-1'>
+                <BInputSelect
+                    title='Status'
+                    options={statusArr}
+                    datavalue={Number(form.status)}
+                    onChange={(value) => {
+                        setForm(prevForm => ({
+                            ...prevForm,
+                            status: Number(value) === 1
+                        }))
                     }}
                 />
             </div>
