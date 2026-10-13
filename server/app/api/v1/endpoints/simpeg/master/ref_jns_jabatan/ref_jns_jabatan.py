@@ -41,7 +41,7 @@ async def read_JenisJabatan(
     total = total_result.scalar_one_or_none()
 
 
-    query = query.order_by(JenisJabatan.created_at.desc()).offset(skip).limit(limit)
+    query = query.order_by(JenisJabatan.created_at.asc()).offset(skip).limit(limit)
 
     result = await db.execute(query)
 
