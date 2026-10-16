@@ -181,6 +181,11 @@ const routex = [
                         children : []
                     },
                     {
+                        title : "Master Sub-Unit Kerja",
+                        path:"/simpeg/master/data_source/master-ref-sub-unit-kerja",
+                        children : []
+                    },
+                    {
                         title : "Master Jenis Lokasi",
                         path:"/simpeg/master/data_source/master-jns-lokasi",
                         children : []

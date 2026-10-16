@@ -24,6 +24,7 @@ interface useUrlStoreProps {
   URL: URLProps;
   DataShow: DataShowProps[];
   status: StatusProps[];
+  choose: StatusProps[];
 }
 
 export const useUrlStore = create<useUrlStoreProps>((set) => ({
@@ -61,5 +62,9 @@ export const useUrlStore = create<useUrlStoreProps>((set) => ({
   status: [
     { id: 0, value: "Tidak Aktif" },
     { id: 1, value: "Aktif" },
+  ],
+  choose: [
+    { id: 0, value: "Tidak" },
+    { id: 1, value: "Ya" },
   ],
 }));
