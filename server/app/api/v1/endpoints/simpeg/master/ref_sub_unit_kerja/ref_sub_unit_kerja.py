@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
-from app.models.simpeg.master.models import UnitKerja
+from app.models.simpeg.master.models import SubUnitKerja
 from app.api.deps import get_current_user
 from app.db.transaction import commit_or_raise_unique_conflict
 from app.db.session_simpeg import get_db
-from .schema import UnitKerjaResponse, UnitKerjaCreate, UnitKerjaResponseList
+from .schema import SubUnitKerjaResponse, SubUnitKerjaCreate, SubUnitKerjaResponseList
 from typing import List
 
 
@@ -13,30 +13,34 @@ from sqlalchemy import select, func
 
 router = APIRouter()
 
-@router.get("/option", response_model=List[UnitKerjaResponse])
+@router.get("/option", response_model=List[SubUnitKerjaResponse])
 async def option(
+    search : str | None = None,
     db:AsyncSession = Depends(get_db)
 ):
-    query = select(UnitKerja)
+    query = select(SubUnitKerja)
+    if search:
+        query = query.where(SubUnitKerja.nama.ilike(f"%{search}%"))
+    
     result = await db.execute(query)
     return result.scalars().all()
 
-@router.get("/read", response_model=UnitKerjaResponseList)
+@router.get("/read", response_model=SubUnitKerjaResponseList)
 async def read(
     skip : int = 0,
     limit : int = 100,
     search : str | None = None,
     db:AsyncSession = Depends(get_db)
 ):
-    query = select(UnitKerja)
+    query = select(SubUnitKerja)
     if search:
-        query = query.where(UnitKerja.nama.ilike(f"%{search}%"))
+        query = query.where(SubUnitKerja.nama.ilike(f"%{search}%"))
 
     total_query =  select(func.count()).select_from(query.subquery())
     total_result = await db.execute(total_query)
     total = total_result.scalar_one_or_none()
 
-    query = query.order_by(UnitKerja.created_at.desc()).offset(skip).limit(limit)
+    query = query.order_by(SubUnitKerja.created_at.desc()).offset(skip).limit(limit)
 
     result = await db.execute(query)
     data = result.scalars().all()
@@ -49,14 +53,14 @@ async def read(
     }
 
 
-@router.post("/create", response_model= UnitKerjaResponse)
+@router.post("/create", response_model= SubUnitKerjaResponse)
 async def create(
-    payload : UnitKerjaCreate,
+    payload : SubUnitKerjaCreate,
     db:AsyncSession = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
 
-    newdata = UnitKerja(
+    newdata = SubUnitKerja(
         nama = payload.nama,
         unit_induk = payload.unit_induk,
         penyedia_pbj = payload.penyedia_pbj,
@@ -69,14 +73,14 @@ async def create(
     return newdata
 
 
-@router.patch("/update/{id}", response_model= UnitKerjaResponse)
+@router.patch("/update/{id}", response_model= SubUnitKerjaResponse)
 async def update(
     id : str,
-    payload : UnitKerjaCreate,
+    payload : SubUnitKerjaCreate,
     db:AsyncSession = Depends(get_db)
 ):
 
-    query = select(UnitKerja).where(UnitKerja.id == id)
+    query = select(SubUnitKerja).where(SubUnitKerja.id == id)
     result = await db.execute(query)
     data_db = result.scalar_one_or_none()
 
@@ -97,7 +101,7 @@ async def delete(
     id : str,
     db:AsyncSession = Depends(get_db)
 ):
-    query = select(UnitKerja).where(UnitKerja.id == id)
+    query = select(SubUnitKerja).where(SubUnitKerja.id == id)
     result = await db.execute(query)
     data_db = result.scalar_one_or_none()
 

@@ -4,7 +4,7 @@ from typing import Optional, List
 from datetime import datetime
 
 
-class UnitKerjaResponse(BaseModel):
+class SubUnitKerjaResponse(BaseModel):
     id : str
     nama : str
     unit_induk : bool
@@ -13,13 +13,13 @@ class UnitKerjaResponse(BaseModel):
     created_at : Optional[datetime]
     model_config = ConfigDict(from_attributes=True)
 
-class UnitKerjaCreate(BaseModel):
+class SubUnitKerjaCreate(BaseModel):
     nama : str
     unit_induk : bool
     penyedia_pbj : bool
 
-class UnitKerjaResponseList(BaseModel):
+class SubUnitKerjaResponseList(BaseModel):
     skip : int
     limit : int
     total : int
-    data : List[UnitKerjaResponse]
+    data : List[SubUnitKerjaResponse]

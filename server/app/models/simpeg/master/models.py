@@ -107,8 +107,8 @@ class RumpunJabatan(Base):
     # Relationship
     ref_kel_jabatan = relationship("KelJabatan", back_populates="ref_rumpun_jabatan_rel")
 
-class UnitKerja(Base):
-    __tablename__ = "ref_unit_kerja"
+class SubUnitKerja(Base):
+    __tablename__ = "ref_sub_unit_kerja"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     unit_induk = Column(Boolean(), index=True, default=False)
     nama = Column(Text(), nullable=False)
