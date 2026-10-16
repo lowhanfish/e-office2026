@@ -107,6 +107,15 @@ class RumpunJabatan(Base):
     # Relationship
     ref_kel_jabatan = relationship("KelJabatan", back_populates="ref_rumpun_jabatan_rel")
 
+class UnitKerja(Base):
+    __tablename__ = "ref_unit_kerja"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    unit_induk = Column(Boolean(), index=True, default=False)
+    nama = Column(Text(), nullable=False)
+    penyedia_pbj = Column(Boolean(), default=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
 class Unor(Base):
     __tablename__ = "ref_unor"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
