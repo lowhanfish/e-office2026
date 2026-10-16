@@ -110,10 +110,22 @@ class RumpunJabatan(Base):
 class Unor(Base):
     __tablename__ = "ref_unor"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
-    kode = Column(String(50), index=True, nullable=False, unique=True)
     nama = Column(String(100), nullable=False)
+    parent_id = Column(String(50), ForeignKey("ref_unor.id"), index=True, nullable=True, default=None)
+    sub_unit_kerja = Column(String(50), index=True, default=None)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    parent = relationship(
+        "Unor",
+        remote_side=[id],
+        back_populates="children"
+    )
+
+    children = relationship(
+        "Unor",
+        back_populates="parent"
+    )
 
 class RumpunJabatanJF(Base):
     __tablename__ = "ref_rumpun_jabatan_jf"
