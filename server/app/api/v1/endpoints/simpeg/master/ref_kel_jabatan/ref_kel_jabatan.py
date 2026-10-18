@@ -1,35 +1,88 @@
 from app.db.transaction import commit_or_raise_unique_conflict
 from fastapi import APIRouter, Depends, HTTPException
-from .schema import KelJabatanResponse, KelJabatanCreate, KelJabatanUpdate
+from .schema import KelJabatanResponse, KelJabatanCreate, KelJabatanUpdate, KelJabatanResponseList
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
 from app.api.deps import get_current_user
-from sqlalchemy.future import select
-from app.models.simpeg.master.models import KelJabatan
+from sqlalchemy import select, func
+from app.models.simpeg.master.models import KelJabatan, JenisJabatan, Instansi, RumpunJabatanJF
 
 router = APIRouter()
 
+@router.get("/option", response_model=List[KelJabatanResponse])
+async def option(
+    skip : int = 0,
+    limit : int = 100,
+    search : str | None = None,
+    db : AsyncSession = Depends(get_db)
+):
+    query = select(
+        *KelJabatan.__table__.c,
+        JenisJabatan.nama.label("ref_jns_jabatan_nama"),
+        RumpunJabatanJF.nama.label("ref_rumpun_jabatan_nama"),
+        Instansi.nama.label("pembina_nama")
+    )
+    query = query.outerjoin(JenisJabatan, JenisJabatan.kode == KelJabatan.ref_jns_jabatan_id)
+    query = query.outerjoin(RumpunJabatanJF, RumpunJabatanJF.kode == KelJabatan.ref_rumpun_jabatan_id)
+    query = query.outerjoin(Instansi, Instansi.kode == KelJabatan.pembina_id)
 
-@router.get("/read", response_model=List[KelJabatanResponse])
-async def create_KelJabatan(db: AsyncSession = Depends(get_db)):
+    if search:
+        query = query.where(KelJabatan.nama.ilike(f"%{search}%"))
+
+    query = query.order_by(KelJabatan.created_at.desc()).offset(skip).limit(limit)
+    result = await db.execute(query)
+    return result.mappings().all()
+
+
+@router.get("/read", response_model=KelJabatanResponseList)
+async def create_KelJabatan(
+    skip : int = 0,
+    limit : int = 100,
+    search : str | None = None,
+    db: AsyncSession = Depends(get_db)
+):
     """
     ## Mengambil semua List Jabatan Fungsional
     Membaca data Jabatan fungsional baru dari sistem.
 
     **Parameter:**
     - `search`   : String, Untuk mencari data value dari Jabfung.
-    - `page_start`: Int, Data page pertama akses page.
-    - `page_limit` : Int, Jumlah data yang ditarik.
+    - `skip`: Int, Data page pertama akses page.
+    - `limit` : Int, Jumlah data yang ditarik.
 
     **Error yang mungkin terjadi:**
     - `422`: Jika format input tidak sesuai skema.
     """
 
 
-    query = select(KelJabatan)
+    query = select(
+        *KelJabatan.__table__.c,
+        JenisJabatan.nama.label("ref_jns_jabatan_nama"),
+        RumpunJabatanJF.nama.label("ref_rumpun_jabatan_nama"),
+        Instansi.nama.label("pembina_nama")
+    )
+    query = query.outerjoin(JenisJabatan, JenisJabatan.kode == KelJabatan.ref_jns_jabatan_id)
+    query = query.outerjoin(RumpunJabatanJF, RumpunJabatanJF.kode == KelJabatan.ref_rumpun_jabatan_id)
+    query = query.outerjoin(Instansi, Instansi.kode == KelJabatan.pembina_id)
+
+    if search:
+        query = query.where(KelJabatan.nama.ilike(f"%{search}%"))
+
+    total_query = select(func.count()).select_from(query.subquery())
+    total_result = await db.execute(total_query)
+    total = total_result.scalar_one_or_none()
+
+    query = query.order_by(KelJabatan.created_at.desc()).offset(skip).limit(limit)
     result = await db.execute(query)
-    return result.scalars().all()
+    data = result.mappings().all()
+
+    return {
+        "skip" : skip,
+        "limit" : limit,
+        "total" : total,
+        "data" : data,
+    }
 
 @router.post("/create", response_model=KelJabatanResponse)
 async def create_KelJabatan(payload: KelJabatanCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
