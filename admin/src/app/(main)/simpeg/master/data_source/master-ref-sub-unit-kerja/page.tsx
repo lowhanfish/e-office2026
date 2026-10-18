@@ -135,8 +135,8 @@ const InputData = () => {
                                             </div>
                                         </td>
                                         <td className=''><p>{item.nama}</p></td>
-                                        <td><p className='text-center'>{item.unit_induk ? 'Ya' : "Tidak"}</p></td>
-                                        <td><p className='text-center'>{item.penyedia_pbj ? 'Ya' : "Tidak"}</p></td>
+                                        <td><p className='text-center text-[16px]'>{item.unit_induk ? '✅' : "❌"}</p></td>
+                                        <td><p className='text-center text-[16px]'>{item.penyedia_pbj ? '✅' : "❌"}</p></td>
                                     </tr>
                                 ))}
                             </tbody>

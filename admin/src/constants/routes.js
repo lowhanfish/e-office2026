@@ -186,6 +186,11 @@ const routex = [
                         children : []
                     },
                     {
+                        title : "Master Referensi Unor",
+                        path:"/simpeg/master/data_source/master-ref-unor",
+                        children : []
+                    },
+                    {
                         title : "Master Jenis Lokasi",
                         path:"/simpeg/master/data_source/master-jns-lokasi",
                         children : []

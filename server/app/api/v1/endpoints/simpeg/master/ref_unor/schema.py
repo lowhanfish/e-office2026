@@ -7,6 +7,7 @@ class RefUnorResponse(BaseModel):
     id : str
     nama : str
     parent_id : Optional[str]
+    parent_id_nama : Optional[str] | None = None
     sub_unit_kerja : Optional[str] | None = None
     sub_unit_kerja_nama : Optional[str] | None = None
     created_by : Optional[str]
@@ -15,7 +16,7 @@ class RefUnorResponse(BaseModel):
 
 class RefUnorCreate(BaseModel):
     nama : str
-    parent_id : str
+    parent_id : Optional[str] | None = None
     sub_unit_kerja : str
 
 class RefUnorResponseList(BaseModel):

@@ -1,48 +1,43 @@
-import React from 'react'
-import CodeWrapper from './CodeWrapper'
-import BButton from '@/components/items/BButton'
-
-
-
-const ListModal = () => {
-    return (
-        <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
-            <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-1 w-full'>
-
-                <div className='col-span-3 '>
-
-                </div>
-
-
-
-
-            </div>
-
-            <div className='mt-5'>
-                <CodeWrapper codeString={codeString} />
-            </div>
-
-        </div>
-    )
-}
-
-export default ListModal
-
-
-
-const codeString = `
 "use client"
 
 import { useState } from 'react'
-import BCheckBox from '@/components/items/BCheckBox'
+import BModal from '@/components/items/BModal'
+import BButton from '@/components/items/BButton'
+import DocumentationSection from './DocumentationSection'
+import { componentDocumentation } from './componentDocumentation'
 
-const InputDataRd = () => {
-
-    const [data, setData] = useState<boolean>(false);
-
-    
+export default function ListModal() {
+    const [open, setOpen] = useState(false)
+    return (
+        <DocumentationSection documentation={componentDocumentation.ListModal} codeString={codeString}> 
+            <BButton color='blue' size='md' onClick={() => setOpen(true)}>Buka dialog</BButton>
+            <BModal title='Informasi dokumen' size='sm' openModal={open} setOpenModal={setOpen}>
+                <div className='space-y-5 p-4'>
+                    <p className='text-sm leading-7'>Gunakan area ini untuk menampilkan detail, formulir, atau tindakan tambahan sesuai kebutuhan halaman.</p>
+                    <BButton color='gray' size='sm' onClick={() => setOpen(false)}>Selesai</BButton>
+                </div>
+            </BModal>
+        </DocumentationSection>
+    )
 }
 
-export default InputDataRd
-    
-`
+const codeString = `"use client"
+
+import { useState } from 'react'
+import BModal from '@/components/items/BModal'
+import BButton from '@/components/items/BButton'
+
+export default function ListModal() {
+    const [open, setOpen] = useState(false)
+    return (
+        <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
+            <BButton color='blue' size='md' onClick={() => setOpen(true)}>Buka dialog</BButton>
+            <BModal title='Informasi dokumen' size='sm' openModal={open} setOpenModal={setOpen}>
+                <div className='space-y-5 p-4'>
+                    <p className='text-sm leading-7'>Gunakan area ini untuk menampilkan detail, formulir, atau tindakan tambahan sesuai kebutuhan halaman.</p>
+                    <BButton color='gray' size='sm' onClick={() => setOpen(false)}>Selesai</BButton>
+                </div>
+            </BModal>
+        </div>
+    )
+}`

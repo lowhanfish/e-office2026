@@ -4,6 +4,7 @@ from .schema import RefUnorCreate, RefUnorResponse, RefUnorResponseList
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
+from sqlalchemy.orm import aliased
 
 from app.db.session_simpeg import get_db
 from app.api.deps import get_current_user
@@ -13,17 +14,31 @@ from typing import List
 
 router = APIRouter()
 
+ParentUnor = aliased(Unor)
+
 @router.get("/option", response_model=List[RefUnorResponse])
 async def option(
+    skip : int = 0,
+    limit : int = 100,
     search : str | None = None,
     db : AsyncSession = Depends(get_db)
 ):
-    query = select(Unor)
+    query = select(
+        *Unor.__table__.c,
+        SubUnitKerja.nama.label("sub_unit_kerja_nama"),
+        ParentUnor.nama.label("parent_id_nama")
+    )
+
+    query = query.outerjoin(SubUnitKerja, SubUnitKerja.id == Unor.sub_unit_kerja)
+    query = query.outerjoin(ParentUnor, ParentUnor.id == Unor.parent_id)
+
     if search:
         query = query.where(Unor.nama.ilike(f"%{search}%"))
 
+    query = query.order_by(Unor.created_at.desc()).offset(skip).limit(limit)
     result = await db.execute(query)
-    return result.scalars().all()
+    return result.mappings().all()
+
 
 @router.get("/read", response_model=RefUnorResponseList)
 async def read(
@@ -34,10 +49,12 @@ async def read(
 ):
     query = select(
         *Unor.__table__.c,
-        SubUnitKerja.nama.label("sub_unit_kerja_nama")
+        SubUnitKerja.nama.label("sub_unit_kerja_nama"),
+        ParentUnor.nama.label("parent_id_nama")
     )
 
     query = query.outerjoin(SubUnitKerja, SubUnitKerja.id == Unor.sub_unit_kerja)
+    query = query.outerjoin(ParentUnor, Unor.parent_id == ParentUnor.id)
 
     if search:
         query = query.where(Unor.nama.ilike(f"%{search}%"))

@@ -119,7 +119,7 @@ class SubUnitKerja(Base):
 class Unor(Base):
     __tablename__ = "ref_unor"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
-    nama = Column(String(100), nullable=False)
+    nama = Column(String(255), nullable=False)
     parent_id = Column(String(50), ForeignKey("ref_unor.id"), index=True, nullable=True, default=None)
     sub_unit_kerja = Column(String(50), index=True, default=None)
     created_by = Column(String(50), index=True, nullable=False)

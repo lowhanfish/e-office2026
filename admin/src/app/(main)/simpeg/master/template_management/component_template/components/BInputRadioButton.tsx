@@ -1,17 +1,17 @@
 "use client"
 
 import { useState } from 'react'
-import CodeWrapper from './CodeWrapper'
+import DocumentationSection from './DocumentationSection'
+import { componentDocumentation } from './componentDocumentation'
 import BRadioButton from '@/components/items/BRadioButton'
 
 const BInputRadioButton = () => {
-    const [check, setCheck] = useState<boolean>(false);
     const [selected, setSelected] = useState<string>("sm");
 
     return (
-        <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
-            <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-1 w-full'>
-                <div className='col-span-6 flex gap-2'>
+        <DocumentationSection documentation={componentDocumentation.BInputRadioButton} codeString={codeString}> 
+            <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-5 w-full'>
+                <div className='col-span-1 md:col-span-6 flex flex-wrap gap-3'>
 
                     <BRadioButton
                         title="size = xs"
@@ -74,7 +74,7 @@ const BInputRadioButton = () => {
                     />
                 </div>
 
-                <div className='col-span-6 flex gap-2'>
+                <div className='col-span-1 md:col-span-6 flex flex-wrap gap-3'>
 
                     <BRadioButton
                         title="color = gray"
@@ -139,32 +139,24 @@ const BInputRadioButton = () => {
 
                 </div>
             </div>
-
-            <div className='mt-5'>
-                <CodeWrapper codeString={codeString} />
-            </div>
-        </div>
+        </DocumentationSection>
     )
 }
 
 export default BInputRadioButton
 
-
-
-const codeString = `
-"use client"
+const codeString = `"use client"
 
 import { useState } from 'react'
 import BRadioButton from '@/components/items/BRadioButton'
 
 const BInputRadioButton = () => {
-    const [check, setCheck] = useState<boolean>(false);
     const [selected, setSelected] = useState<string>("sm");
 
     return (
         <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
-            <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-1 w-full'>
-                <div className='col-span-6 flex gap-2'>
+            <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-5 w-full'>
+                <div className='col-span-1 md:col-span-6 flex flex-wrap gap-3'>
 
                     <BRadioButton
                         title="size = xs"
@@ -227,7 +219,7 @@ const BInputRadioButton = () => {
                     />
                 </div>
 
-                <div className='col-span-6 flex gap-2'>
+                <div className='col-span-1 md:col-span-6 flex flex-wrap gap-3'>
 
                     <BRadioButton
                         title="color = gray"
@@ -296,6 +288,4 @@ const BInputRadioButton = () => {
     )
 }
 
-export default BInputRadioButton
-    
-`
+export default BInputRadioButton`

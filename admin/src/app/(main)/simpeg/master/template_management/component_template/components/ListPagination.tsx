@@ -1,23 +1,24 @@
 "use client"
 
 import { useState } from 'react'
-import CodeWrapper from './CodeWrapper'
+import DocumentationSection from './DocumentationSection'
+import { componentDocumentation } from './componentDocumentation'
 import BPagination from '@/components/items/BPagination'
 
 const ListPagination = () => {
     const [pageSelect, setPageSelect] = useState<number>(1);
-    const [pageLimit, setPageLimit] = useState<number>(4)
-    const [dataLength, setDataLength] = useState<number>(99999)
+    const pageLimit = 4
+    const dataLength = 48
 
     const testClick = () => {
         console.log("hy")
     }
 
     return (
-        <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
+        <DocumentationSection documentation={componentDocumentation.ListPagination} codeString={codeString}> 
             <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-10 w-full'>
 
-                <div className='col-span-12 flex flex-col md:flex-row  gap-2'>
+                <div className='col-span-1 md:col-span-12 flex flex-wrap items-center gap-3'>
                     <BPagination
                         pageSelect={pageSelect}
                         setPageSelect={setPageSelect}
@@ -29,26 +30,22 @@ const ListPagination = () => {
                 </div>
             </div>
 
-            <div className='mt-5'>
-                <CodeWrapper codeString={codeString} />
-            </div>
-
-        </div>
+            <p className='mt-5 text-sm'>Halaman {pageSelect} dari {Math.ceil(dataLength / pageLimit)} · {dataLength} data</p>
+        </DocumentationSection>
     )
 }
 
 export default ListPagination
 
-const codeString = `
-"use client"
+const codeString = `"use client"
 
 import { useState } from 'react'
 import BPagination from '@/components/items/BPagination'
 
 const ListPagination = () => {
     const [pageSelect, setPageSelect] = useState<number>(1);
-    const [pageLimit, setPageLimit] = useState<number>(4)
-    const [dataLength, setDataLength] = useState<number>(99999)
+    const pageLimit = 4
+    const dataLength = 48
 
     const testClick = () => {
         console.log("hy")
@@ -58,7 +55,7 @@ const ListPagination = () => {
         <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
             <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-10 w-full'>
 
-                <div className='col-span-12 flex flex-col md:flex-row  gap-2'>
+                <div className='col-span-1 md:col-span-12 flex flex-wrap items-center gap-3'>
                     <BPagination
                         pageSelect={pageSelect}
                         setPageSelect={setPageSelect}
@@ -69,10 +66,10 @@ const ListPagination = () => {
                     />
                 </div>
             </div>
+
+            <p className='mt-5 text-sm'>Halaman {pageSelect} dari {Math.ceil(dataLength / pageLimit)} · {dataLength} data</p>
         </div>
     )
 }
 
-export default ListPagination
-    
-`
+export default ListPagination`

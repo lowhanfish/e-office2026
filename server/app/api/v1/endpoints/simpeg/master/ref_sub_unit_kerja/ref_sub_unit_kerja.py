@@ -15,12 +15,16 @@ router = APIRouter()
 
 @router.get("/option", response_model=List[SubUnitKerjaResponse])
 async def option(
+    skip : int = 0,
+    limit : int = 100,
     search : str | None = None,
     db:AsyncSession = Depends(get_db)
 ):
     query = select(SubUnitKerja)
     if search:
         query = query.where(SubUnitKerja.nama.ilike(f"%{search}%"))
+
+    query = query.offset(skip).limit(limit)
     
     result = await db.execute(query)
     return result.scalars().all()

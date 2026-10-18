@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from 'react'
-import CodeWrapper from './CodeWrapper'
+import DocumentationSection from './DocumentationSection'
+import { componentDocumentation } from './componentDocumentation'
 import BInput from '@/components/items/BInput'
 import BInputFile from '@/components/items/BInputFile'
 import BInputDate from '@/components/items/BInputDate'
@@ -13,47 +14,35 @@ const InputData = () => {
     const [filex, setFilex] = useState<File | File[] | null>(null);
     const [datex, setDatex] = useState(new Date().toISOString().split('T')[0]);
 
-    const [form, setForm] = useState({
-        name: "",
-        age: 0,
-        gender: "F"
-    })
-
-    const gender = [
-        { id: 1, gender: "Female", code: "F" },
-        { id: 2, gender: "Male", code: "M" },
-    ]
-
-
     return (
-        <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
-            <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-1 w-full'>
-                <div className='col-span-3 '>
+        <DocumentationSection documentation={componentDocumentation.InputData} codeString={codeString}> 
+            <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-5 w-full'>
+                <div className='col-span-1 md:col-span-3 '>
                     <BInput
-                        title='Data number'
-                        placeholder='Data number'
+                        title='Angka'
+                        placeholder='Angka'
                         type='number'
                         value={numberx}
                         onChange={(value) => {
                             setNumberx(value)
                         }}
                     />
-                    <p className='text-[10px] pt-1.5'>Value : {numberx}</p>
+                    <p className='text-xs pt-1.5'>Nilai: {numberx}</p>
 
                 </div>
-                <div className='col-span-3 '>
+                <div className='col-span-1 md:col-span-3 '>
                     <BInput
-                        title='Data text'
-                        placeholder='Data text'
+                        title='Teks'
+                        placeholder='Teks'
                         type='text'
                         value={textx}
                         onChange={(value) => {
                             setTextx(value)
                         }}
                     />
-                    <p className='text-[10px] pt-1.5'>Value : {textx}</p>
+                    <p className='text-xs pt-1.5'>Nilai: {textx}</p>
                 </div>
-                <div className='col-span-3 '>
+                <div className='col-span-1 md:col-span-3 '>
                     <BInputFile
                         accept='image/*'
                         placeholder='pilih file'
@@ -68,7 +57,7 @@ const InputData = () => {
                     <div className='pt-1'>
                         {filex && (
                             (Array.isArray(filex) ? filex : [filex]).map((file, index) => (
-                                <p key={index} className="text-[10px]">
+                                <p key={index} className="text-xs">
                                     {file.name}
                                 </p>
                             ))
@@ -76,10 +65,10 @@ const InputData = () => {
                     </div>
                 </div>
 
-                <div className='col-span-3 '>
+                <div className='col-span-1 md:col-span-3 '>
                     <BInputDate
-                        title='Data date'
-                        placeholder='Data date'
+                        title='Tanggal'
+                        placeholder='Tanggal'
                         value={datex}
                         onChange={
                             (value) => {
@@ -88,23 +77,16 @@ const InputData = () => {
                             }
                         }
                     />
-                    <p className='text-[10px] pt-1.5'>Value : {datex}</p>
+                    <p className='text-xs pt-1.5'>Nilai: {datex}</p>
                 </div>
             </div>
-
-            <div className='mt-5'>
-                <CodeWrapper codeString={codeString} />
-            </div>
-        </div>
+        </DocumentationSection>
     )
 }
 
 export default InputData
 
-
-
-const codeString = `
-"use client"
+const codeString = `"use client"
 
 import { useState } from 'react'
 import BInput from '@/components/items/BInput'
@@ -118,47 +100,35 @@ const InputData = () => {
     const [filex, setFilex] = useState<File | File[] | null>(null);
     const [datex, setDatex] = useState(new Date().toISOString().split('T')[0]);
 
-    const [form, setForm] = useState({
-        name: "",
-        age: 0,
-        gender: "F"
-    })
-
-    const gender = [
-        { id: 1, gender: "Female", code: "F" },
-        { id: 2, gender: "Male", code: "M" },
-    ]
-
-
     return (
         <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
-            <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-1 w-full'>
-                <div className='col-span-3 '>
+            <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-5 w-full'>
+                <div className='col-span-1 md:col-span-3 '>
                     <BInput
-                        title='Data number'
-                        placeholder='Data number'
+                        title='Angka'
+                        placeholder='Angka'
                         type='number'
                         value={numberx}
                         onChange={(value) => {
                             setNumberx(value)
                         }}
                     />
-                    <p className='text-[10px] pt-1.5'>Value : {numberx}</p>
+                    <p className='text-xs pt-1.5'>Nilai: {numberx}</p>
 
                 </div>
-                <div className='col-span-3 '>
+                <div className='col-span-1 md:col-span-3 '>
                     <BInput
-                        title='Data text'
-                        placeholder='Data text'
+                        title='Teks'
+                        placeholder='Teks'
                         type='text'
                         value={textx}
                         onChange={(value) => {
                             setTextx(value)
                         }}
                     />
-                    <p className='text-[10px] pt-1.5'>Value : {textx}</p>
+                    <p className='text-xs pt-1.5'>Nilai: {textx}</p>
                 </div>
-                <div className='col-span-3 '>
+                <div className='col-span-1 md:col-span-3 '>
                     <BInputFile
                         accept='image/*'
                         placeholder='pilih file'
@@ -173,7 +143,7 @@ const InputData = () => {
                     <div className='pt-1'>
                         {filex && (
                             (Array.isArray(filex) ? filex : [filex]).map((file, index) => (
-                                <p key={index} className="text-[10px]">
+                                <p key={index} className="text-xs">
                                     {file.name}
                                 </p>
                             ))
@@ -181,10 +151,10 @@ const InputData = () => {
                     </div>
                 </div>
 
-                <div className='col-span-3 '>
+                <div className='col-span-1 md:col-span-3 '>
                     <BInputDate
-                        title='Data date'
-                        placeholder='Data date'
+                        title='Tanggal'
+                        placeholder='Tanggal'
                         value={datex}
                         onChange={
                             (value) => {
@@ -193,14 +163,11 @@ const InputData = () => {
                             }
                         }
                     />
-                    <p className='text-[10px] pt-1.5'>Value : {datex}</p>
+                    <p className='text-xs pt-1.5'>Nilai: {datex}</p>
                 </div>
             </div>
         </div>
     )
 }
 
-export default InputData
-
-    
-`
+export default InputData`

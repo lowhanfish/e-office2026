@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from 'react'
-import CodeWrapper from './CodeWrapper'
+import DocumentationSection from './DocumentationSection'
+import { componentDocumentation } from './componentDocumentation'
 import BCheckBox from '@/components/items/BCheckBox'
 
 const InputDataRd = () => {
@@ -9,9 +10,9 @@ const InputDataRd = () => {
     const [data, setData] = useState<boolean>(false);
 
     return (
-        <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
-            <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-1 w-full'>
-                <div className='col-span-6 flex gap-2'>
+        <DocumentationSection documentation={componentDocumentation.BCheckBox} codeString={codeString}> 
+            <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-5 w-full'>
+                <div className='col-span-1 md:col-span-6 flex flex-wrap gap-3'>
 
                     <BCheckBox
                         checked={data}
@@ -80,7 +81,7 @@ const InputDataRd = () => {
 
                 </div>
 
-                <div className='col-span-6 flex gap-2'>
+                <div className='col-span-1 md:col-span-6 flex flex-wrap gap-3'>
 
                     <BCheckBox
                         checked={data}
@@ -149,20 +150,13 @@ const InputDataRd = () => {
 
                 </div>
             </div>
-
-            <div className='mt-5'>
-                <CodeWrapper codeString={codeString} />
-            </div>
-        </div>
+        </DocumentationSection>
     )
 }
 
 export default InputDataRd
 
-
-
-const codeString = `
-"use client"
+const codeString = `"use client"
 
 import { useState } from 'react'
 import BCheckBox from '@/components/items/BCheckBox'
@@ -173,8 +167,8 @@ const InputDataRd = () => {
 
     return (
         <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
-            <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-1 w-full'>
-                <div className='col-span-6 flex gap-2'>
+            <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-5 w-full'>
+                <div className='col-span-1 md:col-span-6 flex flex-wrap gap-3'>
 
                     <BCheckBox
                         checked={data}
@@ -243,7 +237,7 @@ const InputDataRd = () => {
 
                 </div>
 
-                <div className='col-span-6 flex gap-2'>
+                <div className='col-span-1 md:col-span-6 flex flex-wrap gap-3'>
 
                     <BCheckBox
                         checked={data}
@@ -316,6 +310,4 @@ const InputDataRd = () => {
     )
 }
 
-export default InputDataRd
-    
-`
+export default InputDataRd`

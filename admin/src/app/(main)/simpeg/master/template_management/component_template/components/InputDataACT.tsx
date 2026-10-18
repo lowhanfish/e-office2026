@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from 'react'
-import CodeWrapper from './CodeWrapper'
+import DocumentationSection from './DocumentationSection'
+import { componentDocumentation } from './componentDocumentation'
 import BInputAutocomplete from '@/components/items/BInputAutoComplete'
 
 const dataArrObj = [
@@ -51,10 +52,10 @@ const InputData = () => {
     const [btype, getType] = useState<string | number>("")
 
     return (
-        <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
-            <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-1 w-full'>
+        <DocumentationSection documentation={componentDocumentation.InputDataACT} codeString={codeString}> 
+            <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-5 w-full'>
 
-                <div className='col-span-4 '>
+                <div className='col-span-1 md:col-span-4 '>
                     <BInputAutocomplete
                         title="Autocomplete text (Array Obj)"
                         placeholder="Cari data..."
@@ -72,22 +73,15 @@ const InputData = () => {
                 <p className='text-[12px]'> Data selected : {data}</p>
 
             </div>
-
-            <div className='mt-5'>
-                <CodeWrapper codeString={codeString} />
-            </div>
-        </div>
+        </DocumentationSection>
     )
 }
 
 export default InputData
 
-
-const codeString = `
-"use client"
+const codeString = `"use client"
 
 import { useState } from 'react'
-import CodeWrapper from './CodeWrapper'
 import BInputAutocomplete from '@/components/items/BInputAutoComplete'
 
 const dataArrObj = [
@@ -138,9 +132,9 @@ const InputData = () => {
 
     return (
         <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
-            <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-1 w-full'>
+            <div className='grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-5 w-full'>
 
-                <div className='col-span-4 '>
+                <div className='col-span-1 md:col-span-4 '>
                     <BInputAutocomplete
                         title="Autocomplete text (Array Obj)"
                         placeholder="Cari data..."
@@ -158,13 +152,8 @@ const InputData = () => {
                 <p className='text-[12px]'> Data selected : {data}</p>
 
             </div>
-
-            <div className='mt-5'>
-                <CodeWrapper codeString={codeString} />
-            </div>
         </div>
     )
 }
 
-export default InputData
-`
+export default InputData`

@@ -1,8 +1,9 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { BsGear } from "react-icons/bs";
-import CodeWrapper from './CodeWrapper'
+import DocumentationSection from './DocumentationSection'
+import { componentDocumentation } from './componentDocumentation'
 import BModal from '@/components/items/BModal';
 
 const Data = [
@@ -39,8 +40,8 @@ const Data = [
 const BTable = () => {
     const [open, setOpen] = useState(false);
     return (
-        <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
-            <table className='Btable w-full'>
+        <DocumentationSection documentation={componentDocumentation.BTable} codeString={codeString}> 
+            <div className='overflow-x-auto'><table className='Btable w-full min-w-[760px]'>
                 <thead>
                     <tr>
                         <th className='w-[5%]'>
@@ -81,7 +82,7 @@ const BTable = () => {
                                     <p className={`w-30
                                         ${item.status == "pending" ? "bg-b-yellow-5/50" : item.status == "approve" ? "bg-b-green-5/50" : "bg-b-red-5/50"
                                         }
-                                        flex items-center justify-center rounded-2xl text-[10px] text-b-gray-6`}>
+                                        flex items-center justify-center rounded-2xl text-xs text-b-gray-6`}>
                                         {item.status}
                                     </p>
                                 </td>
@@ -89,7 +90,7 @@ const BTable = () => {
                         ))
                     }
                 </tbody>
-            </table>
+            </table></div>
 
             <BModal title='Configuration' openModal={open} setOpenModal={setOpen} size='xs'>
                 <div className='flex flex-col gap-2 p-4'>
@@ -104,22 +105,15 @@ const BTable = () => {
                     </button>
                 </div>
             </BModal>
-
-            <div className='mt-5'>
-                <CodeWrapper codeString={codeString} />
-            </div>
-        </div>
+        </DocumentationSection>
     )
 }
 
 export default BTable
 
+const codeString = `"use client"
 
-
-const codeString = `
-"use client"
-
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { BsGear } from "react-icons/bs";
 import BModal from '@/components/items/BModal';
 
@@ -158,7 +152,7 @@ const BTable = () => {
     const [open, setOpen] = useState(false);
     return (
         <div className='flex flex-col bg-linear-to-r from-b-gray-1 to-50% to-b-gray-1/40 shadow-sm rounded-[5] px-3 py-3 mt-2'>
-            <table className='Btable w-full'>
+            <div className='overflow-x-auto'><table className='Btable w-full min-w-[760px]'>
                 <thead>
                     <tr>
                         <th className='w-[5%]'>
@@ -199,7 +193,7 @@ const BTable = () => {
                                     <p className={\`w-30
                                         \${item.status == "pending" ? "bg-b-yellow-5/50" : item.status == "approve" ? "bg-b-green-5/50" : "bg-b-red-5/50"
                                         }
-                                        flex items-center justify-center rounded-2xl text-[10px] text-b-gray-6\`}>
+                                        flex items-center justify-center rounded-2xl text-xs text-b-gray-6\`}>
                                         {item.status}
                                     </p>
                                 </td>
@@ -207,7 +201,7 @@ const BTable = () => {
                         ))
                     }
                 </tbody>
-            </table>
+            </table></div>
 
             <BModal title='Configuration' openModal={open} setOpenModal={setOpen} size='xs'>
                 <div className='flex flex-col gap-2 p-4'>
@@ -226,5 +220,4 @@ const BTable = () => {
     )
 }
 
-export default BTable
-`;
+export default BTable`

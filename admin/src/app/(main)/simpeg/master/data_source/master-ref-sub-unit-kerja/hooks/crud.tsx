@@ -13,7 +13,7 @@ export const useResponseOption = (search: string) => {
     const url = useUrlStore(state => state.URL.APP)
     const { data, isLoading, isError, error } = useQuery({
         queryFn: () => fetchData(`
-            ${url}/api/v1/simpeg/master/ref_sub_unit_kerja/option?skip=0&limit=100&search=${search}
+            ${url}/api/v1/simpeg/master/ref_sub_unit_kerja/option?skip=0&limit=20&search=${search}
         `),
         queryKey: ["master-ref-sub-unit-kerja-option", search]
     })
@@ -21,8 +21,9 @@ export const useResponseOption = (search: string) => {
     let result: ListOptionSchema = []
     if (data) {
         result = (data as ResponseInterface[])?.map((item: any) => ({
-            id: item.kode_cepat,
-            value: item.nama
+            id: item.id,
+            value: item.nama,
+            sub_value: item.nama
         }))
     }
 
