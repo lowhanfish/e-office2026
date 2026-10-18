@@ -95,7 +95,6 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
                     }}
                     onChange={(item) => {
                         setItemForm("parent_id", item?.id ?? "")
-                        // setItemForm("sub_unit_kerja_nama", item?.value ?? "")
                     }}
                 >
                     {(item) => (

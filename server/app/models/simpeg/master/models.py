@@ -105,7 +105,7 @@ class RumpunJabatan(Base):
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     # Relationship
-    ref_kel_jabatan = relationship("KelJabatan", back_populates="ref_rumpun_jabatan_rel")
+    # ref_kel_jabatan = relationship("KelJabatan", back_populates="ref_rumpun_jabatan_rel")
 
 class SubUnitKerja(Base):
     __tablename__ = "ref_sub_unit_kerja"
@@ -154,7 +154,7 @@ class JenisJabatan(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     # Relationship
-    # ref_kel_jabatan = relationship("KelJabatan", back_populates="ref_jns_jabatan_rel")
+    ref_kel_jabatan_rel = relationship("KelJabatan", back_populates="ref_jns_jabatan_rel")
 
 
 
@@ -166,23 +166,22 @@ class RefJnsJabatanUmum(Base):
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    ref_kel_jabatan = relationship("KelJabatan", back_populates="ref_jns_jabatan_umum_rel")
-
 
 class KelJabatan(Base):
     __tablename__ = "ref_kel_jabatan"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     kode = Column(CHAR(50), index=True, nullable=False, unique=True)
     nama = Column(String(50), nullable=False)
-    ref_jns_jabatan_id = Column(String(2), ForeignKey("ref_jns_jabatan_umum.kode"),index=True, nullable=False, comment="dari kolom kode tabel ref_jns_jabatan_umum")
-    ref_rumpun_jabatan_id = Column(String(50), ForeignKey("ref_rumpun_jabatan.kode"),index=True, nullable=False, comment="dari kolom kode tabel ref_rumpun_jabatan")
-    pembina_id = Column(String(50), index=True, nullable=False)
+    ref_jns_jabatan_id = Column(String(2), ForeignKey("ref_jns_jabatan.kode"),index=True, nullable=False, comment="dari kolom kode tabel ref_jns_jabatan")
+    ref_rumpun_jabatan_id = Column(String(50), ForeignKey("ref_rumpun_jabatan_jf.kode"),index=True, nullable=False, comment="dari kolom kode tabel ref_rumpun_jabatan_jf")
+    pembina_id = Column(String(50), ForeignKey("ref_instansi.kode"), index=True, nullable=False)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     # Relationship
-    ref_jns_jabatan_umum_rel = relationship("RefJnsJabatanUmum", back_populates="ref_kel_jabatan")
-    ref_rumpun_jabatan_rel = relationship("RumpunJabatan", back_populates="ref_kel_jabatan")
+    ref_jns_jabatan_rel = relationship("JenisJabatan", back_populates="ref_kel_jabatan_rel")
+    ref_instansi_rel = relationship("Instansi", back_populates="ref_kel_jabatan_rel")
+
     ref_jabatan_fungsional = relationship("RefJabatanFungsional", back_populates="ref_kel_jabatan_rel")
 
 
@@ -211,6 +210,8 @@ class RefPenugasan(Base):
     created_by = Column(String(50), index=True, nullable=False)
     create_at = Column(DateTime(timezone=True), server_default=func.now())
 
+
+# jabatan_fungsional_id
 class RefJabatanFungsional(Base):
     __tablename__ = "ref_jabatan_fungsional"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
@@ -303,12 +304,13 @@ class Instansi(Base):
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     kode = Column(String(50), index=True, nullable=False, unique=True)
     kode_cepat = Column(CHAR(5), index=True, nullable=True)
-    nama = Column(String(150), nullable=False)
+    nama = Column(String(250), nullable=False)
     jenis = Column(String(2), ForeignKey("jenis_instansi.kode", ondelete="CASCADE"), index=True, nullable=False)
     jenis_instansi_id = Column(String(8), ForeignKey("jenis_instansi_id.kode", ondelete="CASCADE"), index=True, nullable=False)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
+    ref_kel_jabatan_rel = relationship("KelJabatan", back_populates="ref_instansi_rel")
     jenis_instansi_rel = relationship("JenisInstansi", primaryjoin="Instansi.jenis == JenisInstansi.kode", back_populates="ref_instansi_rel")
     jenis_instansi_id_rel = relationship("JenisInstansiId", primaryjoin="Instansi.jenis_instansi_id == JenisInstansiId.kode", back_populates="ref_instansi_rel")
     ref_satker_rel = relationship("Satker", primaryjoin="Instansi.kode == Satker.instansi_id",back_populates="ref_instansi_rel", cascade="all, delete-orphan")
