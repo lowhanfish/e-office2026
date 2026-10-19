@@ -5,7 +5,11 @@ import BInputSelect from '@/components/items/BInputSelect'
 
 import { ResponseInterface } from "../types"
 import { useCreateMaster, useUpdateMaster } from '../hooks/crud';
+
 import { useMasterJnsJabatanOption } from "../../master-jenis-jabatan/hooks"
+import { useResponseOption as useListRumpunJabatanJf } from "../../master-ref-rumpun-jabatan-jf/hooks/crud"
+import { useResponseOption as useListInstansi } from "../../master-instansi/hooks"
+
 import BAutoComplete from '@/components/items/BAutoComplete'
 
 const dataArrObj = [
@@ -26,6 +30,8 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
     const createMaster = useCreateMaster()
     const updateMaster = useUpdateMaster()
     const { List: listJnsJabatanOptiom } = useMasterJnsJabatanOption()
+    const { List: listRumpunJabatanJfOption } = useListRumpunJabatanJf(form.ref_rumpun_jabatan_nama)
+    const { List: listInstansi } = useListInstansi(form.pembina_nama)
 
     const setItemForm = (key: keyof ResponseInterface, value: string | number) => {
         setForm((prev) => ({
@@ -103,8 +109,8 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
                 <BAutoComplete
                     title="Rumpun Jabatan"
                     placeholder="Cari Rumpun Jabatan..."
-                    options={dataArrObj}
-                    getOptionLabel={(item) => item.name}
+                    options={listRumpunJabatanJfOption}
+                    getOptionLabel={(item) => item.value}
                     getOptionKey={(item) => item.id}
                     inputValue={form.ref_rumpun_jabatan_nama ?? ""}
                     onInputChange={(text) => {
@@ -116,7 +122,7 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
                 >
                     {(item) => (
                         <>
-                            <span className="text-b-gray-5 font-bold">{item.name}</span>
+                            <span className="text-b-gray-5 font-bold">{item.value}</span>
                         </>
                     )}
                 </BAutoComplete>
@@ -126,8 +132,8 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
                 <BAutoComplete
                     title="Unit Pembina"
                     placeholder="Cari Unit Pembina..."
-                    options={dataArrObj}
-                    getOptionLabel={(item) => item.name}
+                    options={listInstansi}
+                    getOptionLabel={(item) => item.value}
                     getOptionKey={(item) => item.id}
                     inputValue={form.pembina_nama ?? ""}
                     onInputChange={(text) => {
@@ -139,7 +145,8 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
                 >
                     {(item) => (
                         <>
-                            <span className="text-b-gray-5 font-bold">{item.name}</span>
+                            <span className="text-b-gray-5 font-bold">{item.value}</span>
+                            <span className="text-b-gray-5 text-[11px]">{item.sub_value}</span>
                         </>
                     )}
                 </BAutoComplete>

@@ -11,16 +11,28 @@ from .schema import InstansiCreate, InstansiResponse, InstansiUpdate, InstansiRe
 
 router = APIRouter()
 
-@router.get("/options", response_model=List[InstansiResponse])
-async def read_options(db : AsyncSession = Depends(get_db)):
+@router.get("/option", response_model=List[InstansiResponse])
+async def read_options(
+    skip: int = 0,
+    limit: int = 100,
+    search: str | None = None,
+    db : AsyncSession = Depends(get_db)
+):
     query = select(
         *Instansi.__table__.c,
         JenisInstansi.nama.label("jenis_nama"),
         JenisInstansiId.nama.label("jenis_instansi_nama"),
     )
 
-    query = query.join(JenisInstansi, Instansi.jenis == JenisInstansi.kode)
-    query = query.join(JenisInstansiId, Instansi.jenis_instansi_id == JenisInstansiId.kode)
+    query = query.outerjoin(JenisInstansi, Instansi.jenis == JenisInstansi.kode)
+    query = query.outerjoin(JenisInstansiId, Instansi.jenis_instansi_id == JenisInstansiId.kode)
+
+
+    if search:
+        query = query.where(Instansi.nama.ilike(f"%{search}%"))
+
+    query = query.offset(skip).limit(limit)
+
     result = await db.execute(query)
 
 

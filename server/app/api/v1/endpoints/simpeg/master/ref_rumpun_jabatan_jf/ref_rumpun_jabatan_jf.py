@@ -11,6 +11,32 @@ from app.models.simpeg.master.models import RumpunJabatanJF, RumpunJabatan
 router = APIRouter()
 
 
+@router.get("/option", response_model=List[ResponseRumpunJabatanJF])
+async def option(
+    skip : int = 0,
+    limit : int = 100,
+    search : str | None = None,
+    db: AsyncSession = Depends(get_db)
+):
+    query = select(
+        *RumpunJabatanJF.__table__.c,
+        RumpunJabatan.kode.label("kode_utama_rumpun"),
+        RumpunJabatan.nama.label("nama_rumpun")
+    )
+
+    query = query.outerjoin(RumpunJabatan, RumpunJabatan.kode_cepat == RumpunJabatanJF.kode_rumpun)
+
+    if search:
+        query = query.where(RumpunJabatanJF.nama.ilike(f"%{search}%"))
+
+    query = query.order_by(RumpunJabatanJF.created_at.desc()).offset(skip).limit(limit)
+
+    result = await db.execute(query)
+    return  result.mappings().all()
+
+
+
+
 @router.get("/read", response_model=ResponseRumpunJabatanJFList)
 async def read_RumpunJabatanJF(
     skip : int = 0,

@@ -9,13 +9,13 @@ import { swallAlert, showLoadingAlert } from '@/lib/show_swall';
 import { ListOptionSchema } from '@/types/global'
 
 
-export const useResponseOption = () => {
+export const useResponseOption = (search: string) => {
     const url = useUrlStore(state => state.URL.APP)
     const { data, isLoading, isError, error } = useQuery({
         queryFn: () => fetchData(`
-            ${url}/api/v1/simpeg/master/ref_rumpun_jabatan_jf/option
+            ${url}/api/v1/simpeg/master/ref_rumpun_jabatan_jf/option?skip=0&limit=100&search=${encodeURIComponent(search)}
         `),
-        queryKey: ["master-ref-rumpun-jabatan-jf-option"]
+        queryKey: ["master-ref-rumpun-jabatan-jf-option", search]
     })
 
     let result: ListOptionSchema = []
