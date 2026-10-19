@@ -1,9 +1,18 @@
 import { Dispatch, SetStateAction } from 'react'
 import BButton from '@/components/items/BButton'
 import BInput from '@/components/items/BInput'
+import BInputSelect from '@/components/items/BInputSelect'
 
-import { CreateInterface, ResponseInterface, ResponseListInterface } from "../types"
+import { ResponseInterface } from "../types"
 import { useCreateMaster, useUpdateMaster } from '../hooks/crud';
+import { useMasterJnsJabatanOption } from "../../master-jenis-jabatan/hooks"
+import BAutoComplete from '@/components/items/BAutoComplete'
+
+const dataArrObj = [
+    { id: 1, name: 'Kiken S batara, S.Si.,MT', role: 'Fullstack AI Engineer' },
+    { id: 2, name: 'Riswan M Rizal. ST', role: 'Fullstack AI Engineer' },
+    { id: 3, name: 'Muh. Hidayat Dermawan. ST', role: 'Fullstack AI Engineer' },
+]
 
 interface FormCreateProps {
     setClose: Dispatch<SetStateAction<boolean>>,
@@ -16,12 +25,13 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
 
     const createMaster = useCreateMaster()
     const updateMaster = useUpdateMaster()
+    const { List: listJnsJabatanOptiom } = useMasterJnsJabatanOption()
 
     const setItemForm = (key: keyof ResponseInterface, value: string | number) => {
-        setForm({
-            ...form,
+        setForm((prev) => ({
+            ...prev,
             [key]: String(value)
-        })
+        }))
     }
 
     const emptyForm = () => {
@@ -29,6 +39,12 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
             id: '',
             kode: '',
             nama: '',
+            ref_jns_jabatan_id: "",
+            ref_jns_jabatan_nama: "",
+            ref_rumpun_jabatan_id: "",
+            ref_rumpun_jabatan_nama: "",
+            pembina_id: "",
+            pembina_nama: "",
             created_by: "user.id",
             created_at: "user.id",
         })
@@ -52,8 +68,8 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
         <div className='px-5 pb-2'>
             <div className='pt-1'>
                 <BInput
-                    title='Kode Ref Jenis Jabatan Umum (Id pada SIASN)'
-                    placeholder='Kode Ref Jenis Jabatan Umum'
+                    title='Kode Ref Kela Jabatan (Id pada SIASN)'
+                    placeholder='Kode Ref Kela Jabatan'
                     type='text'
                     value={form.kode}
                     onChange={(value) => {
@@ -63,14 +79,70 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
             </div>
             <div className='pt-1'>
                 <BInput
-                    title='Nama Ref Jenis Jabatan Umum'
-                    placeholder='Nama Ref Jenis Jabatan Umum'
+                    title='Nama Ref Kelas Jabatan'
+                    placeholder='Nama Ref Kelas Jabatan'
                     type='text'
                     value={form.nama}
                     onChange={(value) => {
                         setItemForm('nama', value)
                     }}
                 />
+            </div>
+            <div className='pt-1'>
+                <BInputSelect
+                    title='Jenis Jabatan Id'
+                    datavalue={form.ref_jns_jabatan_id}
+                    options={listJnsJabatanOptiom}
+                    onChange={(value) => {
+                        console.log(value)
+                        setItemForm('ref_jns_jabatan_id', value)
+                    }}
+                />
+            </div>
+            <div className='pt-1'>
+                <BAutoComplete
+                    title="Rumpun Jabatan"
+                    placeholder="Cari Rumpun Jabatan..."
+                    options={dataArrObj}
+                    getOptionLabel={(item) => item.name}
+                    getOptionKey={(item) => item.id}
+                    inputValue={form.ref_rumpun_jabatan_nama ?? ""}
+                    onInputChange={(text) => {
+                        setItemForm("ref_rumpun_jabatan_nama", text)
+                    }}
+                    onChange={(item) => {
+                        setItemForm("ref_rumpun_jabatan_id", item?.id ?? "")
+                    }}
+                >
+                    {(item) => (
+                        <>
+                            <span className="text-b-gray-5 font-bold">{item.name}</span>
+                        </>
+                    )}
+                </BAutoComplete>
+            </div>
+
+            <div className='pt-1'>
+                <BAutoComplete
+                    title="Unit Pembina"
+                    placeholder="Cari Unit Pembina..."
+                    options={dataArrObj}
+                    getOptionLabel={(item) => item.name}
+                    getOptionKey={(item) => item.id}
+                    inputValue={form.pembina_nama ?? ""}
+                    onInputChange={(text) => {
+                        setItemForm("pembina_nama", text)
+                    }}
+                    onChange={(item) => {
+                        setItemForm("pembina_id", item?.id ?? "")
+                    }}
+                >
+                    {(item) => (
+                        <>
+                            <span className="text-b-gray-5 font-bold">{item.name}</span>
+                        </>
+                    )}
+                </BAutoComplete>
             </div>
 
 

@@ -115,7 +115,7 @@ async def create_KelJabatan(payload: KelJabatanCreate, db: AsyncSession = Depend
     await db.refresh(new_data)
     return new_data
 
-@router.put("/update/{id}")
+@router.patch("/update/{id}")
 async def create_KelJabatan(id:str, payload : KelJabatanUpdate, db: AsyncSession = Depends(get_db)):
     
     """

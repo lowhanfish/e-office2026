@@ -33,7 +33,7 @@ const BInputSelect = ({ title, datavalue, options, onChange }: BInputSelectProps
                                 <option
                                     key={index}
                                     value={item?.id}>
-                                    {item?.value}
+                                    - {item?.value}
                                 </option>
                             ))
                         }

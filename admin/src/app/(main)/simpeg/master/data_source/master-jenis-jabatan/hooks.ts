@@ -4,8 +4,41 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchData } from "@/lib/api_secure";
 import { useUrlStore } from "@/store/useUrlStore";
 import type { MasterResponse, MasterResponseList } from "./types";
+import { ListOptionSchema } from "@/types/global";
 
-export const useMasterJnsLokasiList = (
+interface ResponseInterface {
+  id: string;
+  value: string;
+  sub_value?: string;
+}
+
+export const useMasterJnsJabatanOption = () => {
+  const url = useUrlStore((state) => state.URL.APP);
+  const { data, isLoading, isError, error } = useQuery({
+    queryFn: () =>
+      fetchData(`
+            ${url}/api/v1/simpeg/master/ref_jns_jabatan/option
+        `),
+    queryKey: ["ref_jns_jabatan"],
+  });
+
+  let result: ListOptionSchema = [];
+  if (data) {
+    result = (data as ResponseInterface[])?.map((item: any) => ({
+      id: item.kode,
+      value: item.nama,
+    }));
+  }
+
+  return {
+    List: result,
+    isLoading: isLoading,
+    isError: isError,
+    error: error,
+  };
+};
+
+export const useMasterJnsJabatanList = (
   debounced: string,
   pageSelect: number,
   pageLimit: number,
@@ -28,7 +61,7 @@ export const useMasterJnsLokasiList = (
   return { List, isLoading, isError, error };
 };
 
-export const useMasterJnsLokasiDelete = () => {
+export const useMasterJnsJabatanDelete = () => {
   const url = useUrlStore((state) => state.URL.APP);
   const queryClient = useQueryClient();
 
@@ -47,7 +80,7 @@ export const useMasterJnsLokasiDelete = () => {
   });
 };
 
-export const useMasterJnsLokasiCreate = () => {
+export const useMasterJnsJabatanCreate = () => {
   const queryClient = useQueryClient();
 
   return useMutation({

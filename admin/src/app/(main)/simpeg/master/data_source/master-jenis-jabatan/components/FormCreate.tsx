@@ -3,7 +3,7 @@ import BButton from '@/components/items/BButton'
 import BInput from '@/components/items/BInput'
 import { useUrlStore } from '@/store/useUrlStore'
 import { MasterResponse } from "../types"
-import { useMasterJnsLokasiCreate } from '../hooks'
+import { useMasterJnsJabatanCreate } from '../hooks'
 
 interface FormCreateProps {
     setClose: Dispatch<SetStateAction<boolean>>,
@@ -15,7 +15,7 @@ interface FormCreateProps {
 const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
 
     const url = useUrlStore(state => state.URL.APP)
-    const { mutate } = useMasterJnsLokasiCreate()
+    const { mutate } = useMasterJnsJabatanCreate()
     const setItemForm = (key: keyof MasterResponse, value: string | number) => {
         setForm({
             ...form,

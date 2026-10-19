@@ -13,9 +13,9 @@ export const useResponseOption = () => {
     const url = useUrlStore(state => state.URL.APP)
     const { data, isLoading, isError, error } = useQuery({
         queryFn: () => fetchData(`
-            ${url}/api/v1/simpeg/master/ref_jns_jabatan_umum/option
+            ${url}/api/v1/simpeg/master/ref_kel_jabatan/option
         `),
-        queryKey: ["master-jenis-jabatan-umum-option"]
+        queryKey: ["master-kel-jabatan"]
     })
 
     let result: ListOptionSchema = []
@@ -25,7 +25,6 @@ export const useResponseOption = () => {
             value: item.nama
         }))
     }
-
 
     return {
         List: result,
@@ -39,7 +38,7 @@ export const useResponseListMaster = (skip: number, limit: number, search: strin
     const url = useUrlStore(state => state.URL.APP)
     const { data: List, isLoading, isError, error } = useQuery({
         queryFn: () => fetchData<ResponseListInterface>(
-            `${url}/api/v1/simpeg/master/ref_jns_jabatan_umum/read/?skip=${(skip - 1) * limit}&limit=${limit}&search=${search}`
+            `${url}/api/v1/simpeg/master/ref_kel_jabatan/read/?skip=${(skip - 1) * limit}&limit=${limit}&search=${search}`
         ),
         queryKey: ["master-jenis-jabatan-umum", skip, limit, search]
     })
@@ -52,7 +51,7 @@ export const useDeleteMaster = () => {
     const queryClient = useQueryClient()
     const deleteMutation = useMutation({
         mutationFn: (id: string) => fetchData(
-            `${url}/api/v1/simpeg/master/ref_jns_jabatan_umum/delete/${id}`,
+            `${url}/api/v1/simpeg/master/ref_kel_jabatan/delete/${id}`,
             {
                 method: "DELETE"
             }
@@ -81,7 +80,7 @@ export const useCreateMaster = () => {
 
     const createMutation = useMutation({
         mutationFn: (body: ResponseInterface) => fetchData(
-            `${url}/api/v1/simpeg/master/ref_jns_jabatan_umum/create`,
+            `${url}/api/v1/simpeg/master/ref_kel_jabatan/create`,
             {
                 method: "POST",
                 body: JSON.stringify(body),
@@ -111,7 +110,7 @@ export const useUpdateMaster = () => {
 
     const updateMutation = useMutation({
         mutationFn: ({ body, id }: { body: ResponseInterface, id: string }) => fetchData(
-            `${url}/api/v1/simpeg/master/ref_jns_jabatan_umum/update/${id}`,
+            `${url}/api/v1/simpeg/master/ref_kel_jabatan/update/${id}`,
             {
                 method: "PATCH",
                 body: JSON.stringify(body),

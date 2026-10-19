@@ -11,6 +11,25 @@ from sqlalchemy import select, func
 
 router = APIRouter()
 
+@router.get("/option", response_model=List[JenisJabatanResponse])
+async def option(
+    skip : int = 0,
+    limit : int = 100,
+    search : str | None = None,
+    db : AsyncSession = Depends(get_db)
+):
+    query = select(JenisJabatan)
+
+    if search:
+        query = query.where(JenisJabatan.nama.ilike(f"%{search}%"))
+
+    query = query.order_by(JenisJabatan.created_at.asc()).offset(skip).limit(limit)
+
+    result = await db.execute(query)
+    return result.scalars().all()
+
+    
+
 @router.get("/read", response_model = JenisJabatanResponseList)
 async def read_JenisJabatan(
     skip : int = 0,

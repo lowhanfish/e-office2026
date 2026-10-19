@@ -12,7 +12,7 @@ import { useUrlStore } from "@/store/useUrlStore"
 import FormCreate from './components/FormCreate';
 import { listindex } from "@/utilities/pagination"
 import { BSkeletonTable } from '@/components/items/BSkeleton';
-import { useMasterJnsLokasiList, useMasterJnsLokasiDelete } from './hooks';
+import { useMasterJnsJabatanList, useMasterJnsJabatanDelete } from './hooks';
 import { MasterResponse } from "./types"
 import useDebounced from '@/hooks/useDebounced';
 import useForm from '@/hooks/useForm';
@@ -30,9 +30,9 @@ const Page = () => {
 
     const [search, setSearch] = useState<string>("")
     const debounced = useDebounced(search)
-    const deletemutation = useMasterJnsLokasiDelete()
+    const deletemutation = useMasterJnsJabatanDelete()
 
-    const { List, isLoading } = useMasterJnsLokasiList(
+    const { List, isLoading } = useMasterJnsJabatanList(
         debounced,
         pageSelect,
         pageLimit,

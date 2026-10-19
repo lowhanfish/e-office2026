@@ -35,6 +35,12 @@ const InputData = () => {
         id: '',
         kode: '',
         nama: '',
+        ref_jns_jabatan_id: "",
+        ref_jns_jabatan_nama: "",
+        ref_rumpun_jabatan_id: "",
+        ref_rumpun_jabatan_nama: "",
+        pembina_id: "",
+        pembina_nama: "",
         created_at: "user.id",
         created_by: "user.id"
     })
@@ -47,6 +53,12 @@ const InputData = () => {
             id: item.id,
             kode: item.kode,
             nama: item.nama,
+            ref_jns_jabatan_id: item.ref_jns_jabatan_id,
+            ref_jns_jabatan_nama: item.ref_jns_jabatan_nama,
+            ref_rumpun_jabatan_id: item.ref_rumpun_jabatan_id,
+            ref_rumpun_jabatan_nama: item.ref_rumpun_jabatan_nama,
+            pembina_id: item.pembina_id,
+            pembina_nama: item.pembina_nama,
             created_by: item.created_by,
             created_at: item.created_at,
         })
@@ -57,6 +69,12 @@ const InputData = () => {
             id: "",
             kode: "",
             nama: "",
+            ref_jns_jabatan_id: "",
+            ref_jns_jabatan_nama: "",
+            ref_rumpun_jabatan_id: "",
+            ref_rumpun_jabatan_nama: "",
+            pembina_id: "",
+            pembina_nama: "",
             created_by: "",
             created_at: "",
         })
@@ -112,8 +130,8 @@ const InputData = () => {
                                 <tr className="text-left">
                                     <th className='w-[5%] text-center'>No</th>
                                     <th className='w-[5%] text-center'>Act</th>
-                                    <th className='w-[10%] text-center'>Kode</th>
-                                    <th className='w-[80%]'>Nama</th>
+                                    <th className='w-[40%]'>Nama/Jenis</th>
+                                    <th className='w-[50%] text-center'>Rumpun/Pembina</th>
                                 </tr>
                             </thead>
 
@@ -130,8 +148,14 @@ const InputData = () => {
                                                 </button>
                                             </div>
                                         </td>
-                                        <td className=''><p className='text-center'>{item.kode}</p></td>
-                                        <td className=''><p>{item.nama}</p></td>
+                                        <td className=''>
+                                            <p className='font-bold'>{item.nama}</p>
+                                            <p className='text-[10px]'>{item.ref_jns_jabatan_nama}</p>
+                                        </td>
+                                        <td className=''>
+                                            <p className='font-bold'>{item.ref_rumpun_jabatan_nama}</p>
+                                            <p className='text-[10px]'>{item.pembina_nama}</p>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
