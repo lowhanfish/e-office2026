@@ -6,16 +6,16 @@ from pydantic import BaseModel
 class KelJabatanResponse(MasterResponse):
     ref_jns_jabatan_id : str
     ref_jns_jabatan_nama : Optional[str] | None = None
-    ref_rumpun_jabatan_id : str
+    ref_rumpun_jabatan_id : Optional[str] = None
     ref_rumpun_jabatan_nama : Optional[str] | None = None
-    pembina_id : str
+    pembina_id : Optional[str] = None
     pembina_nama : Optional[str] | None = None
 
 
 class KelJabatanCreate(MasterCreate):
     ref_jns_jabatan_id : str
-    ref_rumpun_jabatan_id : str
-    pembina_id : str
+    ref_rumpun_jabatan_id : Optional[str] = None
+    pembina_id : Optional[str] = None
 
 class KelJabatanUpdate(MasterBase):
     kode : Optional[str] = None
