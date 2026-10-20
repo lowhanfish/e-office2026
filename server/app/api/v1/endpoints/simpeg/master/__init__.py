@@ -19,6 +19,7 @@ from . import (
     ref_asn_jenis_jabatan,
     ref_level_kompetensi_asn,
     ref_jenjang_jabatan,
+    ref_jenjang_jabatan_fungsional,
     ref_jns_jabatan, 
     ref_jns_jabatan_umum, 
     ref_kel_jabatan, 
@@ -57,6 +58,7 @@ master_router.include_router(ref_kppn.router, prefix="/ref_kppn")
 master_router.include_router(ref_asn_jenis_jabatan.router, prefix="/ref_asn_jenis_jabatan")
 master_router.include_router(ref_level_kompetensi_asn.router, prefix="/ref_level_kompetensi_asn")
 master_router.include_router(ref_jenjang_jabatan.router, prefix="/ref_jenjang_jabatan")
+master_router.include_router(ref_jenjang_jabatan_fungsional.router, prefix="/ref_jenjang_jabatan_fungsional")
 master_router.include_router(ref_jns_jabatan.router, prefix="/ref_jns_jabatan")
 master_router.include_router(ref_jns_jabatan_umum.router, prefix="/ref_jns_jabatan_umum")
 master_router.include_router(ref_rumpun_jabatan.router, prefix="/ref_rumpun_jabatan")

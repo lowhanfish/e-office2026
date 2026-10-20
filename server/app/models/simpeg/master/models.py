@@ -210,6 +210,14 @@ class RefPenugasan(Base):
     created_by = Column(String(50), index=True, nullable=False)
     create_at = Column(DateTime(timezone=True), server_default=func.now())
 
+class RefJenjangJabatanFungsional(Base): #jenjang untuk fungsional bukan struktural
+    __tablename__ = "ref_jenjang_jabatan_fungsional"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(CHAR(5), index=True, nullable=False, unique=True)
+    nama = Column(String(50), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    create_at = Column(DateTime(timezone=True), server_default=func.now())
+
 
 # jabatan_fungsional_id
 class RefJabatanFungsional(Base):
