@@ -5,6 +5,9 @@ from app.db.session_simpeg import get_db
 from app.api.deps import get_current_user
 from .schema import JenjangJabatanFungsionalCreate, JenjangJabatanFungsionalResponse, JenjangJabatanFungsionalResponseList
 
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, func
+
 
 router = APIRouter()
 
@@ -16,3 +19,10 @@ async def option():
         "message" : "active"
     }
 
+
+@router.get("/read", response_model=JenjangJabatanFungsionalResponseList)
+async def read(
+    skip : int = 0,
+    limit : i
+):
+    pass
