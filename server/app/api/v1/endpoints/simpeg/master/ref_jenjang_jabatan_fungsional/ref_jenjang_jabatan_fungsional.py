@@ -46,3 +46,28 @@ async def read(
         "total" : total,
         "data" : data
     }
+
+
+@router.post("/create", response_model=JenjangJabatanFungsionalResponse)
+async def create(
+    payload : JenjangJabatanFungsionalCreate,
+    db:AsyncSession = Depends(get_db)
+):
+    pass
+
+
+@router.patch("/update/{id}", response_model=JenjangJabatanFungsionalResponse)
+async def update(
+    id: str,
+    payload : JenjangJabatanFungsionalCreate,
+    db:AsyncSession = Depends(get_db)
+):
+    pass
+
+
+@router.delete("/delete/{id}", response_model=JenjangJabatanFungsionalResponse)
+async def delete(
+    id: str,
+    db:AsyncSession = Depends(get_db)
+):
+    pass
