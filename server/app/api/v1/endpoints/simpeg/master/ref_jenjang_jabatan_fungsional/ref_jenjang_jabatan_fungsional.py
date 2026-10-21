@@ -51,9 +51,21 @@ async def read(
 @router.post("/create", response_model=JenjangJabatanFungsionalResponse)
 async def create(
     payload : JenjangJabatanFungsionalCreate,
-    db:AsyncSession = Depends(get_db)
+    db:AsyncSession = Depends(get_db),
+    user = Depends(get_current_user)
+
 ):
-    pass
+    new_data = JenjangJabatanFungsionalResponse(
+        kode = payload.kode,
+        nama = payload.nama,
+        created_by= user.id
+    )
+
+    db.add(new_data)
+    await db.commit()
+    await db.refresh(new_data)
+    return new_data
+
 
 
 @router.patch("/update/{id}", response_model=JenjangJabatanFungsionalResponse)
