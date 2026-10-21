@@ -13,11 +13,20 @@ router = APIRouter()
 
 
 @router.get("/option")
-async def option():
-    return {
-        "status" : 200,
-        "message" : "active"
-    }
+async def option(
+    skip : int = 0,
+    limit : int = 100,
+    search : str | None = None,
+    db: AsyncSession = Depends(get_db)
+):
+    query = select(RefJenjangJabatanFungsional)
+    if search:
+        query = query.where(RefJenjangJabatanFungsional.nama.ilike("f%{search}%"))
+
+    query = query.order_by(RefJenjangJabatanFungsional.create_at.desc()).offset(skip).limit(limit)
+    result = await db.execute(query)
+    return result.scalars().all()
+
 
 
 @router.get("/read", response_model=JenjangJabatanFungsionalResponseList)
@@ -74,12 +83,40 @@ async def update(
     payload : JenjangJabatanFungsionalCreate,
     db:AsyncSession = Depends(get_db)
 ):
-    pass
 
+    query = select(RefJenjangJabatanFungsional).where(RefJenjangJabatanFungsional.id == id)
+    result = await db.execute(query)
+    db_data = result.scalar_one_or_none()
+
+    if not db_data:
+        raise HTTPException(status_code=404, detail="Data tidak ditemukan")
+
+    update_data = payload.model_dump(exclude_unset=True)
+
+    for key, value in update_data.items():
+        if hasattr(db_data, key):
+            setattr(db_data, key, value)
+    
+    await db.commit()
+    await db.refresh(db_data)
+    return db_data
 
 @router.delete("/delete/{id}", response_model=JenjangJabatanFungsionalResponse)
 async def delete(
     id: str,
     db:AsyncSession = Depends(get_db)
 ):
-    pass
+    query = select(RefJenjangJabatanFungsional).where(RefJenjangJabatanFungsional.id == id)
+    result = await db.execute(query)
+    db_data = result.scalar_one_or_none()
+
+    if not db_data:
+        raise HTTPException(status_code=404, detail="Data tidak ditemukan")
+
+    nama = db_data.nama
+
+    await db.delete(db_data)
+    await db.commit()
+    return {"message": f"Ref Jenjang Jabatan Fungsional ID : {nama} berhasil dihapus"}
+
+            
