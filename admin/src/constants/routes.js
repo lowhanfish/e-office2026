@@ -221,6 +221,11 @@ const routex = [
                         children : []
                     },
                     {
+                        title : "Master Referensi Jenjang Jabatan Fungsional",
+                        path:"/simpeg/master/data_source/master-ref-jenjang-jabatan-fungsional",
+                        children : []
+                    },
+                    {
                         title : "Master Referensi Jenis Jabatan Umum",
                         path:"/simpeg/master/data_source/master-jenis-jabatan-umum",
                         children : []

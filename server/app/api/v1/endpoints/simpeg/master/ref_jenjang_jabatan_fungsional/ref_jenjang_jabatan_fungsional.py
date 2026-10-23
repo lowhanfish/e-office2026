@@ -23,7 +23,7 @@ async def option(
     query = select(RefJenjangJabatanFungsional)
 
     if search:
-        query = query.where(RefJenjangJabatanFungsional.nama.ilike("f%{search}%"))
+        query = query.where(RefJenjangJabatanFungsional.nama.ilike(f"%{search}%"))
 
     query = query.order_by(RefJenjangJabatanFungsional.created_at.desc()).offset(skip).limit(limit)
 
@@ -41,7 +41,7 @@ async def read(
 ):
     query = select(RefJenjangJabatanFungsional)
     if search:
-        query = query.where(RefJenjangJabatanFungsional.nama.ilike("f%{search}%"))
+        query = query.where(RefJenjangJabatanFungsional.nama.ilike(f"%{search}%"))
 
     total_query = select(func.count()).select_from(query.subquery())
     total_result = await db.execute(total_query)

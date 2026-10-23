@@ -13,9 +13,9 @@ export const useResponseOption = () => {
     const url = useUrlStore(state => state.URL.APP)
     const { data, isLoading, isError, error } = useQuery({
         queryFn: () => fetchData(`
-            ${url}/api/v1/simpeg/master/ref_riwayat/option
+            ${url}/api/v1/simpeg/master/ref_jenjang_jabatan_fungsional/option
         `),
-        queryKey: ["master-jenis-riwayat-option"]
+        queryKey: ["master-ref-jenjang-jabatan-fungsional"]
     })
 
     let result: ListOptionSchema = []
@@ -39,7 +39,7 @@ export const useResponseListMaster = (skip: number, limit: number, search: strin
     const url = useUrlStore(state => state.URL.APP)
     const { data: List, isLoading, isError, error } = useQuery({
         queryFn: () => fetchData<ResponseListInterface>(
-            `${url}/api/v1/simpeg/master/ref_riwayat/read/?skip=${(skip - 1) * limit}&limit=${limit}&search=${search}`
+            `${url}/api/v1/simpeg/master/ref_jenjang_jabatan_fungsional/read/?skip=${(skip - 1) * limit}&limit=${limit}&search=${search}`
         ),
         queryKey: ["master-jenis-riwayat", skip, limit, search]
     })
@@ -52,7 +52,7 @@ export const useDeleteMaster = () => {
     const queryClient = useQueryClient()
     const deleteMutation = useMutation({
         mutationFn: (id: string) => fetchData(
-            `${url}/api/v1/simpeg/master/ref_riwayat/delete/${id}`,
+            `${url}/api/v1/simpeg/master/ref_jenjang_jabatan_fungsional/delete/${id}`,
             {
                 method: "DELETE"
             }
@@ -81,7 +81,7 @@ export const useCreateMaster = () => {
 
     const createMutation = useMutation({
         mutationFn: (body: ResponseInterface) => fetchData(
-            `${url}/api/v1/simpeg/master/ref_riwayat/create`,
+            `${url}/api/v1/simpeg/master/ref_jenjang_jabatan_fungsional/create`,
             {
                 method: "POST",
                 body: JSON.stringify(body),
@@ -111,7 +111,7 @@ export const useUpdateMaster = () => {
 
     const updateMutation = useMutation({
         mutationFn: ({ body, id }: { body: ResponseInterface, id: string }) => fetchData(
-            `${url}/api/v1/simpeg/master/ref_riwayat/update/${id}`,
+            `${url}/api/v1/simpeg/master/ref_jenjang_jabatan_fungsional/update/${id}`,
             {
                 method: "PATCH",
                 body: JSON.stringify(body),
