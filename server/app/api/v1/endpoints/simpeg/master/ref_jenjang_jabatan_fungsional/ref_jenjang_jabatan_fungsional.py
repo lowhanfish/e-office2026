@@ -7,12 +7,13 @@ from .schema import JenjangJabatanFungsionalCreate, JenjangJabatanFungsionalResp
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
+from typing import List
 
 
 router = APIRouter()
 
 
-@router.get("/option")
+@router.get("/option", response_model=List[JenjangJabatanFungsionalResponse])
 async def option(
     skip : int = 0,
     limit : int = 100,
@@ -20,10 +21,12 @@ async def option(
     db: AsyncSession = Depends(get_db)
 ):
     query = select(RefJenjangJabatanFungsional)
+
     if search:
         query = query.where(RefJenjangJabatanFungsional.nama.ilike("f%{search}%"))
 
-    query = query.order_by(RefJenjangJabatanFungsional.create_at.desc()).offset(skip).limit(limit)
+    query = query.order_by(RefJenjangJabatanFungsional.created_at.desc()).offset(skip).limit(limit)
+
     result = await db.execute(query)
     return result.scalars().all()
 
@@ -44,7 +47,7 @@ async def read(
     total_result = await db.execute(total_query)
     total = total_result.scalar_one_or_none()
 
-    query = query.order_by(RefJenjangJabatanFungsional.create_at.desc()).offset(skip).limit(limit)
+    query = query.order_by(RefJenjangJabatanFungsional.created_at.desc()).offset(skip).limit(limit)
     result = await db.execute(query)
     data = result.scalars().all()
 
@@ -64,7 +67,7 @@ async def create(
     user = Depends(get_current_user)
 
 ):
-    new_data = JenjangJabatanFungsionalResponse(
+    new_data = RefJenjangJabatanFungsional(
         kode = payload.kode,
         nama = payload.nama,
         created_by= user.id
@@ -73,6 +76,10 @@ async def create(
     db.add(new_data)
     await db.commit()
     await db.refresh(new_data)
+
+    print(new_data)
+
+
     return new_data
 
 
@@ -101,7 +108,7 @@ async def update(
     await db.refresh(db_data)
     return db_data
 
-@router.delete("/delete/{id}", response_model=JenjangJabatanFungsionalResponse)
+@router.delete("/delete/{id}")
 async def delete(
     id: str,
     db:AsyncSession = Depends(get_db)

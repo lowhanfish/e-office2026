@@ -18,10 +18,11 @@ class MasterResponse(MasterBase):
     id : str
     created_by : Optional[str] = None
     created_at : datetime
+    
     model_config = ConfigDict(from_attributes=True)
 
 class MasterResponseList(BaseModel):
+    skip : int = 0
+    limit : int = 100
     total : int
-    skip : int
-    limit : int
     data : List[MasterResponse]

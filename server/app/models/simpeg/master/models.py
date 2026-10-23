@@ -208,7 +208,7 @@ class RefPenugasan(Base):
     kode = Column(CHAR(5), index=True, nullable=False, unique=True)
     nama = Column(String(50), nullable=False)
     created_by = Column(String(50), index=True, nullable=False)
-    create_at = Column(DateTime(timezone=True), server_default=func.now())
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class RefJenjangJabatanFungsional(Base): #jenjang untuk fungsional bukan struktural
     __tablename__ = "ref_jenjang_jabatan_fungsional"
@@ -216,7 +216,7 @@ class RefJenjangJabatanFungsional(Base): #jenjang untuk fungsional bukan struktu
     kode = Column(CHAR(5), index=True, nullable=False, unique=True)
     nama = Column(String(50), nullable=False)
     created_by = Column(String(50), index=True, nullable=False)
-    create_at = Column(DateTime(timezone=True), server_default=func.now())
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
 # jabatan_fungsional_id

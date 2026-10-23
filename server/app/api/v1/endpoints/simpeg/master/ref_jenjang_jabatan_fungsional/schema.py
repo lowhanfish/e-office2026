@@ -2,7 +2,9 @@ from app.schemas.simpeg.master.base_schema import MasterCreate, MasterResponse, 
 
 class JenjangJabatanFungsionalResponse(MasterResponse):
     pass
+
 class JenjangJabatanFungsionalCreate(MasterCreate):
     pass
+
 class JenjangJabatanFungsionalResponseList(MasterResponseList):
     pass
