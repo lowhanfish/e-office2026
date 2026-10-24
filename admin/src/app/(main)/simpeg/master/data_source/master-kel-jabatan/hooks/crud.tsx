@@ -9,20 +9,21 @@ import { swallAlert, showLoadingAlert } from '@/lib/show_swall';
 import { ListOptionSchema } from '@/types/global'
 
 
-export const useResponseOption = () => {
+export const useResponseOption = (search: string) => {
     const url = useUrlStore(state => state.URL.APP)
     const { data, isLoading, isError, error } = useQuery({
         queryFn: () => fetchData(`
-            ${url}/api/v1/simpeg/master/ref_kel_jabatan/option
+            ${url}/api/v1/simpeg/master/ref_kel_jabatan/option?skip=0&limit=20&search=${encodeURIComponent(search)}
         `),
-        queryKey: ["master-kel-jabatan"]
+        queryKey: ["master-kel-jabatan", search]
     })
 
     let result: ListOptionSchema = []
     if (data) {
         result = (data as ResponseInterface[])?.map((item: any) => ({
             id: item.kode,
-            value: item.nama
+            value: `${item.nama} - (${item.ref_rumpun_jabatan_nama})`,
+            sub_value: item.pembina_nama
         }))
     }
 

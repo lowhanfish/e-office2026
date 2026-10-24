@@ -123,7 +123,7 @@ async def create_jabfung(
     return data
 
 
-@router.put("/update/{id}")
+@router.patch("/update/{id}")
 async def update_jabfung(
     id:str, 
     payload: RefJabfungUpdate, 

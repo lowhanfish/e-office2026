@@ -13,7 +13,7 @@ export const useResponseOption = () => {
     const url = useUrlStore(state => state.URL.APP)
     const { data, isLoading, isError, error } = useQuery({
         queryFn: () => fetchData(`
-            ${url}/api/v1/simpeg/master/ref_jenjang_jabatan_fungsional/option
+            ${url}/api/v1/simpeg/master/ref_jenjang_jabatan_fungsional/option?skip=0&limit=100
         `),
         queryKey: ["master-ref-jenjang-jabatan-fungsional"]
     })

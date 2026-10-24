@@ -35,12 +35,13 @@ const InputData = () => {
         id: '',
         kode: '',
         nama: '',
-        ref_jns_jabatan_id: "",
-        ref_jns_jabatan_nama: "",
-        ref_rumpun_jabatan_id: "",
-        ref_rumpun_jabatan_nama: "",
-        pembina_id: "",
-        pembina_nama: "",
+        kode_cepat: '',
+        bup_usia: 0,
+        ref_kel_jabatan_id: '',
+        jenjang: '',
+        status: '',
+        ref_kel_jabatan_nama: '',
+        jenjang_nama: '',
         created_at: "user.id",
         created_by: "user.id"
     })
@@ -53,12 +54,13 @@ const InputData = () => {
             id: item.id,
             kode: item.kode,
             nama: item.nama,
-            ref_jns_jabatan_id: item.ref_jns_jabatan_id,
-            ref_jns_jabatan_nama: item.ref_jns_jabatan_nama,
-            ref_rumpun_jabatan_id: item.ref_rumpun_jabatan_id,
-            ref_rumpun_jabatan_nama: item.ref_rumpun_jabatan_nama,
-            pembina_id: item.pembina_id,
-            pembina_nama: item.pembina_nama,
+            kode_cepat: item.kode_cepat,
+            bup_usia: item.bup_usia,
+            ref_kel_jabatan_id: item.ref_kel_jabatan_id,
+            jenjang: item.jenjang,
+            status: item.status,
+            ref_kel_jabatan_nama: item.ref_kel_jabatan_nama,
+            jenjang_nama: item.jenjang_nama,
             created_by: item.created_by,
             created_at: item.created_at,
         })
@@ -66,15 +68,16 @@ const InputData = () => {
 
     const emptyForm = () => {
         setForm({
-            id: "",
-            kode: "",
-            nama: "",
-            ref_jns_jabatan_id: "",
-            ref_jns_jabatan_nama: "",
-            ref_rumpun_jabatan_id: "",
-            ref_rumpun_jabatan_nama: "",
-            pembina_id: "",
-            pembina_nama: "",
+            id: '',
+            kode: '',
+            nama: '',
+            kode_cepat: '',
+            bup_usia: 0,
+            ref_kel_jabatan_id: '',
+            jenjang: '',
+            status: '',
+            ref_kel_jabatan_nama: '',
+            jenjang_nama: '',
             created_by: "",
             created_at: "",
         })
@@ -130,8 +133,9 @@ const InputData = () => {
                                 <tr className="text-left">
                                     <th className='w-[5%] text-center'>No</th>
                                     <th className='w-[5%] text-center'>Act</th>
-                                    <th className='w-[40%]'>Nama/Jenis</th>
-                                    <th className='w-[50%] text-center'>Rumpun/Pembina</th>
+                                    <th className='w-[20%] text-center'>Kode/Kode Cepat</th>
+                                    <th className='w-[35%]'>Nama/Status/BUP</th>
+                                    <th className='w-[35%] text-center'>Kel Jabatan/Jenjang</th>
                                 </tr>
                             </thead>
 
@@ -149,12 +153,17 @@ const InputData = () => {
                                             </div>
                                         </td>
                                         <td className=''>
-                                            <p className='font-bold'>{item.nama}</p>
-                                            <p className='text-[10px]'>{item.ref_jns_jabatan_nama}</p>
+                                            <p className='font-bold'>{item.kode}</p>
+                                            <p className='text-[10px]'><b>Kode Cepat :</b> [{item.kode_cepat}]</p>
                                         </td>
                                         <td className=''>
-                                            <p className='font-bold'>{item.ref_rumpun_jabatan_nama}</p>
-                                            <p className='text-[10px]'>{item.pembina_nama}</p>
+                                            <p className='font-bold'>{item.nama}</p>
+                                            <p className='text-[10px]'><b>Status :</b> {item.status}</p>
+                                            <p className='text-[10px]'><b>BUP :</b> {item.bup_usia}</p>
+                                        </td>
+                                        <td className=''>
+                                            <p className='font-bold'>{item.ref_kel_jabatan_nama}</p>
+                                            <p className='text-[10px]'><b>Jenjang :</b> {item.jenjang_nama}</p>
                                         </td>
                                     </tr>
                                 ))}
