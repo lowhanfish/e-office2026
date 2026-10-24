@@ -1,35 +1,94 @@
 from app.db.transaction import commit_or_raise_unique_conflict
 from fastapi import APIRouter, Depends, HTTPException
-from .schema import RefJabfungCreate, RefJabfungResponse, RefJabfungUpdate
+from .schema import RefJabfungCreate, RefJabfungResponse, RefJabfungUpdate, RefJabfungResponseList
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
+from sqlalchemy import select, func
 from app.db.session import get_db
 from app.api.deps import get_current_user
-from app.models.simpeg.master.models import RefJabatanFungsional
+from app.models.simpeg.master.models import RefJabatanFungsional, KelJabatan, RefJenjangJabatanFungsional
 from typing import List
 
 router = APIRouter()
 
-@router.get("/read", response_model=List[RefJabfungResponse])
-async def read_jabfung(db:AsyncSession = Depends(get_db)):
+@router.get("/option", response_model=List[RefJabfungResponse])
+async def option(
+    skip : int = 0,
+    limit : int = 100,
+    search : str | None = None,
+    db:AsyncSession = Depends(get_db)
+):
+
+    query = select(
+        *RefJabatanFungsional.__table__.c,
+        KelJabatan.nama.label("ref_kel_jabatan_nama"),
+        RefJenjangJabatanFungsional.nama.label("jenjang_nama"),
+    )
+
+    if search:
+        query = query.where(RefJabatanFungsional.nama.ilike(f"%{search}%"))
+
+    query = query.outerjoin(KelJabatan, KelJabatan.kode == RefJabatanFungsional.ref_kel_jabatan_id)
+    query = query.outerjoin(RefJenjangJabatanFungsional, RefJenjangJabatanFungsional.kode == RefJabatanFungsional.jenjang)
+
+    query = query.order_by(RefJabatanFungsional.created_at).offset(skip).limit(limit)
+    
+    result = await db.execute(query)
+    return result.mappings().all()
+
+@router.get("/read")
+async def read_jabfung(
+    skip : int = 0,
+    limit : int = 100,
+    search : str | None = None,
+    db:AsyncSession = Depends(get_db)
+):
     """
     ## Mengambil semua List Ref Jabatan Fungsional
     Membaca data Ref Jabatan Fungsional baru dari sistem.
 
     **Parameter:**
     - `search`   : String, Untuk mencari data value dari Ref Jabatan Fungsional.
-    - `page_start`: Int, Data page pertama akses page.
-    - `page_limit` : Int, Jumlah data yang ditarik.
+    - `skip`: Int, Data page pertama akses page.
+    - `limit` : Int, Jumlah data yang ditarik.
 
     **Error yang mungkin terjadi:**
     - `422`: Jika format input tidak sesuai skema.
     """
-    query = select(RefJabatanFungsional)
-    result = await db.execute(query)
-    return result.scalars().all()
+    query = select(
+        *RefJabatanFungsional.__table__.c,
+        KelJabatan.nama.label("ref_kel_jabatan_nama"),
+        RefJenjangJabatanFungsional.nama.label("jenjang_nama"),
+    )
 
-@router.post("/create", response_model=RefJabfungResponse)
-async def create_jabfung(payload: RefJabfungCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
+    if search:
+        query = query.where(RefJabatanFungsional.nama.ilike(f"%{search}%"))
+
+    query = query.outerjoin(KelJabatan, KelJabatan.kode == RefJabatanFungsional.ref_kel_jabatan_id)
+    query = query.outerjoin(RefJenjangJabatanFungsional, RefJenjangJabatanFungsional.kode == RefJabatanFungsional.jenjang)
+
+    total_query = select(func.count()).select_from(query.subquery())
+    total_result = await db.execute(total_query)
+    total = total_result.scalar_one_or_none()
+
+    query = query.order_by(RefJabatanFungsional.created_at).offset(skip).limit(limit)
+
+    result = await db.execute(query)
+    data = result.mappings().all()
+
+    return {
+        "skip" : skip,
+        "limit" : limit,
+        "total" : total,
+        "data" : data
+    }
+    
+
+@router.post("/create")
+async def create_jabfung(
+    payload: RefJabfungCreate, 
+    db: AsyncSession = Depends(get_db), 
+    current_user = Depends(get_current_user)
+):
     """
     ## Membuat Ref Jabatan Fungsional
     Menambahkan data Ref Jabatan Fungsional baru ke dalam sistem.
@@ -65,7 +124,11 @@ async def create_jabfung(payload: RefJabfungCreate, db: AsyncSession = Depends(g
 
 
 @router.put("/update/{id}")
-async def update_jabfung(id:str, payload: RefJabfungUpdate, db : AsyncSession = Depends(get_db)):
+async def update_jabfung(
+    id:str, 
+    payload: RefJabfungUpdate, 
+    db : AsyncSession = Depends(get_db)
+):
     """
     ## Mengubah Ref Jabatan Fungsional
     Mengubah data item Ref Jabatan Fungsional di dalam sistem.

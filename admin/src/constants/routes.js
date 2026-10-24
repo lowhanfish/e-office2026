@@ -241,6 +241,11 @@ const routex = [
                         children : []
                     },
                     {
+                        title : "Master Referensi Jabfung",
+                        path:"/simpeg/master/data_source/master-ref-jabfung",
+                        children : []
+                    },
+                    {
                         title : "Master Referensi Jabfung Umum",
                         path:"/simpeg/master/data_source/master-ref-jabfung-umum",
                         children : []

@@ -7,15 +7,15 @@ import uuid
 from app.db.session import Base
 
 
-class Jenjang(enum.Enum): #jenjang untuk fungsional bukan struktural
-    PM = "Pemula"
-    TR = "Terampil"
-    MH = "Mahir"
-    PY = "Penyelia"
-    PT = "Pertama"
-    MU = "Muda"
-    MA = "Madya"
-    UT = "Utama"
+# class Jenjang(enum.Enum): #jenjang untuk fungsional bukan struktural
+#     PM = "Pemula"
+#     TR = "Terampil"
+#     MH = "Mahir"
+#     PY = "Penyelia"
+#     PT = "Pertama"
+#     MU = "Muda"
+#     MA = "Madya"
+#     UT = "Utama"
 
 class StatusJabfung(enum.Enum):
     N = "Jabatan yang masih berlaku"
@@ -218,6 +218,8 @@ class RefJenjangJabatanFungsional(Base): #jenjang untuk fungsional bukan struktu
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
+    ref_jabatan_fungsional = relationship("RefJabatanFungsional", back_populates="ref_jenjang_jabatan_fungsional_rel")
+
 
 # jabatan_fungsional_id
 class RefJabatanFungsional(Base):
@@ -228,14 +230,14 @@ class RefJabatanFungsional(Base):
     nama = Column(String(250), nullable=False)
     bup_usia = Column(SmallInteger, nullable=False)
     ref_kel_jabatan_id = Column(String(50), ForeignKey("ref_kel_jabatan.kode"), index=True, nullable=False, comment="dari kolom kode tabel ref_kel_jabatan")
-    jenjang = Column(Enum(Jenjang), nullable=False, index=True)
+    jenjang = Column(String(50), ForeignKey("ref_jenjang_jabatan_fungsional.kode"), index=True, nullable=False, comment="Kode dari tabel ref_jenjang_jabatan_fungsional")
     status = Column(Enum(StatusJabfung), nullable=False, index=True)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     # relationship
     ref_kel_jabatan_rel = relationship("KelJabatan", back_populates="ref_jabatan_fungsional")
-    created_by = Column(String(50), index=True, nullable=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    ref_jenjang_jabatan_fungsional_rel = relationship("RefJenjangJabatanFungsional", back_populates="ref_jabatan_fungsional")
+
 
 class RefJabatanFungsionalUmum(Base):
     __tablename__ = "ref_jabatan_fungsional_umum"
