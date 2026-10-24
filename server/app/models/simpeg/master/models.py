@@ -6,17 +6,6 @@ import uuid
 
 from app.db.session import Base
 
-
-# class Jenjang(enum.Enum): #jenjang untuk fungsional bukan struktural
-#     PM = "Pemula"
-#     TR = "Terampil"
-#     MH = "Mahir"
-#     PY = "Penyelia"
-#     PT = "Pertama"
-#     MU = "Muda"
-#     MA = "Madya"
-#     UT = "Utama"
-
 class StatusJabfung(enum.Enum):
     N = "Jabatan yang masih berlaku"
     O = "Jabatan yang tidak berlaku"

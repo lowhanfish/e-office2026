@@ -133,7 +133,7 @@ const InputData = () => {
                                 <tr className="text-left">
                                     <th className='w-[5%] text-center'>No</th>
                                     <th className='w-[5%] text-center'>Act</th>
-                                    <th className='w-[20%] text-center'>Kode/Kode Cepat</th>
+                                    <th className='w-[20%] text-center'>Kode Cepat / Kode</th>
                                     <th className='w-[35%]'>Nama/Status/BUP</th>
                                     <th className='w-[35%] text-center'>Kel Jabatan/Jenjang</th>
                                 </tr>
@@ -153,13 +153,13 @@ const InputData = () => {
                                             </div>
                                         </td>
                                         <td className=''>
-                                            <p className='font-bold'>{item.kode}</p>
-                                            <p className='text-[10px]'><b>Kode Cepat :</b> [{item.kode_cepat}]</p>
+                                            <p className='font-bold'><b>Kode Cepat : </b>[{item.kode_cepat}]</p>
+                                            <p className='text-[10px]'>{item.kode}</p>
                                         </td>
                                         <td className=''>
                                             <p className='font-bold'>{item.nama}</p>
-                                            <p className='text-[10px]'><b>Status :</b> {item.status}</p>
-                                            <p className='text-[10px]'><b>BUP :</b> {item.bup_usia}</p>
+                                            <p className='text-[10px]'><b>Status :</b> ({item.status})</p>
+                                            <p className='text-[10px]'><b>BUP :</b> ({item.bup_usia})</p>
                                         </td>
                                         <td className=''>
                                             <p className='font-bold'>{item.ref_kel_jabatan_nama}</p>

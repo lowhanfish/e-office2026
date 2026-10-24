@@ -122,7 +122,6 @@ async def create_jabfung(
 
     return data
 
-
 @router.patch("/update/{id}")
 async def update_jabfung(
     id:str, 
