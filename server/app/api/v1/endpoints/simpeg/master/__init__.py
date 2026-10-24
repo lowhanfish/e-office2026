@@ -27,6 +27,7 @@ from . import (
     ref_rumpun_jabatan_jf, 
     ref_jabfung_umum, 
     ref_jabfung, 
+    ref_jabatan_struktural,
     
     ref_riwayat, 
     ref_hukdis, 
@@ -66,6 +67,7 @@ master_router.include_router(ref_kel_jabatan.router, prefix="/ref_kel_jabatan")
 master_router.include_router(ref_rumpun_jabatan_jf.router, prefix="/ref_rumpun_jabatan_jf")
 master_router.include_router(ref_jabfung_umum.router, prefix="/ref_jabfung_umum")
 master_router.include_router(ref_jabfung.router, prefix="/ref_jabfung")
+master_router.include_router(ref_jabatan_struktural.router, prefix="/ref_jabatan_struktural")
 
 master_router.include_router(ref_riwayat.router, prefix="/ref_riwayat")
 master_router.include_router(ref_hukdis.router, prefix="/ref_hukdis")

@@ -60,6 +60,9 @@ class Agama(Base):
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
+    # bidata_rel = relationship("Biodata", back_populates="ref_agama_rel")
+
+
 class RefAsnJenisJabatan(Base):
     __tablename__ = "ref_asn_jenis_jabatan"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
@@ -84,6 +87,8 @@ class Esselon(Base):
     jabatan_asn = Column(String(50), nullable=False)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    ref_jabatan_struktural_rel = relationship("RefJabatanStruktural", back_populates="ref_esselon_rel")
 
 class RumpunJabatan(Base):
     __tablename__ = "ref_rumpun_jabatan"
@@ -113,6 +118,8 @@ class Unor(Base):
     sub_unit_kerja = Column(String(50), index=True, default=None)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    ref_jabatan_struktural_rel = relationship("RefJabatanStruktural", back_populates="ref_unor_rel")
 
     parent = relationship(
         "Unor",
@@ -248,15 +255,22 @@ class RefJenjangJabatan(Base): #Fungsional tertentu dan Struktural
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
+
 class RefJabatanStruktural(Base):
     __tablename__ = "ref_jabatan_struktural"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
     kode = Column(String(50), unique=True, nullable=False)
     nama = Column(String(150), nullable=False)
     kode_cepat = Column(String(10),nullable=False)
+    ref_esselon_id = Column(String(50), ForeignKey("ref_esselon.kode"),index=True, nullable=True)
+    ref_unor_id = Column(String(50), ForeignKey("ref_unor.id"),index=True, nullable=True)
     status = Column(Boolean, default=False)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    ref_esselon_rel = relationship("Esselon", back_populates="ref_jabatan_struktural_rel")
+    ref_unor_rel = relationship("Unor", back_populates="ref_jabatan_struktural_rel")
+
 
 class RefGolongan(Base):
     __tablename__ = "ref_golongan"
@@ -399,7 +413,21 @@ class RefKPKN(Base):
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-  
+class JenisIdDokumen(Base):
+    __tablename__ = "jenis_id_dokumen"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(50), index=True, nullable=False, unique=True)
+    nama = Column(String(100), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class RefKedudukanHukum(Base):
+    __tablename__ = "ref_kedudukan_hukum"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(50), index=True, nullable=False, unique=True)
+    nama = Column(String(100), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
    
