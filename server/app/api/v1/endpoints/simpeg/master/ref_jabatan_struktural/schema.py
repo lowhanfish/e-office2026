@@ -7,6 +7,10 @@ class RefJabatanStrukturalResponse(MasterResponse):
     kode_cepat : str
     ref_esselon_id : Optional[str]
     ref_unor_id : Optional[str]
+    ref_esselon_nama : Optional[str]
+    ref_unor_nama : Optional[str]
+    ref_unor_parent_nama : Optional[str]
+    sub_unit_kerja_nama : Optional[str]
     status : bool
 
 
