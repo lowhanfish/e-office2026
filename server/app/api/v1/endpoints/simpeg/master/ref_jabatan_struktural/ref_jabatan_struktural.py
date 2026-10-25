@@ -13,11 +13,33 @@ router = APIRouter()
 ParentUnor = aliased(Unor, name="Unor_parent")
 
 @router.get("/option", response_model=List[RefJabatanStrukturalResponse])
-async def option():
-    return {
-        "status" : 200,
-        "message" : "endpoint aktif"
-    }
+async def option(
+    skip : int = 0,
+    limit : int = 100,
+    search : str | None = None,
+    db: AsyncSession = Depends(get_db)
+):
+    query = select(
+        *RefJabatanStruktural.__table__.c,
+        Esselon.nama.label("ref_esselon_nama"),
+        Unor.nama.label("ref_unor_nama"),
+        ParentUnor.nama.label("ref_unor_parent_nama"),
+        SubUnitKerja.nama.label("sub_unit_kerja_nama")
+    )
+
+    query = query.outerjoin(Esselon, Esselon.kode == RefJabatanStruktural.ref_esselon_id)
+    query = query.outerjoin(Unor, Unor.id == RefJabatanStruktural.ref_unor_id)
+    query = query.outerjoin(ParentUnor, ParentUnor.id == Unor.parent_id)
+    query = query.outerjoin(SubUnitKerja, SubUnitKerja.id == Unor.sub_unit_kerja)
+
+    if search:
+        query = query.where(RefJabatanStruktural.nama.ilike(f"%{search}%"))
+
+    query = query.order_by(RefJabatanStruktural.created_at).offset(skip).limit(limit)
+    
+    result = await db.execute(query)
+    return result.mappings().all()
+
 
 
 @router.get("/read", response_model=RefJabatanStrukturalResponseList)

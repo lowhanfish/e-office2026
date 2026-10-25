@@ -27,7 +27,6 @@ class User(Base):
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, onupdate=func.now())
 
-
 class RefJnsPegawai(Base):
     __tablename__ = "ref_jns_pegawai"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
@@ -430,4 +429,3 @@ class RefKedudukanHukum(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
-   
