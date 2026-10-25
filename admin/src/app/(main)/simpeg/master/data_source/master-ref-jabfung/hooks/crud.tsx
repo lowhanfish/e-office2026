@@ -40,7 +40,7 @@ export const useResponseListMaster = (skip: number, limit: number, search: strin
         queryFn: () => fetchData<ResponseListInterface>(
             `${url}/api/v1/simpeg/master/ref_jabfung/read/?skip=${(skip - 1) * limit}&limit=${limit}&search=${search}`
         ),
-        queryKey: ["master-jenis-jabatan-umum", skip, limit, search]
+        queryKey: ["master-ref-jabfung", skip, limit, search]
     })
     return { List, isLoading, isError, error }
 }
@@ -58,7 +58,7 @@ export const useDeleteMaster = () => {
         ),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ["master-jenis-jabatan-umum"]
+                queryKey: ["master-ref-jabfung"]
             })
             swallAlert("sukses dihapus", "success")
         },
@@ -91,7 +91,7 @@ export const useCreateMaster = () => {
         ),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ["master-jenis-jabatan-umum"]
+                queryKey: ["master-ref-jabfung"]
             });
             swallAlert("sukses ditambahkan", "success")
         },
@@ -120,7 +120,7 @@ export const useUpdateMaster = () => {
             }
         ),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["master-jenis-jabatan-umum"] })
+            queryClient.invalidateQueries({ queryKey: ["master-ref-jabfung"] })
             swallAlert("sukses diubah", "success")
         },
         onError: (err: any) => {

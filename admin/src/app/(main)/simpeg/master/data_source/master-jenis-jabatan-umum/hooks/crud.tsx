@@ -9,11 +9,11 @@ import { swallAlert, showLoadingAlert } from '@/lib/show_swall';
 import { ListOptionSchema } from '@/types/global'
 
 
-export const useResponseOption = () => {
+export const useResponseOption = (search: string) => {
     const url = useUrlStore(state => state.URL.APP)
     const { data, isLoading, isError, error } = useQuery({
         queryFn: () => fetchData(`
-            ${url}/api/v1/simpeg/master/ref_jns_jabatan_umum/option
+            ${url}/api/v1/simpeg/master/ref_jns_jabatan_umum/option?skip=0&limit=20&search=${search}
         `),
         queryKey: ["master-jenis-jabatan-umum-option"]
     })
