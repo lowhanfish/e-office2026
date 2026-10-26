@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-const url = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+const url = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8001";
 
 interface DataShowProps {
   id: string | number;

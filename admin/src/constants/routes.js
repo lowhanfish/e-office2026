@@ -260,6 +260,11 @@ const routex = [
                         path:"/simpeg/master/data_source/master-golongan",
                         children : []
                     },
+                    {
+                        title : "Master Jenis ID Dokumen",
+                        path:"/simpeg/master/data_source/master-jenis-id-dokumen",
+                        children : []
+                    },
                    
                 ]
             },

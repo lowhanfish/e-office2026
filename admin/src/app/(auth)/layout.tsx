@@ -8,7 +8,7 @@ export default async function AuthLayout({ children }: { children: ReactNode }) 
     let isAuthenticated = false;
 
     if (token) {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8001';
 
         try {
             const response = await fetch(`${apiUrl}/api/v1/auth/check-auth`, {

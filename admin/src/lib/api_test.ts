@@ -1,9 +1,11 @@
 // lib/fetchInstansi.ts
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8001";
+
 // 1. Helper sederhana untuk minta Access Token baru (15 menit)
 async function refreshAccessToken(): Promise<string | null> {
   try {
-    const res = await fetch("http://localhost:8000/api/v1/auth/refresh", {
+    const res = await fetch(`${apiUrl}/api/v1/auth/refresh`, {
       method: "POST",
       headers: { "accept": "application/json" },
       credentials: "include", // Mengirim cookies (termasuk refresh_token 7 hari)
@@ -23,7 +25,7 @@ async function refreshAccessToken(): Promise<string | null> {
 
 // 2. Fungsi khusus untuk nembak endpoint Instansi SIMPEG
 export async function getInstansi(skip = 0, limit = 100) {
-  const url = `http://localhost:8000/api/v1/simpeg/master/ref_instansi/read?skip=${skip}&limit=${limit}`;
+  const url = `${apiUrl}/api/v1/simpeg/master/ref_instansi/read?skip=${skip}&limit=${limit}`;
   
   // Ambil token dari browser
   let token = localStorage.getItem("accessToken");
