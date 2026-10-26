@@ -52,8 +52,8 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
         <div className='px-5 pb-2'>
             <div className='pt-1'>
                 <BInput
-                    title='Kode Ref Jenis Jabatan Umum (Id pada SIASN)'
-                    placeholder='Kode Ref Jenis Jabatan Umum'
+                    title='Kode Ref Jenis  ID Dokumen (Id pada SIASN)'
+                    placeholder='Kode Ref Jenis  ID Dokumen'
                     type='text'
                     value={form.kode}
                     onChange={(value) => {
@@ -63,8 +63,8 @@ const FormAdd = ({ setClose, isEdit, form, setForm }: FormCreateProps) => {
             </div>
             <div className='pt-1'>
                 <BInput
-                    title='Nama Ref Jenis Jabatan Umum'
-                    placeholder='Nama Ref Jenis Jabatan Umum'
+                    title='Nama Ref Jenis  ID Dokumen'
+                    placeholder='Nama Ref Jenis  ID Dokumen'
                     type='text'
                     value={form.nama}
                     onChange={(value) => {

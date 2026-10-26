@@ -13,9 +13,9 @@ export const useResponseOption = (search: string) => {
     const url = useUrlStore(state => state.URL.APP)
     const { data, isLoading, isError, error } = useQuery({
         queryFn: () => fetchData(`
-            ${url}/api/v1/simpeg/master/ref_jns_jabatan_umum/option?skip=0&limit=20&search=${search}
+            ${url}/api/v1/simpeg/master/ref_jenis_id_dokumen/option?skip=0&limit=20&search=${search}
         `),
-        queryKey: ["master-jenis-jabatan-umum-option"]
+        queryKey: ["master-jenis-id-dokumen-option"]
     })
 
     let result: ListOptionSchema = []
@@ -39,9 +39,9 @@ export const useResponseListMaster = (skip: number, limit: number, search: strin
     const url = useUrlStore(state => state.URL.APP)
     const { data: List, isLoading, isError, error } = useQuery({
         queryFn: () => fetchData<ResponseListInterface>(
-            `${url}/api/v1/simpeg/master/ref_jns_jabatan_umum/read/?skip=${(skip - 1) * limit}&limit=${limit}&search=${search}`
+            `${url}/api/v1/simpeg/master/ref_jenis_id_dokumen/read/?skip=${(skip - 1) * limit}&limit=${limit}&search=${search}`
         ),
-        queryKey: ["master-jenis-jabatan-umum", skip, limit, search]
+        queryKey: ["master-jenis-id-dokumen", skip, limit, search]
     })
     return { List, isLoading, isError, error }
 }
@@ -52,14 +52,14 @@ export const useDeleteMaster = () => {
     const queryClient = useQueryClient()
     const deleteMutation = useMutation({
         mutationFn: (id: string) => fetchData(
-            `${url}/api/v1/simpeg/master/ref_jns_jabatan_umum/delete/${id}`,
+            `${url}/api/v1/simpeg/master/ref_jenis_id_dokumen/delete/${id}`,
             {
                 method: "DELETE"
             }
         ),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ["master-jenis-jabatan-umum"]
+                queryKey: ["master-jenis-id-dokumen"]
             })
             swallAlert("sukses dihapus", "success")
         },
@@ -81,7 +81,7 @@ export const useCreateMaster = () => {
 
     const createMutation = useMutation({
         mutationFn: (body: ResponseInterface) => fetchData(
-            `${url}/api/v1/simpeg/master/ref_jns_jabatan_umum/create`,
+            `${url}/api/v1/simpeg/master/ref_jenis_id_dokumen/create`,
             {
                 method: "POST",
                 body: JSON.stringify(body),
@@ -92,7 +92,7 @@ export const useCreateMaster = () => {
         ),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ["master-jenis-jabatan-umum"]
+                queryKey: ["master-jenis-id-dokumen"]
             });
             swallAlert("sukses ditambahkan", "success")
         },
@@ -111,7 +111,7 @@ export const useUpdateMaster = () => {
 
     const updateMutation = useMutation({
         mutationFn: ({ body, id }: { body: ResponseInterface, id: string }) => fetchData(
-            `${url}/api/v1/simpeg/master/ref_jns_jabatan_umum/update/${id}`,
+            `${url}/api/v1/simpeg/master/ref_jenis_id_dokumen/update/${id}`,
             {
                 method: "PATCH",
                 body: JSON.stringify(body),
@@ -121,7 +121,7 @@ export const useUpdateMaster = () => {
             }
         ),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["master-jenis-jabatan-umum"] })
+            queryClient.invalidateQueries({ queryKey: ["master-jenis-id-dokumen"] })
             swallAlert("sukses diubah", "success")
         },
         onError: (err: any) => {

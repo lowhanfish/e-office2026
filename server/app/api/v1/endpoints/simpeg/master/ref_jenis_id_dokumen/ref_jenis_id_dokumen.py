@@ -31,8 +31,8 @@ async def option(
 
 
 
-@router.get("/get", response_model=RefJenisIdDokumenResponseList)
-async def get(
+@router.get("/read", response_model=RefJenisIdDokumenResponseList)
+async def read(
     skip : int = 0,
     limit : int = 100,
     search : str | None = None,
