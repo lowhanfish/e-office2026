@@ -38,6 +38,7 @@ from . import (
     ref_kpkn,
 
     ref_jenis_id_dokumen,
+    ref_kedudukan_hukum,
 
 )
 
@@ -83,3 +84,4 @@ master_router.include_router(ref_kpkn.router, prefix="/ref_kpkn")
 
 
 master_router.include_router(ref_jenis_id_dokumen.router, prefix="/ref_jenis_id_dokumen")
+master_router.include_router(ref_kedudukan_hukum.router, prefix="/ref_kedudukan_hukum")
