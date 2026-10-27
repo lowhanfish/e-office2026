@@ -27,6 +27,14 @@ class User(Base):
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, onupdate=func.now())
 
+class RefStatusPegawai(Base):
+    __tablename__ = "ref_status_pegawai"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(String(50), index=True, nullable=False, unique=True)
+    nama = Column(String(50), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
 class RefJnsPegawai(Base):
     __tablename__ = "ref_jns_pegawai"
     id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
@@ -427,5 +435,16 @@ class RefKedudukanHukum(Base):
     nama = Column(String(100), nullable=False)
     created_by = Column(String(50), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class RefTaspenId(Base):
+    __tablename__ = "ref_taspen_id"
+    id = Column(String(50), primary_key=True, index=True, default=lambda:str(uuid.uuid4()))
+    kode = Column(CHAR(3), index=True, nullable=False, unique=True)
+    nama = Column(String(50), nullable=False)
+    ktua_id = Column(String(50), nullable=False)
+    created_by = Column(String(50), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
 
 

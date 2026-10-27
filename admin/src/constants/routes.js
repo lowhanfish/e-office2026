@@ -265,6 +265,11 @@ const routex = [
                         path:"/simpeg/master/data_source/master-jenis-id-dokumen",
                         children : []
                     },
+                    {
+                        title : "Master Referensi Kedudukan Hukum",
+                        path:"/simpeg/master/data_source/master-ref-keudukan-hukum",
+                        children : []
+                    },
                    
                 ]
             },

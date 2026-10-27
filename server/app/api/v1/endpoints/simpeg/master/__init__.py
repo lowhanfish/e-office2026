@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from . import (
+    ref_status_pegawai,
     ref_jns_pegawai,
     ref_jns_kawin,
     ref_status_hidup,
@@ -44,6 +45,7 @@ from . import (
 
 master_router = APIRouter()
 
+master_router.include_router(ref_status_pegawai.router, prefix="/ref_status_pegawai")
 master_router.include_router(ref_jns_pegawai.router, prefix="/ref_jns_pegawai")
 master_router.include_router(ref_jns_kawin.router, prefix="/ref_jns_kawin")
 master_router.include_router(ref_status_hidup.router, prefix="/ref_status_hidup")

@@ -8,8 +8,8 @@ from typing import List
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
-
 router = APIRouter()
+
 
 @router.get("/option", response_model=List[RefKedudukanHukumResponse])
 async def option(
@@ -27,7 +27,6 @@ async def option(
     return result.scalars().all()
 
 
-
 @router.get("/read", response_model=RefKedudukanHukumResponseList)
 async def read(
     skip : int = 0,
@@ -43,7 +42,7 @@ async def read(
     total_result = await db.execute(total_query)
     total = total_result.scalar_one_or_none()
 
-    query = query.order_by(RefKedudukanHukum.created_at).offset(skip).limit(limit)
+    query = query.order_by(RefKedudukanHukum.kode).offset(skip).limit(limit)
     result = await db.execute(query)
     data = result.scalars().all()
 
@@ -53,7 +52,6 @@ async def read(
         "total" : total,
         "data" : data,
     }
-
 
 
 @router.post("/create", response_model=RefKedudukanHukumResponse)
@@ -73,7 +71,7 @@ async def create(
     return new_data
 
 
-@router.patch("/update/{str}", response_model=RefKedudukanHukumResponse)
+@router.patch("/update/{id}", response_model=RefKedudukanHukumResponse)
 async def update(
     id:str,
     payload : RefKedudukanHukumCreate,
@@ -96,7 +94,7 @@ async def update(
     return data_db
 
     
-@router.delete("/delete/{str}")
+@router.delete("/delete/{id}")
 async def delete(
     id:str,
     db: AsyncSession = Depends(get_db)
