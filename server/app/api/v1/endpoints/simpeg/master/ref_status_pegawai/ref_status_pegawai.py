@@ -4,23 +4,28 @@ from app.models.simpeg.master.models import RefStatusPegawai, User
 from app.api.deps import get_current_user
 from .schema import RefStatusPegawaiCreate, RefStatusPegawaiResponse, RefStatusPegawaiResponseList
 from typing import List
-
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()
 
-@router.get("/option")
+@router.get("/option", response_model=List[RefStatusPegawaiResponse])
 async def option(
     skip : int = 0,
     limit : int = 100,
     search : str | None = None,
     db:AsyncSession = Depends(get_db)
 ):
-    pass
+    query = select(RefStatusPegawai)
+    if search:
+        query = query.where(RefStatusPegawai.nama.ilike(f"%{search}%"))
+
+    query = query.order_by(RefStatusPegawai.created_at).offset(skip).limit(limit)
+    result = await db.execute(query)
+    return result.scalars().all()
 
 
-@router.get("/read", response_model=List[RefStatusPegawaiResponse])
+@router.get("/read", response_model=RefStatusPegawaiResponseList)
 async def read(
     skip : int = 0,
     limit : int = 100,
@@ -34,9 +39,7 @@ async def read(
     total_query = select(func.count()).select_from(query.subquery())
     total_result = await db.execute(total_query)
     total = total_result.scalar_one_or_none()
-
     query = query.order_by(RefStatusPegawai.created_at).offset(skip).limit(limit)
-
     result = await db.execute(query)
     data = result.scalars().all()
 
@@ -48,7 +51,7 @@ async def read(
     }
 
 
-@router.post("/create", response_model=RefStatusPegawaiResponseList)
+@router.post("/create", response_model=RefStatusPegawaiResponse)
 async def create(
     payload : RefStatusPegawaiCreate,
     db:AsyncSession = Depends(get_db),
@@ -58,11 +61,9 @@ async def create(
         **payload.model_dump(exclude={"created_by"}),
         created_by = user.id
     )
-
     db.add(new_data)
     await db.commit()
     await db.refresh(new_data)
-
     return new_data
 
 
@@ -75,7 +76,6 @@ async def update(
     query = select(RefStatusPegawai).where(RefStatusPegawai.id == id)
     result = await db.execute(query)
     data_db = result.scalar_one_or_none()
-
     if not data_db:
         raise HTTPException(status_code=404, detail="Id dari data yang akan anda update tidak ditemukan")
 
@@ -87,7 +87,6 @@ async def update(
 
     await db.commit()
     await db.refresh(data_db)
-
     return data_db
 
 

@@ -141,6 +141,11 @@ const routex = [
                         children : []
                     },
                     {
+                        title : "Master Referensi Status Pegawai",
+                        path:"/simpeg/master/data_source/master-ref-status-pegawai",
+                        children : []
+                    },
+                    {
                         title : "Master Status Hidup",
                         path:"/simpeg/master/data_source/master-status-hidup",
                         children : []
